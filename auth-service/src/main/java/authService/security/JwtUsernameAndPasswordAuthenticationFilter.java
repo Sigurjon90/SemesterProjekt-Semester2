@@ -1,6 +1,7 @@
 package authService.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import commonService.security.JwtConfig;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;

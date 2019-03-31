@@ -2,27 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cddf528f-3d34-4bd4-bb6f-5e6ce57d8777" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/server/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/JwtUsernameAndPasswordAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/SecurityCredentialsConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/UserDetailsServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../auth-service/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../common-service/src/main/java/commonService/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../common-service/src/main/java/commonService/security/JwtConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../common-service/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/controllers/GalleryController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/entities/Gallery.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gallery-service/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/security/JwtTokenAuthenticationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/security/SecurityTokenConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../gateway-service/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../image-service/src/main/java/imageService/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../image-service/src/main/java/imageService/Entities/Image.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../image-service/src/main/java/imageService/controllers/ImageController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../common-service/src/main/java/commonService/security/UserRole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auth-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auth-service/src/main/java/authService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/JwtUsernameAndPasswordAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/JwtUsernameAndPasswordAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/SecurityCredentialsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/SecurityCredentialsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/UserDetailsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/src/main/java/authService/security/UserDetailsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../common-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/security/JwtTokenAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/security/JwtTokenAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/security/SecurityTokenConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/security/SecurityTokenConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../image-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../image-service/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -71,17 +66,7 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -163,7 +148,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553871009447" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554053095623" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -261,12 +246,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1553859216058</updated>
-      <workItem from="1553859217385" duration="4285000" />
+      <workItem from="1553859217385" duration="4576000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4285000" />
+    <option name="totallyTimeSpent" value="4576000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="720" y="23" width="720" height="877" extended-state="0" />

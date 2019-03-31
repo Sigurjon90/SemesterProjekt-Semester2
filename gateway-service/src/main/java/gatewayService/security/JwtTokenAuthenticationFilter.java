@@ -1,5 +1,6 @@
 package gatewayService.security;
 
+import commonService.security.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

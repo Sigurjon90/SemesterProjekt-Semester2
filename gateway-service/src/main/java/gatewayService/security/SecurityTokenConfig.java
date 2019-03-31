@@ -1,5 +1,6 @@
 package gatewayService.security;
 
+import commonService.security.JwtConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

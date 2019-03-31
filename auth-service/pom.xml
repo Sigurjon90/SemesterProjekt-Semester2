@@ -50,12 +50,4 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>local-maven-repo</id>
-            <url>file:${project.basedir}/common-service</url>
-        </repository>
-    </repositories>
-
-
 </project>
