@@ -66,7 +66,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + jwtConfig.getExpiration() * 1000))
-                .signWith(SignatureAlgorithm.ES512, jwtConfig.getSecret().getBytes())
+                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
                 .compact();
 
         // Add token to header
