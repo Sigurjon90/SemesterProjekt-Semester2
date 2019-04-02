@@ -1,0 +1,13 @@
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/controllers/UserController.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/domain/Greeting.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/services/IUserService.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/repositories/IUserRepository.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/services/IJwtService.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/repositories/UserRepository.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/controllers/GreetingController.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/domain/UserDTO.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/utils/JwtTokenFilter.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/domain/User.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/Application.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/services/JwtService.java
+/Users/frederikhelth/NetBeansProjects/Auth/src/main/java/main/services/UserService.java
