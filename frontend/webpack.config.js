@@ -1,0 +1,97 @@
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+  entry: [
+    'react-hot-loader',
+    'babel-polyfill',
+    './src/index.js'
+  ],
+  devServer: {
+    hot: true,
+    contentBase: path.resolve(__dirname, 'dist'),
+    port: process.env.PORT || 1337,
+    publicPath: '/',
+    historyApiFallback: true,
+    disableHostCheck: true
+  },
+  output: {
+    path: path.join(__dirname, 'dist'),
+    publicPath: '/',
+    filename: 'app.[hash].js'
+  },
+  devtool: 'eval',
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            ['es2015', {modules: false}],
+            'stage-0',
+            'react'
+          ],
+          plugins: [
+            'transform-async-to-generator',
+            'transform-decorators-legacy',
+            ['import', {
+              libraryName: 'antd',
+              style: 'css',
+            }]
+          ]
+        }
+      },
+      {
+        test: /\.scss|css$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'resolve-url-loader',
+          'sass-loader?sourceMap'
+        ]
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: [
+          'file-loader?hash=sha512&digest=hex&name=[hash].[ext]',
+          {
+            loader: 'image-webpack-loader',
+            query: {
+              mozjpeg: {
+                progressive: true
+              },
+              gifsicle: {
+                interlaced: false
+              },
+              optipng: {
+                optimizationLevel: 4
+              },
+              pngquant: {
+                quality: '75-90',
+                speed: 3
+              }
+            }
+          }
+        ]
+      },
+      {
+        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: 'url-loader?limit=10000&mimetype=application/font-woff'
+      },
+      {
+        test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        use: 'file-loader',
+        exclude: /images/,
+      }
+    ]
+  },
+  plugins: [
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new HtmlWebpackPlugin({ hash: false, template: './index.html' }),
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /nb/)
+  ]
+}
