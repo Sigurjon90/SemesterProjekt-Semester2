@@ -11,6 +11,7 @@ import java.util.List;
 
 import API.repositories.DiaryRepository;
 import API.repositories.IDiaryRepository;
+import API.services.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/diaries")
 public class DiaryController {
     @Autowired
-    private IDiaryRepository diaryRepository;
+    private IDiaryService diaryService;
     
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getDiaries(){
-     return new ResponseEntity(diaryRepository.getDiaries(), HttpStatus.OK);
+     return new ResponseEntity(diaryService.getDiaries(), HttpStatus.OK);
     
 
     }
