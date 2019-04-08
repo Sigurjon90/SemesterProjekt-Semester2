@@ -1,0 +1,8 @@
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/controllers/JournalController.java
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/entities/EventDTO.java
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/repositories/JournalRepository.java
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/entities/Event.java
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/services/JournalService.java
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/entities/Journal.java
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/Application.java
+/home/thinkbuntu/NetBeansProjects/JournalAPI/src/main/java/API/entities/JournalDTO.java
