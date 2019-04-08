@@ -116,15 +116,24 @@ public class CitizensRepositories {
     
     
     public Citizens createCitizen(Citizens citizen) {
-        Scanner scanner;
+        Scanner scanner = new Scanner(System.in);
         String name, streetName, streetNumber, town;
-        int CPR, zipCode;
+        int zipCode;
+        Long CPR;
+        System.out.println("Enter name of Citizen > ");
+        name = scanner.next();
+        System.out.println("CPR number >");
+        CPR = scanner.nextLong();
+        System.out.println("Street name >");
+        streetName = scanner.next();
+        System.out.println("Street number");
         
         try {
             connection.setAutoCommit(false); // Transaction
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO Citizens(id, citizens_id) VALUES (?, ?) RETURNING id, date_start, citizens_id");
-            createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
-            createCitizen.setObject(2, Types.OTHER);
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO Citizens(id, name, CPR_Number, address, til_number, )"
+                    + "VALURE(?,?,?,?,?)");
+            createCitizen.setObject(0, UUID.randomUUID(), Types.OTHER);
+            createCitizen.setObject(1, Types.OTHER);
             ResultSet citizenResultSet = createCitizen.executeQuery();
             Citizens createdCitizen = null;
             while (citizenResultSet.next()) {
