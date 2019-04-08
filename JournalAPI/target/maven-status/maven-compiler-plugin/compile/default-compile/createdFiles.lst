@@ -1,8 +1,0 @@
-API/entities/Event.class
-API/entities/JournalDTO.class
-API/services/JournalService.class
-API/controllers/JournalController.class
-API/entities/Journal.class
-API/Application.class
-API/entities/EventDTO.class
-API/repositories/JournalRepository.class
