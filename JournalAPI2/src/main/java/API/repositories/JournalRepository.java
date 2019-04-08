@@ -87,38 +87,67 @@ public class JournalRepository {
         return null;
     }
 
-    public Journal deleteJournal(UUID id, UUID authorID) {            
+    public Journal deleteJournal(UUID id, UUID authorID) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
+            checker.setObject(1, id, Types.OTHER);
+            ResultSet checkResultSet = checker.executeQuery();
+            String stringType = null;
+            while(checkResultSet.next()) {
+                stringType = checkResultSet.getString("type");
+            }
+
+            if (stringType.equals("deleted")) {
+                System.out.println("############### DELETED TYPE ##################");
+                return null;
+            } 
+            
+            /*
+            PreparedStatement checkIfTypeDeleted = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN "
+                    + "(SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = '?';");
             try {
-                // Trans
-                PreparedStatement deleteJournal = connection.prepareStatement("INSERT into journal_events(id, journal_ID, type, author_id) VALUES (?, ?, ?, ?) ON CONFLICT(journal_ID, type) DO NOTHING"
-                        + "RETURNING id, journal_ID, type, author_id, date_modified, type"); // RETURN GENERATED KEYS
-                deleteJournal.setObject(1, UUID.randomUUID());
-                deleteJournal.setObject(2, id);
-                deleteJournal.setString(3, "deleted");
-                deleteJournal.setObject(4, authorID); 
-                deleteJournal.setObject(5, id);
-                
-                ResultSet deletedResult = deleteJournal.executeQuery();
-                Journal journal = null;
-                
-                
-                while(deletedResult.next()) {
-                    journal = new Journal((UUID) deletedResult.getObject("journal_ID"), null,
+                checkIfTypeDeleted.setString(1, "'916f98ab-2864-423e-9675-b7608e3ba95d'");
+            } catch (Exception e) {
+                System.out.println("######### ERROR");
+            }
+
+            ResultSet checkResultSet = checkIfTypeDeleted.executeQuery();
+            String stringType = null;
+            while(checkResultSet.next()) {
+                stringType = checkResultSet.getString("type");
+            }
+
+            if (stringType.equals("deleted")) {
+                connection.rollback();
+                System.out.println("############### DELETED");
+            } */
+
+            PreparedStatement deleteJournal = connection.prepareStatement("INSERT into journal_events(id, journal_ID, type, author_id) VALUES (?, ?, ?, ?)"
+                    + "RETURNING id, journal_ID, type, author_id, date_modified, type"); // RETURN GENERATED KEYS
+            deleteJournal.setObject(1, UUID.randomUUID());
+            deleteJournal.setObject(2, id);
+            deleteJournal.setString(3, "deleted");
+            deleteJournal.setObject(4, authorID);
+
+            ResultSet deletedResult = deleteJournal.executeQuery();
+            Journal journal = null;
+
+            while (deletedResult.next()) {
+                journal = new Journal((UUID) deletedResult.getObject("journal_ID"), null,
                         null, null,
                         (UUID) deletedResult.getObject("author_id"), deletedResult.getString("date_modified"));
-                }
-                
-                return journal;
-                
-            } catch (SQLException ex) {
-                Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            return null;
-            
+            connection.commit();
+            return journal;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-    
+        return null;
+
+    }
 
     public Journal createJournal(Journal journal) {
         try {
