@@ -40,7 +40,7 @@ public class JournalController {
     public ResponseEntity getJournals() {
         List<JournalDTO> journals = journalService.getJournals();
 
-        if(journals != null) {
+        if (journals != null) {
             return new ResponseEntity(journals, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -57,7 +57,7 @@ public class JournalController {
     // Create Journal
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createJournal(@RequestBody JournalDTO journalDTO) {
-        
+
         // Hvorfor det her step?
         JournalDTO journal = journalService.createJournal(journalDTO);
 
@@ -67,33 +67,30 @@ public class JournalController {
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-    
+
     // Modify Journal
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity modifyJournal(@RequestBody JournalDTO journalDTO) {
-        
+
         EventDTO event = journalService.modifyJournal(journalDTO);
-        
-        if(event != null) {
+
+        if (event != null) {
             return new ResponseEntity(event, HttpStatus.OK);
         }
-        
+
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     // Delete Journal on ID
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteJournal(@PathVariable("id") String stringID
-    ) {
+    public ResponseEntity deleteJournal(@PathVariable("id") String stringID) {
+
         UUID id = UUID.fromString(stringID);
+        JournalDTO journal = journalService.deleteJournal(id, UUID.randomUUID());
 
-        // Find Journal first
-        JournalDTO journalDTO = journalService.findJournal(id);
-
-        // Delete Journal
-        journalService.deleteJournal(id);
-
-        // Return journalDTO to confirm deletion
-        return new ResponseEntity(journalDTO.toString() + " has been deleted!", HttpStatus.OK);
+        if (journal != null) {
+            return new ResponseEntity(journal, HttpStatus.OK);
+        }
+        
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-}

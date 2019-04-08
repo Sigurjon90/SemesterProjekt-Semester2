@@ -36,13 +36,14 @@ public class JournalService {
     }
     
     // Delete Journal
-    public void deleteJournal(UUID id) {
-        jr.deleteJournal(id);
-        /*Journal journal = jr.deleteJournal(id);
-        if (journal != null) {
+    public JournalDTO deleteJournal(UUID id, UUID authorID) {
+        Journal journal = jr.deleteJournal(id, authorID);
+        
+        if(journal != null) {
             return mm.map(journal, JournalDTO.class);
         }
-        return null; */
+        
+        return null;
     }
 
     // Find Journal
