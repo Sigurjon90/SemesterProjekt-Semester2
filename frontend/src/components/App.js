@@ -17,6 +17,7 @@ export default class App extends Component {
 						<LazyRoute {...props} component={import('./TodoList')} />
 					)}
 				/>
+				<DevTools />
 			</div>
 		)
 	}
