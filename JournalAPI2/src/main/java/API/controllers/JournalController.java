@@ -8,6 +8,7 @@ package API.controllers;
 import API.entities.Journal;
 import API.entities.JournalDTO;
 import API.repositories.JournalRepository;
+import API.services.IJournalService;
 import API.services.JournalService;
 import java.util.Arrays;
 import java.util.List;
@@ -29,10 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class JournalController {
 
     @Autowired
-    JournalRepository journalRepository;
-
-    @Autowired
-    JournalService journalService;
+    IJournalService journalService;
 
     // Find all journals
     @RequestMapping(method = RequestMethod.GET)
