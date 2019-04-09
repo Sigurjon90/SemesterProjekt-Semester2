@@ -1,11 +1,14 @@
 package galleryService.controllers;
 
+import commonService.security.JwtUtils;
 import galleryService.entities.Gallery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -30,7 +33,9 @@ public class GalleryController {
     }
 
     @RequestMapping("/{id}")
-    public Gallery getGallery(@PathVariable final int id) {
+    public Gallery getGallery(@RequestHeader HttpHeaders headers, @PathVariable final int id) {
+        String userId = JwtUtils.getUserId(headers.get("Authorization").get(0));
+        System.out.println(userId);
         Gallery gallery = new Gallery();
         gallery.setId(id);
 

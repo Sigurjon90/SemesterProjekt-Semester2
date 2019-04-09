@@ -1,3 +1,4 @@
 /Users/madsfalken/Documents/GitHub/SemesterProjekt-Semester2/common-service/src/main/java/commonService/Application.java
 /Users/madsfalken/Documents/GitHub/SemesterProjekt-Semester2/common-service/src/main/java/commonService/security/JwtConfig.java
 /Users/madsfalken/Documents/GitHub/SemesterProjekt-Semester2/common-service/src/main/java/commonService/security/UserRole.java
+/Users/madsfalken/Documents/GitHub/SemesterProjekt-Semester2/common-service/src/main/java/commonService/security/JwtUtils.java

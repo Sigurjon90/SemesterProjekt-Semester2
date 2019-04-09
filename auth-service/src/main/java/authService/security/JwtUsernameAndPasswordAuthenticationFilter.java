@@ -36,7 +36,6 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(jwtConfig.getUri(), "POST"));
     }
 
-
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
@@ -60,6 +59,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         Long now = System.currentTimeMillis();
         String token = Jwts.builder()
                 .setSubject(auth.getName())
+                .setId("1")
                 // Convert to list of strings.
                 // This is important because it affects the way we get them back in the Gateway.
                 .claim("authorities", auth.getAuthorities().stream()
