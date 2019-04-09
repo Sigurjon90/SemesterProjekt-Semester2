@@ -71,14 +71,21 @@ public class JournalRepository {
 
     public Journal findJournal(UUID id) {
         try {
-            PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journals WHERE id = '" + id + "'");
+
+            PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
+            findJournal.setObject(1, id, Types.OTHER);
             ResultSet journalResultSet = findJournal.executeQuery();
             Journal journal = null;
             while (journalResultSet.next()) {
-                journal = new Journal((UUID) journalResultSet.getObject("id"), null, null, null, null, null);
+                if (journalResultSet.getString("type").equals("deleted")) {
+                    return null;
+                }
+                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getDate("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
             }
 
-            return journal;
+            if (journal != null) {
+                return journal;
+            }
 
         } catch (SQLException e) {
             System.out.println("SQL Exception...");
@@ -93,35 +100,15 @@ public class JournalRepository {
             PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
             checker.setObject(1, id, Types.OTHER);
             ResultSet checkResultSet = checker.executeQuery();
-            String stringType = null;
-            while(checkResultSet.next()) {
+            String stringType = "";
+
+            while (checkResultSet.next()) {
                 stringType = checkResultSet.getString("type");
             }
 
             if (stringType.equals("deleted")) {
-                System.out.println("############### DELETED TYPE ##################");
                 return null;
-            } 
-            
-            /*
-            PreparedStatement checkIfTypeDeleted = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN "
-                    + "(SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = '?';");
-            try {
-                checkIfTypeDeleted.setString(1, "'916f98ab-2864-423e-9675-b7608e3ba95d'");
-            } catch (Exception e) {
-                System.out.println("######### ERROR");
             }
-
-            ResultSet checkResultSet = checkIfTypeDeleted.executeQuery();
-            String stringType = null;
-            while(checkResultSet.next()) {
-                stringType = checkResultSet.getString("type");
-            }
-
-            if (stringType.equals("deleted")) {
-                connection.rollback();
-                System.out.println("############### DELETED");
-            } */
 
             PreparedStatement deleteJournal = connection.prepareStatement("INSERT into journal_events(id, journal_ID, type, author_id) VALUES (?, ?, ?, ?)"
                     + "RETURNING id, journal_ID, type, author_id, date_modified, type"); // RETURN GENERATED KEYS
@@ -193,24 +180,42 @@ public class JournalRepository {
         Purpose: createsEvent from journalDTO
         Returns: Event object 
      */
-    public Event modifyJournal(JournalDTO journalDTO) {
+    public Journal modifyJournal(JournalDTO journalDTO) {
 
         try {
-            PreparedStatement modifyJournal = connection.prepareStatement("INSERT INTO journal_events(id, type, content, author_id, journal_id) VALUES (?, ?, ?, ?, ?) RETURNING id, type, content, author_id, journal_id, date_stamp");
+
+            PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
+            checker.setObject(1, journalDTO.getId(), Types.OTHER);
+            ResultSet checkResultSet = checker.executeQuery();
+            String stringType = "";
+
+            while (checkResultSet.next()) {
+                stringType = checkResultSet.getString("type");
+            }
+
+            if (stringType.equals("deleted")) {
+                return null;
+            }
+
+            PreparedStatement modifyJournal = connection.prepareStatement("INSERT INTO journal_events(id, type, content, author_id, journal_id) VALUES (?, ?, ?, ?, ?) RETURNING id, journal_id, content, type, date_modified, author_id");
             modifyJournal.setObject(1, UUID.randomUUID(), Types.OTHER);
             modifyJournal.setString(2, "modified");
             modifyJournal.setString(3, journalDTO.getContent());
             modifyJournal.setObject(4, journalDTO.getAuthorID(), Types.OTHER);
-            modifyJournal.setObject(5, journalDTO.getId(), Types.OTHER);
-            Event event = null;
-            ResultSet eventResultSet = modifyJournal.executeQuery();
-            while (eventResultSet.next()) {
-                event = new Event((UUID) eventResultSet.getObject("id"), (UUID) eventResultSet.getObject("journal_id"), eventResultSet.getString("content"), eventResultSet.getString("type"), eventResultSet.getDate("date_modified"), (UUID) eventResultSet.getObject("author_id")); //stamp
+            modifyJournal.setObject(5, journalDTO.getId());
+            Journal journal = null;
+            ResultSet modifyResultSet = modifyJournal.executeQuery();
+            while (modifyResultSet.next()) {
+                if (modifyResultSet.getString("type").equals("deleted")) {
+                    return null;
+                }
+                journal = new Journal((UUID) modifyResultSet.getObject("id"), null, null, modifyResultSet.getString("content"), (UUID) modifyResultSet.getObject("author_id"), modifyResultSet.getString("date_modified"));
             }
 
-            return event;
+            return journal;
 
         } catch (SQLException ex) {
+            System.out.println("Possibel JournalID Error -> Custom SQL statement from code");
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

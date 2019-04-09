@@ -59,10 +59,11 @@ public class JournalService {
         Maps Event to EventDTO
         Returns EventDTO or null
     */
-    public EventDTO modifyJournal(JournalDTO journalDTO) {
-        Event event = jr.modifyJournal(journalDTO);
-        if(event != null) {
-            return mm.map(event, EventDTO.class);
+    public JournalDTO modifyJournal(JournalDTO journalDTO) {
+        Journal journal = jr.modifyJournal(journalDTO);
+        
+        if(journal != null) {
+            return mm.map(journal, JournalDTO.class);
         }
         return null;
     }

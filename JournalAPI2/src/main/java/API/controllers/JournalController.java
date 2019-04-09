@@ -50,9 +50,18 @@ public class JournalController {
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity findJournal(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
-
+        
+        JournalDTO journal = journalService.findJournal(id);
+        
+        if(journal != null) {
         return new ResponseEntity(journalService.findJournal(id), HttpStatus.OK);
+        }
+        
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        
     }
+    
+    
 
     // Create Journal
     @RequestMapping(method = RequestMethod.POST)
@@ -72,10 +81,10 @@ public class JournalController {
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity modifyJournal(@RequestBody JournalDTO journalDTO) {
 
-        EventDTO event = journalService.modifyJournal(journalDTO);
+        JournalDTO journal = journalService.modifyJournal(journalDTO);
 
-        if (event != null) {
-            return new ResponseEntity(event, HttpStatus.OK);
+        if (journal != null) {
+            return new ResponseEntity(journal, HttpStatus.OK);
         }
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
