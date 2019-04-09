@@ -1,6 +1,5 @@
 package API.repositories;
 
-import API.entities.Event;
 import API.entities.Journal;
 import API.entities.JournalDTO;
 import java.sql.Connection;
@@ -24,10 +23,10 @@ import org.springframework.stereotype.Repository;
  */
 // Repository gets and gives data from the database to the controller
 @Repository
-public class JournalRepository {
+public class JournalRepository implements IJournalRepository {
 
     private Connection connection = null;
-
+    
     // @Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password
     public JournalRepository(@Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password) {
 
@@ -47,28 +46,33 @@ public class JournalRepository {
         }
     }
 
+    @Override
     public List<Journal> getJournals() {
+        List<Journal> journalList = new ArrayList();
         try {
+            /*
             PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM (SELECT * FROM journals INNER JOIN journal_events ON journals.id = journal_events.journal_ID) "
                     + "as IJ INNER JOIN (SELECT journal_ID, max(date_modified) as MaxDate FROM journal_events GROUP BY journal_ID) "
                     + "AS Middle on Middle.journal_ID = IJ.journal_ID and IJ.date_modified = Middle.MaxDate;");
+            */
+            PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID);");
             ResultSet journalsResult = getJournals.executeQuery();
-            List<Journal> journalList = new ArrayList();
+            
 
             while (journalsResult.next()) {
+                if(journalsResult.getString("type").equals("deleted")) continue;
                 journalList.add(new Journal((UUID) journalsResult.getObject("journal_id"), journalsResult.getDate("date_start"),
                         (UUID) journalsResult.getObject("citizens_id"), journalsResult.getString("content"),
                         (UUID) journalsResult.getObject("author_id"), journalsResult.getString("date_modified")));
             }
 
-            return journalList;
-
         } catch (SQLException ex) {
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return journalList;
     }
 
+    @Override
     public Journal findJournal(UUID id) {
         try {
 
@@ -93,7 +97,33 @@ public class JournalRepository {
 
         return null;
     }
+        @Override
+        public Journal findJournalByCitizen(UUID id) {
+        try {
 
+            PreparedStatement findJournal = connection.prepareStatement("select * from journals join journal_events on journal_events.id = (select id from journal_events where journal_events.journal_ID = journals.id order by date_modified desc limit 1) where journals.citizens_id = ? order by journals.date_start DESC LIMIT 1;");
+            findJournal.setObject(1, id, Types.OTHER);
+            ResultSet journalResultSet = findJournal.executeQuery();
+            Journal journal = null;
+            while (journalResultSet.next()) {
+                if (journalResultSet.getString("type").equals("deleted")) {
+                    return null;
+                }
+                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getDate("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
+            }
+
+            if (journal != null) {
+                return journal;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception...");
+        }
+
+        return null;
+    }
+
+    @Override
     public Journal deleteJournal(UUID id, UUID authorID) {
         try {
             connection.setAutoCommit(false);
@@ -136,6 +166,7 @@ public class JournalRepository {
 
     }
 
+    @Override
     public Journal createJournal(Journal journal) {
         try {
             connection.setAutoCommit(false); // Transaction
@@ -180,6 +211,7 @@ public class JournalRepository {
         Purpose: createsEvent from journalDTO
         Returns: Event object 
      */
+    @Override
     public Journal modifyJournal(JournalDTO journalDTO) {
 
         try {
@@ -215,7 +247,7 @@ public class JournalRepository {
             return journal;
 
         } catch (SQLException ex) {
-            System.out.println("Possibel JournalID Error -> Custom SQL statement from code");
+            System.out.println("Possible JournalID Error -> Custom SQL statement from code");
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;

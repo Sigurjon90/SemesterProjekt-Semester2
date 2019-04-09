@@ -1,9 +1,8 @@
 package API.services;
 
-import API.entities.Event;
-import API.entities.EventDTO;
 import API.entities.Journal;
 import API.entities.JournalDTO;
+import API.repositories.IJournalRepository;
 import API.repositories.JournalRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,68 +17,78 @@ import org.springframework.stereotype.Service;
 // SERVICE LAYER -> Reciever of data from repository
 // Manipulates the data and sends it to the controller
 @Service
-public class JournalService {
+public class JournalService implements IJournalService {
 
     @Autowired
-    private JournalRepository jr;
+    private IJournalRepository journalRepository;
 
     @Autowired
     private ModelMapper mm;
-    
+
+    @Override
     public List<JournalDTO> getJournals() {
-        List<Journal> journalList = jr.getJournals();
+        List<Journal> journalList = journalRepository.getJournals();
         List<JournalDTO> journalDTOList = new ArrayList();
-        for(Journal journal: journalList) {
+        for (Journal journal : journalList) {
             journalDTOList.add(mm.map(journal, JournalDTO.class));
         }
         return journalDTOList;
     }
-    
+
     // Delete Journal
+    @Override
     public JournalDTO deleteJournal(UUID id, UUID authorID) {
-        Journal journal = jr.deleteJournal(id, authorID);
-        
-        if(journal != null) {
+        Journal journal = journalRepository.deleteJournal(id, authorID);
+
+        if (journal != null) {
             return mm.map(journal, JournalDTO.class);
         }
-        
+
         return null;
     }
 
     // Find Journal
+    @Override
     public JournalDTO findJournal(UUID id) {
-        Journal journal = jr.findJournal(id);
+        Journal journal = journalRepository.findJournal(id);
         if (journal != null) {
             return mm.map(journal, JournalDTO.class);
         }
         return null;
     }
-    
-    /*
-        Maps Event to EventDTO
-        Returns EventDTO or null
-    */
-    public JournalDTO modifyJournal(JournalDTO journalDTO) {
-        Journal journal = jr.modifyJournal(journalDTO);
-        
-        if(journal != null) {
+
+    public JournalDTO findJournaByCitizen(UUID id) {
+        Journal journal = journalRepository.findJournalByCitizen(id);
+        if (journal != null) {
             return mm.map(journal, JournalDTO.class);
         }
         return null;
     }
-    
-    // CREATE JOURNAL
-    
-    public JournalDTO createJournal(JournalDTO journalDTO) {
-        Journal journal = mm.map(journalDTO, Journal.class);
-        Journal journalCreated = jr.createJournal(journal);
-        if(journalCreated != null) {
-            return mm.map(journalCreated, JournalDTO.class);
+
+    /*
+        Maps Event to EventDTO
+        Returns EventDTO or null
+     */
+    @Override
+    public JournalDTO modifyJournal(JournalDTO journalDTO) {
+        Journal journal = journalRepository.modifyJournal(journalDTO);
+
+        if (journal != null) {
+            return mm.map(journal, JournalDTO.class);
         }
-        
         return null;
     }
-    
-    
+
+    // CREATE JOURNAL
+    @Override
+    public JournalDTO createJournal(JournalDTO journalDTO) {
+        Journal journal = mm.map(journalDTO, Journal.class);
+        Journal journalCreated = journalRepository.createJournal(journal);
+        if (journalCreated != null) {
+            return mm.map(journalCreated, JournalDTO.class);
+        }
+
+        return null;
+    }
 
 }

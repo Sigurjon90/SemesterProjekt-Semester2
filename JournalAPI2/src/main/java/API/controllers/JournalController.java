@@ -5,7 +5,6 @@ package API.controllers;
  * @author thinkbuntu
  */
 // Handles requests from URL
-import API.entities.EventDTO;
 import API.entities.Journal;
 import API.entities.JournalDTO;
 import API.repositories.JournalRepository;
@@ -39,11 +38,8 @@ public class JournalController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getJournals() {
         List<JournalDTO> journals = journalService.getJournals();
-
-        if (journals != null) {
+        
             return new ResponseEntity(journals, HttpStatus.OK);
-        }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     // Find JournalDTO on ID
@@ -54,27 +50,39 @@ public class JournalController {
         JournalDTO journal = journalService.findJournal(id);
         
         if(journal != null) {
-        return new ResponseEntity(journalService.findJournal(id), HttpStatus.OK);
+        return new ResponseEntity(journal, HttpStatus.OK);
         }
         
         return new ResponseEntity(HttpStatus.NOT_FOUND);
         
     }
     
-    
+    // Find Journal på Citizen ID
+    @RequestMapping(path = "/citizen/{id}", method = RequestMethod.GET)
+    public ResponseEntity findJournalByCitizen(@PathVariable("id") String stringID) {
+        UUID id = UUID.fromString(stringID);
+        
+        JournalDTO journal = journalService.findJournaByCitizen(id);
+        
+        if(journal != null) {
+        return new ResponseEntity(journal, HttpStatus.OK);
+        }
+        
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        
+    }
 
     // Create Journal
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createJournal(@RequestBody JournalDTO journalDTO) {
 
-        // Hvorfor det her step?
         JournalDTO journal = journalService.createJournal(journalDTO);
 
         if (journal != null) {
             return new ResponseEntity(journal, HttpStatus.CREATED);
         }
 
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+           return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     // Modify Journal
@@ -87,7 +95,7 @@ public class JournalController {
             return new ResponseEntity(journal, HttpStatus.OK);
         }
 
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     // Delete Journal on ID
@@ -101,6 +109,6 @@ public class JournalController {
             return new ResponseEntity(journal, HttpStatus.OK);
         }
         
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }
