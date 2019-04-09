@@ -5,7 +5,6 @@
  */
 package API.entities;
 
-import java.sql.Date;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,8 +25,8 @@ public class Citizens {
     
     private UUID id;
     private String name;
-    private long CPR_Number;
-    private UUID AddressId;
+    private int CPR_Number;
+    private UUID Address;
     private long Tlf_Number;
     
 }

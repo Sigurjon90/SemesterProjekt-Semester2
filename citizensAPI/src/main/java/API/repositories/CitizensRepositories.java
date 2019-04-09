@@ -120,6 +120,7 @@ public class CitizensRepositories {
         String name, streetName, streetNumber, town;
         int zipCode;
         Long CPR;
+        
         System.out.println("Enter name of Citizen > ");
         name = scanner.next();
         System.out.println("CPR number >");
@@ -130,7 +131,7 @@ public class CitizensRepositories {
         
         try {
             connection.setAutoCommit(false); // Transaction
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO Citizens(id, name, CPR_Number, address, til_number, )"
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO Citizens(id, name, CPR_Number, address, til_number )"
                     + "VALURE(?,?,?,?,?)");
             createCitizen.setObject(0, UUID.randomUUID(), Types.OTHER);
             createCitizen.setObject(1, Types.OTHER);
@@ -152,5 +153,7 @@ public class CitizensRepositories {
         }
         return null;
     }
+    
+    
 
 }
