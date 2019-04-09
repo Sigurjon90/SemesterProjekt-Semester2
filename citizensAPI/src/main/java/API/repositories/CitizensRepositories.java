@@ -34,12 +34,15 @@ public class CitizensRepositories {
 
     private Connection connection = null;
 
-    public CitizensRepositories(@Value("${database.connection}") String connector,
-            @Value("${database.username}") String username, @Value("${database.password}") String password) {
+    public CitizensRepositories() {
+        String url = "jdbc:postgresql://manny.db.elephantsql.com:5432/zwyyekwy";
+        String user = "zwyyekwy";
+        String password = "m9u0sQT5_oIbIkD-Y8PRsLnDO2dG8v5O";
 
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(connector, username, password);
+            connection = DriverManager.getConnection(url,
+                    user, password);
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Connection Failed! Check output console");
             e.printStackTrace();
@@ -61,8 +64,8 @@ public class CitizensRepositories {
             List<Citizens> citizensList = new ArrayList<>();
 
             while (citizensResult.next()) {
-                citizens = new Citizens((UUID)citizensResult.getObject("id"),(String) citizensResult.getObject("name"), (Integer) citizensResult.getObject("CPR_Number"),
-                        (UUID) citizensResult.getObject("Address_ID"),(Long) citizensResult.getObject("Tlf_Number"));
+                citizens = new Citizens((UUID) citizensResult.getObject("id"), (String) citizensResult.getObject("name"), (Integer) citizensResult.getObject("CPR_Number"),
+                        (UUID) citizensResult.getObject("Address_ID"), (Long) citizensResult.getObject("Tlf_Number"));
                 citizensList.add(citizens);
             }
 
@@ -94,7 +97,7 @@ public class CitizensRepositories {
         return null;
     }
 
-    public void deleteCitizen(UUID id) {
+    public Citizens deleteCitizen(UUID id, UUID authorId) {
         try {
 
             // PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journals WHERE id = '" + id + "'");
@@ -107,20 +110,21 @@ public class CitizensRepositories {
             } */
 
             deletCitizen.executeQuery();
-            //return journal;
+            return null;
 
         } catch (SQLException e) {
             System.out.println("ID was not found in database");
         }
+        
+        return null;
     }
-    
-    
-    public Citizens createCitizen(Citizens citizen) {
+
+    public Citizens createCitizen(Citizens c) {
         Scanner scanner = new Scanner(System.in);
         String name, streetName, streetNumber, town;
         int zipCode;
         Long CPR;
-        
+
         System.out.println("Enter name of Citizen > ");
         name = scanner.next();
         System.out.println("CPR number >");
@@ -128,7 +132,7 @@ public class CitizensRepositories {
         System.out.println("Street name >");
         streetName = scanner.next();
         System.out.println("Street number");
-        
+
         try {
             connection.setAutoCommit(false); // Transaction
             PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO Citizens(id, name, CPR_Number, address, til_number )"
@@ -153,7 +157,5 @@ public class CitizensRepositories {
         }
         return null;
     }
-    
-    
 
 }

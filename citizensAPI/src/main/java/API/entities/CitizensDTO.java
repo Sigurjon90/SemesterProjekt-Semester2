@@ -23,9 +23,10 @@ import lombok.Setter;
 public class CitizensDTO {
 
     private UUID id;
+    private UUID addressId;
+    private UUID authorId;
     private String name;
     private long CPR_Number;
-    private UUID AddressId;
     private long Tlf_Number;
 
     @Override
