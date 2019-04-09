@@ -61,7 +61,7 @@ public class JournalRepository implements IJournalRepository {
 
             while (journalsResult.next()) {
                 if(journalsResult.getString("type").equals("deleted")) continue;
-                journalList.add(new Journal((UUID) journalsResult.getObject("journal_id"), journalsResult.getDate("date_start"),
+                journalList.add(new Journal((UUID) journalsResult.getObject("journal_id"), journalsResult.getString("date_start"),
                         (UUID) journalsResult.getObject("citizens_id"), journalsResult.getString("content"),
                         (UUID) journalsResult.getObject("author_id"), journalsResult.getString("date_modified")));
             }
@@ -84,7 +84,7 @@ public class JournalRepository implements IJournalRepository {
                 if (journalResultSet.getString("type").equals("deleted")) {
                     return null;
                 }
-                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getDate("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
+                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
             }
 
             if (journal != null) {
@@ -109,7 +109,7 @@ public class JournalRepository implements IJournalRepository {
                 if (journalResultSet.getString("type").equals("deleted")) {
                     return null;
                 }
-                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getDate("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
+                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
             }
 
             if (journal != null) {
@@ -176,7 +176,7 @@ public class JournalRepository implements IJournalRepository {
             ResultSet journalResultSet = createJournal.executeQuery();
             Journal createdJournal = null;
             while (journalResultSet.next()) {
-                createdJournal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getDate("date_start"), (UUID) journalResultSet.getObject("citizens_id"), null, null, null);
+                createdJournal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), null, null, null);
             }
 
             PreparedStatement createEvent = connection.prepareStatement("INSERT INTO journal_events(type, content, author_id, journal_id, id) VALUES (?, ?, ?, ?, ?) RETURNING content, author_id");

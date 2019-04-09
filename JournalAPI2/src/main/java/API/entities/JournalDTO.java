@@ -27,7 +27,7 @@ public class JournalDTO {
     private UUID citizensID;
     private UUID authorID;
     private String content;
-    private Date dateStart;
+    private String dateStart;
     private String dateModified; // dateStamp
     
     @Override

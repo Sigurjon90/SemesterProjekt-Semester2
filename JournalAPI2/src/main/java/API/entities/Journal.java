@@ -28,7 +28,7 @@ import lombok.Setter;
 public class Journal {
     
     private UUID id;
-    private Date startDate;
+    private String startDate;
     private UUID citizensID;
     private String content;
     private UUID authorID;
