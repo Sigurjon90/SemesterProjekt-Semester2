@@ -37,9 +37,7 @@ public class GalleryController {
 
     @RequestMapping("/{id}")
     public Gallery getGallery(@RequestHeader HttpHeaders headers, @PathVariable final int id) {
-        String header = headers.get("authorization").get(0);
-        String userId = jwtUtils.getUserId(header);
-        System.out.println(userId);
+        String userId = jwtUtils.getUserId(headers.get("authorization").get(0));
         Gallery gallery = new Gallery();
         gallery.setId(id);
 
