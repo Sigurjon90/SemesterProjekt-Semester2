@@ -36,16 +36,11 @@ public class CitizensRepository {
     
         
     public CitizensRepository(@Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password) {
-        String url = "jdbc:postgresql://manny.db.elephantsql.com:5432/zwyyekwy";
-        String user = "zwyyekwy";
-        String password = "m9u0sQT5_oIbIkD-Y8PRsLnDO2dG8v5O";
         
-        
-
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(url,
-                    user, password);
+            connection = DriverManager.getConnection(connector,
+                    username, password);
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("Connection Failed! Check output console");
             e.printStackTrace();
