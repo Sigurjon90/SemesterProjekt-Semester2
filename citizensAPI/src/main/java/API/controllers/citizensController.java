@@ -6,7 +6,7 @@
 package API.controllers;
 
 import API.entities.CitizensDTO;
-import API.repositories.CitizensRepositories;
+import API.repositories.CitizensRepository;
 import API.services.CitizensService;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class citizensController {
 
     @Autowired
-    CitizensRepositories citizensRepositories;
+    CitizensRepository citizensRepositories;
 
     @Autowired
     CitizensService citizensService;

@@ -7,7 +7,7 @@ package API.services;
 
 import API.entities.Citizens;
 import API.entities.CitizensDTO;
-import API.repositories.CitizensRepositories;
+import API.repositories.CitizensRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 public class CitizensService {
 
     @Autowired
-    private CitizensRepositories cp;
+    private CitizensRepository cp;
 
     @Autowired
     private ModelMapper mm;

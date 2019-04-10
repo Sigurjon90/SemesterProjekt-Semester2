@@ -30,14 +30,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CitizensRepositories {
+public class CitizensRepository {
 
     private Connection connection = null;
-
-    public CitizensRepositories() {
+    
+        
+    public CitizensRepository(@Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password) {
         String url = "jdbc:postgresql://manny.db.elephantsql.com:5432/zwyyekwy";
         String user = "zwyyekwy";
         String password = "m9u0sQT5_oIbIkD-Y8PRsLnDO2dG8v5O";
+        
+        
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -148,11 +151,11 @@ public class CitizensRepositories {
             return (Citizens) createCitizen;
 
         } catch (SQLException ex) {
-            Logger.getLogger(CitizensRepositories.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
             try {
                 connection.rollback();
             } catch (SQLException ex1) {
-                Logger.getLogger(CitizensRepositories.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
         return null;
