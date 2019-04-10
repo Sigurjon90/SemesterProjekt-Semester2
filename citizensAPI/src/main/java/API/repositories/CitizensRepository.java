@@ -9,7 +9,9 @@ package API.repositories;
  *
  * @author sigur
  */
-import API.entities.Citizens;
+import API.entities.Citizen;
+import API.entities.CitizenDTO;
+import API.entities.CreateDTO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -33,10 +35,9 @@ import org.springframework.stereotype.Repository;
 public class CitizensRepository {
 
     private Connection connection = null;
-    
-        
+
     public CitizensRepository(@Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password) {
-        
+
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(connector,
@@ -54,15 +55,15 @@ public class CitizensRepository {
         }
     }
 
-    public List<Citizens> getCitizens() {
+    public List<Citizen> getCitizens() {
         try {
             PreparedStatement getCitizens = connection.prepareStatement("SELECT * FROM Citizens");
             ResultSet citizensResult = getCitizens.executeQuery();
-            Citizens citizens = null;
-            List<Citizens> citizensList = new ArrayList<>();
+            Citizen citizens = null;
+            List<Citizen> citizensList = new ArrayList<>();
 
             while (citizensResult.next()) {
-                citizens = new Citizens((UUID) citizensResult.getObject("id"), (String) citizensResult.getObject("name"), (Integer) citizensResult.getObject("CPR_Number"),
+                citizens = new Citizen((UUID) citizensResult.getObject("id"), (String) citizensResult.getObject("name"), (Integer) citizensResult.getObject("CPR_Number"),
                         (UUID) citizensResult.getObject("Address_ID"), (Long) citizensResult.getObject("Tlf_Number"));
                 citizensList.add(citizens);
             }
@@ -76,13 +77,13 @@ public class CitizensRepository {
         return null;
     }
 
-    public Citizens findCitizen(UUID id) {
+    public Citizen findCitizen(UUID id) {
         try {
             PreparedStatement findCitizen = connection.prepareStatement("SELECT * FROM Citizens WHERE id = '" + id + "'");
             ResultSet citizenResultSet = findCitizen.executeQuery();
-            Citizens citizen = null;
+            Citizen citizen = null;
             while (citizenResultSet.next()) {
-                citizen = new Citizens((UUID) citizenResultSet.getObject("id"), null, 0, null, 0);
+                citizen = new Citizen((UUID) citizenResultSet.getObject("id"), null, 0, null, 0);
             }
 
             return citizen;
@@ -95,7 +96,7 @@ public class CitizensRepository {
         return null;
     }
 
-    public Citizens deleteCitizen(UUID id, UUID authorId) {
+    public Citizen deleteCitizen(UUID id, UUID authorId) {
         try {
 
             // PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journals WHERE id = '" + id + "'");
@@ -113,47 +114,40 @@ public class CitizensRepository {
         } catch (SQLException e) {
             System.out.println("ID was not found in database");
         }
+
+        return null;
+    }
+
+    public Citizen createCitizen(CreateDTO createDTO) {
         
-        return null;
-    }
-
-    public Citizens createCitizen(Citizens c) {
-        Scanner scanner = new Scanner(System.in);
-        String name, streetName, streetNumber, town;
-        int zipCode;
-        Long CPR;
-
-        System.out.println("Enter name of Citizen > ");
-        name = scanner.next();
-        System.out.println("CPR number >");
-        CPR = scanner.nextLong();
-        System.out.println("Street name >");
-        streetName = scanner.next();
-        System.out.println("Street number");
-
         try {
-            connection.setAutoCommit(false); // Transaction
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO Citizens(id, name, CPR_Number, address, til_number )"
-                    + "VALURE(?,?,?,?,?)");
-            createCitizen.setObject(0, UUID.randomUUID(), Types.OTHER);
-            createCitizen.setObject(1, Types.OTHER);
-            ResultSet citizenResultSet = createCitizen.executeQuery();
-            Citizens createdCitizen = null;
-            while (citizenResultSet.next()) {
-                createdCitizen = new Citizens();
-            }
-
-            return (Citizens) createCitizen;
-
-        } catch (SQLException ex) {
-            Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
-            try {
-                connection.rollback();
-            } catch (SQLException ex1) {
-                Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+        PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(?, ?, ?, ?, ?, ?) RETURNING id, name, adress, city, zip, cpr, phoneNumber;");
+        createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
+        createCitizen.setString(2, createDTO.getName());
+        createCitizen.setString(3, createDTO.getAdress());
+        createCitizen.setString(4, createDTO.getCity());
+        createCitizen.setInt(5, createDTO.getZip());
+        createCitizen.setInt(6, createDTO.getCpr());
+        createCitizen.setInt(7, createDTO.getPhoneNumber());
+        
+        ResultSet createCitizenResult = createCitizen.executeQuery();
+        Citizen citizen = null;
+        
+        while(createCitizenResult.next()) {
+            citizen = new Citizen(UUID.randomUUID(), createCitizenResult.getString("name"), createCitizenResult.getString("adress"), 
+                    createCitizenResult.getString("city"), createCitizenResult.getInt("zip"), createCitizenResult.getInt("cpr"), 
+                    createCitizenResult.getInt("phone"), null);
         }
-        return null;
+        
+        
+      
+        
+        
+        } catch (SQLException e) {
+            System.out.println("SQLError in ### createCitizen ###");
+        }
+        
+        return
     }
 
-}
+    }

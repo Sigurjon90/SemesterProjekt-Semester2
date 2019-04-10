@@ -5,7 +5,8 @@
  */
 package API.controllers;
 
-import API.entities.CitizensDTO;
+import API.entities.CitizenDTO;
+import API.entities.CreateDTO;
 import API.repositories.CitizensRepository;
 import API.services.CitizensService;
 import java.util.List;
@@ -31,15 +32,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class citizensController {
 
     @Autowired
-    CitizensRepository citizensRepositories;
+    CitizensRepository citizensRepository;
 
     @Autowired
     CitizensService citizensService;
 
+    
+    @RequestMapping(method = RequestMethod.POST) 
+    public ResponseEntity createCitizen(@RequestBody CreateDTO createDTO) {
+        
+        citizensService.createCitizen(createDTO);
+        
+        
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getCitizens() {
 
-        List<CitizensDTO> citizens = citizensService.getCitizens();
+        List<CitizenDTO> citizens = citizensService.getCitizens();
 
         if (citizens != null) {
             return new ResponseEntity(citizens, HttpStatus.OK);
@@ -52,7 +63,7 @@ public class citizensController {
     public ResponseEntity findJournal(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
 
-        CitizensDTO citizens = citizensService.findCitizen(id);
+        CitizenDTO citizens = citizensService.findCitizen(id);
 
         if (citizens != null) {
             return new ResponseEntity(citizensService.findCitizen(id), HttpStatus.OK);
@@ -63,10 +74,10 @@ public class citizensController {
 
     // Create Journal
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createJournal(@RequestBody CitizensDTO citizensDTO) {
+    public ResponseEntity createJournal(@RequestBody CitizenDTO citizensDTO) {
 
         // Hvorfor det her step?
-        CitizensDTO cDTO = citizensService.createCitizen(citizensDTO);
+        CitizenDTO cDTO = citizensService.createCitizen(citizensDTO);
 
         if (cDTO != null) {
             return new ResponseEntity(cDTO, HttpStatus.CREATED);
@@ -77,9 +88,9 @@ public class citizensController {
 
 //    // Modify Journal
 //    @RequestMapping(method = RequestMethod.PUT)
-//    public ResponseEntity modifyJournal(@RequestBody CitizensDTO journalDTO) {
+//    public ResponseEntity modifyJournal(@RequestBody CitizenDTO journalDTO) {
 //
-//        CitizensDTO journal = citizensService.
+//        CitizenDTO journal = citizensService.
 //
 //        if (journal != null) {
 //            return new ResponseEntity(journal, HttpStatus.OK);
@@ -92,7 +103,7 @@ public class citizensController {
     public ResponseEntity deleteJournal(@PathVariable("id") String stringID) {
 
         UUID id = UUID.fromString(stringID);
-        CitizensDTO cDTO = citizensService.archiveCitizens(id, UUID.randomUUID());
+        CitizenDTO cDTO = citizensService.archiveCitizens(id, UUID.randomUUID());
 
         if (cDTO != null) {
             return new ResponseEntity(cDTO, HttpStatus.OK);

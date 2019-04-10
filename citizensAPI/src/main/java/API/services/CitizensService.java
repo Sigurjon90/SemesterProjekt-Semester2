@@ -5,8 +5,9 @@
  */
 package API.services;
 
-import API.entities.Citizens;
-import API.entities.CitizensDTO;
+import API.entities.Citizen;
+import API.entities.CitizenDTO;
+import API.entities.CreateDTO;
 import API.repositories.CitizensRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,52 +24,64 @@ import org.springframework.stereotype.Service;
 public class CitizensService {
 
     @Autowired
-    private CitizensRepository cp;
+    private CitizensRepository citizensRepository;
 
     @Autowired
-    private ModelMapper mm;
+    private ModelMapper modelMapper;
 
-    public List<CitizensDTO> getCitizens() {
+    
+    public CitizenDTO createCitizen(CreateDTO createDTO) {
+        
+        Citizen citizen = citizensRepository.createCitizen(createDTO);
+        
+        return citizenDTO;
+    }
+    
+    
+    
+    
+    
+    public List<CitizenDTO> getCitizens() {
 
-        List<Citizens> citizensList = cp.getCitizens();
-        List<CitizensDTO> citizensDTOList = new ArrayList();
+        List<Citizen> citizensList = citizensRepository.getCitizens();
+        List<CitizenDTO> citizensDTOList = new ArrayList();
 
         citizensList.forEach((c) -> {
-            citizensDTOList.add(mm.map(c, CitizensDTO.class));
+            citizensDTOList.add(modelMapper.map(c, CitizenDTO.class));
         });
 
         return citizensDTOList;
     }
     
-    public CitizensDTO archiveCitizens(UUID id, UUID authorId){
+    public CitizenDTO archiveCitizens(UUID id, UUID authorId){
         
-        Citizens c = cp.deleteCitizen(id, authorId);
+        Citizen c = citizensRepository.deleteCitizen(id, authorId);
         
         if(c != null){
-            return mm.map(c, CitizensDTO.class);
+            return modelMapper.map(c, CitizenDTO.class);
         }
         
         return null;
     }
     
-    public CitizensDTO findCitizen(UUID id){
+    public CitizenDTO findCitizen(UUID id){
         
-        Citizens c = cp.findCitizen(id);
+        Citizen c = citizensRepository.findCitizen(id);
         
         if(c != null){
-            return mm.map(c, CitizensDTO.class);
+            return modelMapper.map(c, CitizenDTO.class);
         }
         
         return null;
     }
     
-    public CitizensDTO createCitizen(CitizensDTO cDTO){
+    public CitizenDTO createCitizen(CitizenDTO cDTO){
         
-        Citizens c = mm.map(cDTO, Citizens.class);
-        Citizens cCreated = cp.createCitizen(c);
+        Citizen c = modelMapper.map(cDTO, Citizen.class);
+        Citizen cCreated = citizensRepository.createCitizen(c);
         
         if(cCreated != null){
-            return mm.map(cCreated, CitizensDTO.class);
+            return modelMapper.map(cCreated, CitizenDTO.class);
         }
         
         return null;

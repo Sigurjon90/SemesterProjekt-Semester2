@@ -5,6 +5,7 @@
  */
 package API.entities;
 
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,23 +16,21 @@ import lombok.Setter;
  *
  * @author sigur
  */
+
+// Lombok
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor // Mapping Classes always need a NoArgsConstructor to work
-
-public class CitizensDTO {
-
+public class Citizen {
+    
     private UUID id;
-    private UUID addressId;
-    private UUID authorId;
     private String name;
-    private long CPR_Number;
-    private long Tlf_Number;
-
-    @Override
-    public String toString() {
-        return id.toString();
-    }
-
+    private String adress;
+    private String city;
+    private int zip;
+    private int cpr;
+    private int phoneNumber;
+    private List<String> diagnoses;
+    
 }
