@@ -1,7 +1,9 @@
 package commonService.security;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+//@Component
 public class JwtConfig {
 
     @Value("${security.jwt.uri:/auth/**}")
@@ -16,7 +18,7 @@ public class JwtConfig {
     @Value("${security.jwt.expiration:#{24*60*60}}")
     private int expiration;
 
-    @Value("${security.jwt.secret}")
+    @Value("${security.jwt.secret:minvildhesterbedsttilatridemodvestminponyerhoneyoghurtigt}")
     private String secret;
 
     public String getUri() {

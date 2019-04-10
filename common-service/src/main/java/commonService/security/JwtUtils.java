@@ -2,16 +2,14 @@ package commonService.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class JwtUtils {
-    
-    private static JwtConfig jwtConfig;
 
-    public JwtUtils() {
-        jwtConfig = new JwtConfig();
-    }
+    @Autowired
+    private JwtConfig jwtConfig;
 
-    public static String getUserId(String jwt) {
+    public String getUserId(String jwt) {
         String token = jwt.replace(jwtConfig.getPrefix(), "");
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtConfig.getSecret().getBytes())

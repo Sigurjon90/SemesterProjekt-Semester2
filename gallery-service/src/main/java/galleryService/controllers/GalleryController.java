@@ -27,6 +27,9 @@ public class GalleryController {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @RequestMapping("/")
     public String home() {
         return "Galery Service running at port: " + env.getProperty("local.server.port");
@@ -34,7 +37,8 @@ public class GalleryController {
 
     @RequestMapping("/{id}")
     public Gallery getGallery(@RequestHeader HttpHeaders headers, @PathVariable final int id) {
-        String userId = JwtUtils.getUserId(headers.get("Authorization").get(0));
+        String header = headers.get("authorization").get(0);
+        String userId = jwtUtils.getUserId(header);
         System.out.println(userId);
         Gallery gallery = new Gallery();
         gallery.setId(id);
