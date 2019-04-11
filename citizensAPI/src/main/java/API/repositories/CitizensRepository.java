@@ -12,6 +12,7 @@ package API.repositories;
 import API.entities.Citizen;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
+import java.sql.Array;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -55,20 +56,70 @@ public class CitizensRepository {
             System.out.println("No connection...");
         }
     }
+    
+    
 
     public List<Citizen> getCitizens() {
         try {
-            PreparedStatement getCitizens = connection.prepareStatement("SELECT * FROM Citizens");
+            PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens;");
             ResultSet citizensResult = getCitizens.executeQuery();
-            Citizen citizens = null;
+            Citizen citizen = null;
             List<Citizen> citizensList = new ArrayList<>();
 
             while (citizensResult.next()) {
-    
-                       
-                citizensList.add(citizens);
+                
+                Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
+                String[] stringArrayOfDiagnoses = (String[])sqlArrayOfDiagnoses.getArray();
+                List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
+                
+                // List<String> listString = Arrays.asList(arr);
+                // Arrays.asList(citizensResult.getArray("diagnoses"))
+                
+                citizen = new Citizen((UUID)citizensResult.getObject("id"), citizensResult.getString("name"), citizensResult.getString("adress"),
+                citizensResult.getString("city"), citizensResult.getInt("zip"), citizensResult.getString("cpr"), citizensResult.getInt("phone"), listOfDiagnoses, citizensResult.getBoolean("archived"));
+                citizensList.add(citizen);
             }
-
+            
+            /*
+            
+            // UGLYASS CODE
+            
+            PreparedStatement getDiagnoses = connection.prepareStatement("SELECT * FROM diagnose;");
+            ResultSet diagnoses = getDiagnoses.executeQuery();
+            
+            List<UUID> checkedId = null;
+            List<String> tempDiagnoses = null;
+            
+            while(diagnoses.next()) {
+                
+                UUID uuid = (UUID)diagnoses.getObject("citizens_id");
+                if(!checkedId.contains(uuid)) {
+                
+                PreparedStatement diagnoseById = connection.prepareStatement("SELECT * FROM diagnose WHERE citizens_id = ?");
+                diagnoseById.setObject(1, uuid);
+                
+                ResultSet tempResultSet = diagnoseById.executeQuery();
+                
+                while(tempResultSet.next()) {
+                    tempDiagnoses.add(tempResultSet.getString("diagnose"));
+                }
+                
+                for(Citizen citizens : citizensList) {
+                    if(citizens.getId() == uuid) {
+                        citizens.setDiagnoses(tempDiagnoses);
+                    }
+                    
+                }
+                
+                }
+                
+                continue;
+                
+                // remember to reset diagnose
+            }
+            */
+            
+           
             return citizensList;
 
         } catch (SQLException ex) {

@@ -28,7 +28,6 @@ public class CitizenDTO {
     private String adress;
     private String city;
     private int zip;
-    private String cpr;
     private int phoneNumber;
     private List<String> diagnoses;
     private String archived;

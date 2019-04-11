@@ -5,6 +5,7 @@
  */
 package API.controllers;
 
+import API.entities.Citizen;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
 import API.repositories.CitizensRepository;
@@ -52,7 +53,7 @@ public class CitizensController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getCitizens() {
 
-        List<CitizenDTO> citizens = citizensService.getCitizens();
+        List<Citizen> citizens = citizensRepository.getCitizens();
 
         if (citizens != null) {
             return new ResponseEntity(citizens, HttpStatus.OK);
