@@ -15,9 +15,15 @@ import java.util.UUID;
  * @author Jonas
  */
 public interface IDiaryRepository {
-        void saveDiary(Diary diary);
+        Optional<Diary> createDiary(Diary diary);
         
         Optional<Diary> findById(UUID Id);
+
+        Optional<Diary> findByCitizenID(UUID id);
         
         List<Diary> getDiaries();
+
+        Optional<Diary> updateDiary(Diary diary);
+
+        boolean deleteDiary(Diary diary);
 }

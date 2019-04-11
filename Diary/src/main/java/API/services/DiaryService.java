@@ -24,12 +24,34 @@ public class DiaryService implements IDiaryService {
     private IDiaryRepository diaryRepository;
 
     @Override
-    public void saveDiary(DiaryDTO diary) {
-
+    public Optional<DiaryDTO> createDiary(DiaryDTO diaryDTO) {
+    Diary diary = modelMapper.map(diaryDTO, Diary.class);
+    Optional<Diary> diaryCreated = diaryRepository.createDiary(diary);
+    if(diaryCreated.isPresent()){
+        DiaryDTO diaryDto = modelMapper.map(diaryCreated.get(), diaryDTO.getClass());
+        return Optional.of(diaryDto);
+    }
+    return Optional.empty();
     }
 
     @Override
-    public Optional<DiaryDTO> findById(UUID Id) {
+    public Optional<DiaryDTO> findById(UUID Id){
+        Optional diary = diaryRepository.findById(Id);
+        if(diary.isPresent()){
+            DiaryDTO diaryDTO = modelMapper.map(diary.get(), DiaryDTO.class);
+            return Optional.of(diaryDTO);
+        }
+        return Optional.empty();
+        // public Optional<DiaryDTO> findById(UUID Id) { return Optional.empty();}
+    }
+
+    @Override
+    public Optional<DiaryDTO> findByCitizenId(UUID id){
+        Optional diary = diaryRepository.findByCitizenID(id);
+        if(diary.isPresent()){
+            DiaryDTO diaryDTO = modelMapper.map(diary.get(), DiaryDTO.class);
+            return Optional.ofNullable(diaryDTO);
+        }
         return Optional.empty();
     }
 
@@ -39,6 +61,23 @@ public class DiaryService implements IDiaryService {
    /*     Type diaryDTOS = new TypeToken<List<DiaryDTO>>(){}.getType();
         return modelMapper.map(diaries, diaryDTOS); */
         return diaries.stream().map(source -> modelMapper.map(source, DiaryDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<DiaryDTO> updateDiary(DiaryDTO diaryDTO) {
+        Diary diary = modelMapper.map(diaryDTO, Diary.class);
+        Optional<Diary> diaryUpdated = diaryRepository.updateDiary(diary);
+        if(diaryUpdated.isPresent()){
+            DiaryDTO diaryDto = modelMapper.map(diaryUpdated.get(), diaryDTO.getClass());
+            return Optional.of(diaryDto);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean deleteDiary(DiaryDTO diaryDTO) {
+        Diary diary = modelMapper.map(diaryDTO, Diary.class);
+        return diaryRepository.deleteDiary(diary);
     }
 
 }

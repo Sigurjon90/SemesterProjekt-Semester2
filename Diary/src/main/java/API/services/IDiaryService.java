@@ -8,9 +8,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IDiaryService {
-    void saveDiary(DiaryDTO diary);
+    Optional<DiaryDTO> createDiary(DiaryDTO diaryDTO);
 
     Optional<DiaryDTO> findById(UUID Id);
 
+    Optional<DiaryDTO> findByCitizenId(UUID id);
+
     List<DiaryDTO> getDiaries();
+
+    Optional<DiaryDTO> updateDiary(DiaryDTO diaryDTO);
+
+    boolean deleteDiary(DiaryDTO diaryDTO);
 }

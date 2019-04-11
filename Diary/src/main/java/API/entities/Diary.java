@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-
+@AllArgsConstructor
 public class Diary {
 
     private UUID Id;
@@ -28,14 +28,9 @@ public class Diary {
     private UUID citizenID;
     private Date dateCreated;
     private Date dateModified;
+    private String title;
 
-    public Diary(UUID id, String content, UUID authorID, UUID citizenID, Date dateCreated, Date dateModified) {
-        Id = id;
-        this.content = content;
-        this.authorID = authorID;
-        this.citizenID = citizenID;
-        this.dateCreated = dateCreated;
-        this.dateModified = dateModified;
-    }
+
+
 }
 
