@@ -34,7 +34,7 @@ public class CreateDTO {
     private String adress;
     private String city;
     private int zip;
-    private int cpr;
+    private String cpr;
     private int phoneNumber;
     private List<String> diagnoses;
 }

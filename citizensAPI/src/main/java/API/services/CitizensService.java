@@ -30,11 +30,15 @@ public class CitizensService {
     private ModelMapper modelMapper;
 
     
+    // Create Citizen from CreateDTO
     public CitizenDTO createCitizen(CreateDTO createDTO) {
         
         Citizen citizen = citizensRepository.createCitizen(createDTO);
         
-        return citizenDTO;
+        if(citizen != null) {
+            return modelMapper.map(citizen, CitizenDTO.class);
+        }
+        return null;
     }
     
     
@@ -74,17 +78,4 @@ public class CitizensService {
         
         return null;
     }
-    
-    public CitizenDTO createCitizen(CitizenDTO cDTO){
-        
-        Citizen c = modelMapper.map(cDTO, Citizen.class);
-        Citizen cCreated = citizensRepository.createCitizen(c);
-        
-        if(cCreated != null){
-            return modelMapper.map(cCreated, CitizenDTO.class);
-        }
-        
-        return null;
-    }
-
 }

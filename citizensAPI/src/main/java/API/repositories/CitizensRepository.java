@@ -22,6 +22,7 @@ import java.sql.Statement;
 import java.sql.Types;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
@@ -63,8 +64,8 @@ public class CitizensRepository {
             List<Citizen> citizensList = new ArrayList<>();
 
             while (citizensResult.next()) {
-                citizens = new Citizen((UUID) citizensResult.getObject("id"), (String) citizensResult.getObject("name"), (Integer) citizensResult.getObject("CPR_Number"),
-                        (UUID) citizensResult.getObject("Address_ID"), (Long) citizensResult.getObject("Tlf_Number"));
+    
+                       
                 citizensList.add(citizens);
             }
 
@@ -83,7 +84,7 @@ public class CitizensRepository {
             ResultSet citizenResultSet = findCitizen.executeQuery();
             Citizen citizen = null;
             while (citizenResultSet.next()) {
-                citizen = new Citizen((UUID) citizenResultSet.getObject("id"), null, 0, null, 0);
+                
             }
 
             return citizen;
@@ -119,35 +120,42 @@ public class CitizensRepository {
     }
 
     public Citizen createCitizen(CreateDTO createDTO) {
-        
+
         try {
-        PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(?, ?, ?, ?, ?, ?) RETURNING id, name, adress, city, zip, cpr, phoneNumber;");
-        createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
-        createCitizen.setString(2, createDTO.getName());
-        createCitizen.setString(3, createDTO.getAdress());
-        createCitizen.setString(4, createDTO.getCity());
-        createCitizen.setInt(5, createDTO.getZip());
-        createCitizen.setInt(6, createDTO.getCpr());
-        createCitizen.setInt(7, createDTO.getPhoneNumber());
-        
-        ResultSet createCitizenResult = createCitizen.executeQuery();
-        Citizen citizen = null;
-        
-        while(createCitizenResult.next()) {
-            citizen = new Citizen(UUID.randomUUID(), createCitizenResult.getString("name"), createCitizenResult.getString("adress"), 
-                    createCitizenResult.getString("city"), createCitizenResult.getInt("zip"), createCitizenResult.getInt("cpr"), 
-                    createCitizenResult.getInt("phone"), null);
-        }
-        
-        
-      
-        
-        
+            connection.setAutoCommit(false);
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, name, adress, city, zip, cpr, phone;");
+            createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
+            createCitizen.setString(2, createDTO.getName());
+            createCitizen.setString(3, createDTO.getAdress());
+            createCitizen.setString(4, createDTO.getCity());
+            createCitizen.setInt(5, createDTO.getZip());
+            createCitizen.setString(6, createDTO.getCpr());
+            createCitizen.setInt(7, createDTO.getPhoneNumber());
+
+            ResultSet createCitizenResult = createCitizen.executeQuery();
+            Citizen citizen = null;
+
+            // Most values could also be gotten from createDTO (besides "id")
+            while (createCitizenResult.next()) {
+                citizen = new Citizen((UUID)createCitizenResult.getObject("id"), createCitizenResult.getString("name"), createCitizenResult.getString("adress"),
+                        createCitizenResult.getString("city"), createCitizenResult.getInt("zip"), createCitizenResult.getString("cpr"),
+                        createCitizenResult.getInt("phone"), createDTO.getDiagnoses());
+            }
+            
+            for (String diagnoseString : createDTO.getDiagnoses()) {
+                PreparedStatement setDiagnoses = connection.prepareStatement("INSERT INTO diagnose(citizens_id, diagnose) VALUES (?, ?) RETURNING diagnose;");
+                setDiagnoses.setObject(1, citizen.getId(), Types.OTHER);
+                setDiagnoses.setString(2, diagnoseString);
+                setDiagnoses.execute();
+            }
+
+            connection.commit();
+            return citizen;
+
         } catch (SQLException e) {
-            System.out.println("SQLError in ### createCitizen ###");
+            e.printStackTrace();
         }
-        
-        return
+        return null;
     }
 
-    }
+}

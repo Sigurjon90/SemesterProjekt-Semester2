@@ -37,14 +37,16 @@ public class citizensController {
     @Autowired
     CitizensService citizensService;
 
-    
+    // Create Citizen from CreateDTO
     @RequestMapping(method = RequestMethod.POST) 
     public ResponseEntity createCitizen(@RequestBody CreateDTO createDTO) {
         
-        citizensService.createCitizen(createDTO);
-        
-        
-        return new ResponseEntity(HttpStatus.OK);
+        CitizenDTO citizenDTO = citizensService.createCitizen(createDTO);
+
+        if(citizenDTO != null) {
+             return new ResponseEntity(citizenDTO, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
     
     @RequestMapping(method = RequestMethod.GET)
@@ -71,21 +73,21 @@ public class citizensController {
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
-
+ /*
     // Create Journal
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createJournal(@RequestBody CitizenDTO citizensDTO) {
 
         // Hvorfor det her step?
-        CitizenDTO cDTO = citizensService.createCitizen(citizensDTO);
+       /* CitizenDTO cDTO = citizensService.createCitizen(citizensDTO);
 
         if (cDTO != null) {
             return new ResponseEntity(cDTO, HttpStatus.CREATED);
         }
 
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
-    }
-
+        return new ResponseEntity(HttpStatus.BAD_REQUEST); 
+    } */
+ 
 //    // Modify Journal
 //    @RequestMapping(method = RequestMethod.PUT)
 //    public ResponseEntity modifyJournal(@RequestBody CitizenDTO journalDTO) {
