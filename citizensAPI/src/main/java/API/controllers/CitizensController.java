@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/citizens")
-public class citizensController {
+public class CitizensController {
 
     @Autowired
     CitizensRepository citizensRepository;
