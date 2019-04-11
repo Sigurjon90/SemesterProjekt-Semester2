@@ -32,5 +32,6 @@ public class Citizen {
     private String cpr;
     private int phoneNumber;
     private List<String> diagnoses;
+    private boolean archived;
     
 }

@@ -123,7 +123,7 @@ public class CitizensRepository {
 
         try {
             connection.setAutoCommit(false);
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id, name, adress, city, zip, cpr, phone;");
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone, archived) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id, name, adress, city, zip, cpr, phone, archived;");
             createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
             createCitizen.setString(2, createDTO.getName());
             createCitizen.setString(3, createDTO.getAdress());
@@ -131,6 +131,7 @@ public class CitizensRepository {
             createCitizen.setInt(5, createDTO.getZip());
             createCitizen.setString(6, createDTO.getCpr());
             createCitizen.setInt(7, createDTO.getPhoneNumber());
+            createCitizen.setBoolean(8, false);
 
             ResultSet createCitizenResult = createCitizen.executeQuery();
             Citizen citizen = null;
@@ -139,7 +140,7 @@ public class CitizensRepository {
             while (createCitizenResult.next()) {
                 citizen = new Citizen((UUID)createCitizenResult.getObject("id"), createCitizenResult.getString("name"), createCitizenResult.getString("adress"),
                         createCitizenResult.getString("city"), createCitizenResult.getInt("zip"), createCitizenResult.getString("cpr"),
-                        createCitizenResult.getInt("phone"), createDTO.getDiagnoses());
+                        createCitizenResult.getInt("phone"), createDTO.getDiagnoses(), createCitizenResult.getBoolean("archived"));
             }
             
             for (String diagnoseString : createDTO.getDiagnoses()) {

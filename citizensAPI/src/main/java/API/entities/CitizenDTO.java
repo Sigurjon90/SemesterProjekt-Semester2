@@ -31,6 +31,7 @@ public class CitizenDTO {
     private String cpr;
     private int phoneNumber;
     private List<String> diagnoses;
+    private String archived;
 
     @Override
     public String toString() {
