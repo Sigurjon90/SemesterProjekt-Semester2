@@ -42,18 +42,18 @@ public class CitizensService {
     }
     
     
-    
-    
-    
     public List<CitizenDTO> getCitizens() {
 
         List<Citizen> citizensList = citizensRepository.getCitizens();
         List<CitizenDTO> citizensDTOList = new ArrayList();
-
-        citizensList.forEach((c) -> {
-            citizensDTOList.add(modelMapper.map(c, CitizenDTO.class));
-        });
-
+        
+        for(Citizen citizen : citizensList) {
+            CitizenDTO citizenDTO = modelMapper.map(citizen, CitizenDTO.class);
+                citizensDTOList.add(citizenDTO);
+        }
+        
+ 
+        
         return citizensDTOList;
     }
     

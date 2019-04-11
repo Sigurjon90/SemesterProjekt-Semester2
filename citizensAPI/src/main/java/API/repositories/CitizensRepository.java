@@ -80,46 +80,6 @@ public class CitizensRepository {
                 citizensList.add(citizen);
             }
             
-            /*
-            
-            // UGLYASS CODE
-            
-            PreparedStatement getDiagnoses = connection.prepareStatement("SELECT * FROM diagnose;");
-            ResultSet diagnoses = getDiagnoses.executeQuery();
-            
-            List<UUID> checkedId = null;
-            List<String> tempDiagnoses = null;
-            
-            while(diagnoses.next()) {
-                
-                UUID uuid = (UUID)diagnoses.getObject("citizens_id");
-                if(!checkedId.contains(uuid)) {
-                
-                PreparedStatement diagnoseById = connection.prepareStatement("SELECT * FROM diagnose WHERE citizens_id = ?");
-                diagnoseById.setObject(1, uuid);
-                
-                ResultSet tempResultSet = diagnoseById.executeQuery();
-                
-                while(tempResultSet.next()) {
-                    tempDiagnoses.add(tempResultSet.getString("diagnose"));
-                }
-                
-                for(Citizen citizens : citizensList) {
-                    if(citizens.getId() == uuid) {
-                        citizens.setDiagnoses(tempDiagnoses);
-                    }
-                    
-                }
-                
-                }
-                
-                continue;
-                
-                // remember to reset diagnose
-            }
-            */
-            
-           
             return citizensList;
 
         } catch (SQLException ex) {

@@ -30,7 +30,7 @@ public class CitizenDTO {
     private int zip;
     private int phoneNumber;
     private List<String> diagnoses;
-    private String archived;
+    private boolean archived;
 
     @Override
     public String toString() {

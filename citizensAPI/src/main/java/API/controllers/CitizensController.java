@@ -50,10 +50,11 @@ public class CitizensController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
     
+    // Get all Citizens
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getCitizens() {
 
-        List<Citizen> citizens = citizensRepository.getCitizens();
+        List<CitizenDTO> citizens = citizensService.getCitizens();
 
         if (citizens != null) {
             return new ResponseEntity(citizens, HttpStatus.OK);
