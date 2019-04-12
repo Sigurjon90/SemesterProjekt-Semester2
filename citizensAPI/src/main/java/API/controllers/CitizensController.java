@@ -103,6 +103,7 @@ public class CitizensController {
 //
 //        return new ResponseEntity(HttpStatus.BAD_REQUEST);
 //    }
+    
     // Delete Journal on ID
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteJournal(@PathVariable("id") String stringID) {

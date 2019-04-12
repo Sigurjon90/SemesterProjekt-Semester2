@@ -5,6 +5,7 @@
  */
 package API.entities;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -37,4 +38,5 @@ public class CreateDTO {
     private String cpr;
     private int phoneNumber;
     private List<String> diagnoses;
+    private UUID authorId;
 }

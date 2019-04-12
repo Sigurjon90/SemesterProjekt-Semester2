@@ -56,38 +56,38 @@ public class CitizensRepository {
             System.out.println("No connection...");
         }
     }
-    
-    
 
     public List<Citizen> getCitizens() {
-         try {
+        try {
             PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens;");
             ResultSet citizensResult = getCitizens.executeQuery();
             Citizen citizen = null;
-            
+
             List<Citizen> citizensList = new ArrayList<>();
-             
+
             while (citizensResult.next()) {
-                
+
                 Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
-                String[] stringArrayOfDiagnoses = (String[])sqlArrayOfDiagnoses.getArray();
+                String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
                 List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
-                
+
                 // List<String> listString = Arrays.asList(arr);
                 // Arrays.asList(citizensResult.getArray("diagnoses"))
-                
-                citizen = new Citizen((UUID)citizensResult.getObject("id"), 
-                        citizensResult.getString("name"), 
+                citizen = new Citizen((UUID) citizensResult.getObject("id"),
+                        citizensResult.getString("name"),
                         citizensResult.getString("adress"),
-                        citizensResult.getString("city"), 
-                        citizensResult.getInt("zip"), 
-                        citizensResult.getString("cpr"), 
-                        citizensResult.getInt("phone"), 
-                        listOfDiagnoses, 
-                        citizensResult.getBoolean("archived"));
+                        citizensResult.getString("city"),
+                        citizensResult.getInt("zip"),
+                        citizensResult.getString("cpr"),
+                        citizensResult.getInt("phone"),
+                        listOfDiagnoses,
+                        citizensResult.getBoolean("archived"),
+                        citizensResult.getString("date_created"),
+                        (UUID) citizensResult.getObject("author_id"));
+
                 citizensList.add(citizen);
             }
-            
+
             return citizensList;
 
         } catch (SQLException ex) {
@@ -101,29 +101,31 @@ public class CitizensRepository {
         try {
             PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ?");
             findCitizen.setObject(1, id);
-            
+
             ResultSet citizenResultSet = findCitizen.executeQuery();
             Citizen citizen = null;
-            
+
             while (citizenResultSet.next()) {
-                
+
                 Array sqlArrayOfDiagnoses = citizenResultSet.getArray("diagnoses");
                 String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
                 List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
-                
+
                 citizen = new Citizen((UUID) citizenResultSet.getObject("id"),
-                citizenResultSet.getString("name"),
-                citizenResultSet.getString("adress"),
-                citizenResultSet.getString("city"),
-                citizenResultSet.getInt("zip"),
-                citizenResultSet.getString("cpr"),
-                citizenResultSet.getInt("phone"),
-                listOfDiagnoses,
-                citizenResultSet.getBoolean("archived"));
+                        citizenResultSet.getString("name"),
+                        citizenResultSet.getString("adress"),
+                        citizenResultSet.getString("city"),
+                        citizenResultSet.getInt("zip"),
+                        citizenResultSet.getString("cpr"),
+                        citizenResultSet.getInt("phone"),
+                        listOfDiagnoses,
+                        citizenResultSet.getBoolean("archived"),
+                        citizenResultSet.getString("date_created"),
+                        (UUID) citizenResultSet.getObject("author_id"));
             }
 
             return citizen;
-            
+
         } catch (SQLException ex) {
             System.out.println("SQL Exception....");
             System.out.println("Read the Exeption");
@@ -134,24 +136,17 @@ public class CitizensRepository {
     }
 
     public Citizen deleteCitizen(UUID id, UUID authorId) {
-        try {
+        /*        try {
 
-            // PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journals WHERE id = '" + id + "'");
-            PreparedStatement deletCitizen = connection.prepareStatement("DELETE FROM Citizens WHERE id = '" + id + "'");
-            // ResultSet journalResultSet = findJournal.executeQuery();
-            //deleteJournal.setObject(1, (UUID)id); // ----> SQL INJECTION MAAAAAN
-            //Journal journal = null;
-            /*while (journalResultSet.next()) { 
-                journal = new Journal((UUID) journalResultSet.getObject("id"), null);
-            } */
+           // PreparedStatement deleteCitizen = connection.prepareStatement("")
 
-            deletCitizen.executeQuery();
+           // deletCitizen.executeQuery();
             return null;
 
         } catch (SQLException e) {
             System.out.println("ID was not found in database");
         }
-
+         */
         return null;
     }
 
@@ -159,7 +154,7 @@ public class CitizensRepository {
 
         try {
             connection.setAutoCommit(false);
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone, archived) VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id, name, adress, city, zip, cpr, phone, archived;");
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, adress, city, zip, cpr, phone, archived, date_created, author_id;");
             createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
             createCitizen.setString(2, createDTO.getName());
             createCitizen.setString(3, createDTO.getAdress());
@@ -168,17 +163,18 @@ public class CitizensRepository {
             createCitizen.setString(6, createDTO.getCpr());
             createCitizen.setInt(7, createDTO.getPhoneNumber());
             createCitizen.setBoolean(8, false);
+            createCitizen.setObject(9, createDTO.getAuthorId());
 
             ResultSet createCitizenResult = createCitizen.executeQuery();
             Citizen citizen = null;
 
             // Most values could also be gotten from createDTO (besides "id")
             while (createCitizenResult.next()) {
-                citizen = new Citizen((UUID)createCitizenResult.getObject("id"), createCitizenResult.getString("name"), createCitizenResult.getString("adress"),
+                citizen = new Citizen((UUID) createCitizenResult.getObject("id"), createCitizenResult.getString("name"), createCitizenResult.getString("adress"),
                         createCitizenResult.getString("city"), createCitizenResult.getInt("zip"), createCitizenResult.getString("cpr"),
-                        createCitizenResult.getInt("phone"), createDTO.getDiagnoses(), createCitizenResult.getBoolean("archived"));
+                        createCitizenResult.getInt("phone"), createDTO.getDiagnoses(), createCitizenResult.getBoolean("archived"), createCitizenResult.getString("date_created"), (UUID) createCitizenResult.getObject("author_id"));
             }
-            
+
             for (String diagnoseString : createDTO.getDiagnoses()) {
                 PreparedStatement setDiagnoses = connection.prepareStatement("INSERT INTO diagnose(citizens_id, diagnose) VALUES (?, ?) RETURNING diagnose;");
                 setDiagnoses.setObject(1, citizen.getId(), Types.OTHER);

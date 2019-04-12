@@ -31,6 +31,8 @@ public class CitizenDTO {
     private int phoneNumber;
     private List<String> diagnoses;
     private boolean archived;
+    private String dateCreated;
+    private UUID authorId;
 
     @Override
     public String toString() {
