@@ -74,7 +74,7 @@ public class CitizensRepository {
                 List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
 
                 // List<String> listString = Arrays.asList(arr);
-                // Arrays.asList(citizensResult.getArray("diagnoses"))
+                // Arrays.asList(citizensChangedResult.getArray("diagnoses"))
                 citizen = new Citizen((UUID) citizensResult.getObject("id"),
                         citizensResult.getString("name"),
                         citizensResult.getString("adress"),
@@ -125,8 +125,8 @@ public class CitizensRepository {
                         citizenResultSet.getString("date_created"),
                         (UUID) citizenResultSet.getObject("author_id"));
             }
-            
-            if(citizen.isArchived()) {
+
+            if (citizen.isArchived()) {
                 return null;
             }
             return citizen;
@@ -145,10 +145,10 @@ public class CitizensRepository {
             deleteCitizen.setBoolean(1, true);
             deleteCitizen.setObject(2, deleteDTO.getAuthorId());
             deleteCitizen.setObject(3, deleteDTO.getId());
-            
+
             int affectedRows = deleteCitizen.executeUpdate();
-            
-            if(affectedRows == 0) {
+
+            if (affectedRows == 0) {
                 return false;
             }
 
@@ -157,6 +157,88 @@ public class CitizensRepository {
             return false;
         }
         return true;
+    }
+
+    public List<Citizen> batchUpdate(List<Citizen> citizenList) {
+        List<Citizen> citizensListReturned = new ArrayList<>();
+
+        // Deleting all diagnoses
+        try {
+            connection.setAutoCommit(false);
+            for (Citizen citizen : citizenList) {
+                PreparedStatement deleteDiagnoses = this.connection.prepareStatement("DELETE FROM diagnose WHERE citizens_id = ?");
+                deleteDiagnoses.setObject(1, citizen.getId());
+                deleteDiagnoses.execute();
+                
+            }
+            for (Citizen citizen : citizenList) {
+                // Adding all new diagnoses
+                for (String diagnoseString : citizen.getDiagnoses()) {
+                    PreparedStatement setDiagnoses = connection.prepareStatement("INSERT INTO diagnose(citizens_id, diagnose) VALUES (?, ?) RETURNING diagnose;");
+                    setDiagnoses.setObject(1, citizen.getId(), Types.OTHER);
+                    setDiagnoses.setString(2, diagnoseString);
+                    setDiagnoses.execute();
+                }
+            }
+
+            // Updating all Citizens
+            for (Citizen citizen : citizenList) {
+
+                PreparedStatement updateCitizen = this.connection.prepareStatement("UPDATE citizens SET name = ?,"
+                        + "adress = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ?");
+
+                updateCitizen.setString(1, citizen.getName());
+                updateCitizen.setString(2, citizen.getAdress());
+                updateCitizen.setString(3, citizen.getCity());
+                updateCitizen.setInt(4, citizen.getZip());
+                updateCitizen.setInt(5, citizen.getPhoneNumber());
+                updateCitizen.setObject(6, citizen.getAuthorId());
+                updateCitizen.setObject(7, citizen.getId());
+                
+                updateCitizen.execute();
+            }
+
+            // Returning all Citizens changed
+            for (Citizen citizen : citizenList) {
+                PreparedStatement getCitizensChanged = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses FROM citizens WHERE id = ?;");
+                getCitizensChanged.setObject(1, citizen.getId());
+                getCitizensChanged.setObject(2, citizen.getId());
+                ResultSet citizensChangedResult = getCitizensChanged.executeQuery();
+
+                while (citizensChangedResult.next()) {
+
+                    Array sqlArrayOfDiagnoses = citizensChangedResult.getArray("diagnoses");
+                    String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
+                    List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
+
+                    // List<String> listString = Arrays.asList(arr);
+                    // Arrays.asList(citizensChangedResult.getArray("diagnoses"))
+                    citizen = new Citizen((UUID) citizensChangedResult.getObject("id"),
+                            citizensChangedResult.getString("name"),
+                            citizensChangedResult.getString("adress"),
+                            citizensChangedResult.getString("city"),
+                            citizensChangedResult.getInt("zip"),
+                            citizensChangedResult.getString("cpr"),
+                            citizensChangedResult.getInt("phone"),
+                            listOfDiagnoses,
+                            citizensChangedResult.getBoolean("archived"),
+                            citizensChangedResult.getString("date_created"),
+                            (UUID) citizensChangedResult.getObject("author_id"));
+
+                    citizensListReturned.add(citizen);
+                }
+
+            }
+        connection.commit();
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        if(citizensListReturned != null) {
+            return citizensListReturned;
+        }
+        
+    return null;
     }
 
     public Citizen createCitizen(CreateDTO createDTO) {
