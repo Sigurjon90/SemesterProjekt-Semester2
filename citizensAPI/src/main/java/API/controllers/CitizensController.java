@@ -8,6 +8,7 @@ package API.controllers;
 import API.entities.Citizen;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
+import API.entities.DeleteDTO;
 import API.repositories.CitizensRepository;
 import API.services.CitizensService;
 import java.util.List;
@@ -105,17 +106,16 @@ public class CitizensController {
 //    }
     
     // Delete Journal on ID
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteJournal(@PathVariable("id") String stringID) {
+    @RequestMapping(method = RequestMethod.DELETE)
+    public ResponseEntity deleteJournal(@RequestBody DeleteDTO deleteDTO) {
 
-        UUID id = UUID.fromString(stringID);
-        CitizenDTO cDTO = citizensService.archiveCitizens(id, UUID.randomUUID());
+        boolean bool = citizensService.deleteCitizen(deleteDTO);
 
-        if (cDTO != null) {
-            return new ResponseEntity(cDTO, HttpStatus.OK);
+        if (bool) {
+            return new ResponseEntity(bool, HttpStatus.OK);
         }
 
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
 }

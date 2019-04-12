@@ -8,6 +8,7 @@ package API.services;
 import API.entities.Citizen;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
+import API.entities.DeleteDTO;
 import API.repositories.CitizensRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,17 +58,6 @@ public class CitizensService {
         return citizensDTOList;
     }
     
-    public CitizenDTO archiveCitizens(UUID id, UUID authorId){
-        
-        Citizen c = citizensRepository.deleteCitizen(id, authorId);
-        
-        if(c != null){
-            return modelMapper.map(c, CitizenDTO.class);
-        }
-        
-        return null;
-    }
-    
     public CitizenDTO findCitizen(UUID id){
         
         Citizen citizen = citizensRepository.findCitizen(id);
@@ -77,5 +67,15 @@ public class CitizensService {
         }
         
         return null;
+    }
+    
+    public boolean deleteCitizen(DeleteDTO deleteDTO) {
+        boolean bool = citizensRepository.deleteCitizen(deleteDTO);
+        
+        if(bool) {
+            return true;
+        }
+        
+        return false;
     }
 }

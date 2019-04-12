@@ -12,6 +12,7 @@ package API.repositories;
 import API.entities.Citizen;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
+import API.entities.DeleteDTO;
 import java.sql.Array;
 
 import java.sql.Connection;
@@ -29,6 +30,7 @@ import java.util.Scanner;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.dbutils.DbUtils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -135,19 +137,23 @@ public class CitizensRepository {
         return null;
     }
 
-    public Citizen deleteCitizen(UUID id, UUID authorId) {
-        /*        try {
+    public boolean deleteCitizen(DeleteDTO deleteDTO) {
+        try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = ?, author_id = ? WHERE id = ?")) {
+            deleteCitizen.setBoolean(1, true);
+            deleteCitizen.setObject(2, deleteDTO.getAuthorId());
+            deleteCitizen.setObject(3, deleteDTO.getId());
+            
+            int affectedRows = deleteCitizen.executeUpdate();
+            
+            if(affectedRows == 0) {
+                return false;
+            }
 
-           // PreparedStatement deleteCitizen = connection.prepareStatement("")
-
-           // deletCitizen.executeQuery();
-            return null;
-
-        } catch (SQLException e) {
-            System.out.println("ID was not found in database");
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-         */
-        return null;
+        return true;
     }
 
     public Citizen createCitizen(CreateDTO createDTO) {
@@ -187,7 +193,10 @@ public class CitizensRepository {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(connection);
         }
+
         return null;
     }
 
