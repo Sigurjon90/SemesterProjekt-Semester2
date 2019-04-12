@@ -60,8 +60,7 @@ public class CitizensRepository {
     }
 
     public List<Citizen> getCitizens() {
-        try {
-            PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens;");
+        try (PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens;")) {
             ResultSet citizensResult = getCitizens.executeQuery();
             Citizen citizen = null;
 
@@ -100,8 +99,7 @@ public class CitizensRepository {
     }
 
     public Citizen findCitizen(UUID id) {
-        try {
-            PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ?");
+        try(PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ?")) {
             findCitizen.setObject(1, id);
 
             ResultSet citizenResultSet = findCitizen.executeQuery();
@@ -232,6 +230,8 @@ public class CitizensRepository {
         connection.commit();
         } catch (SQLException ex) {
             Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DbUtils.closeQuietly(connection);
         }
         
         if(citizensListReturned != null) {
