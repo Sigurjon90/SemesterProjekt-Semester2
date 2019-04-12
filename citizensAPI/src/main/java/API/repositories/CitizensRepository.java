@@ -60,7 +60,7 @@ public class CitizensRepository {
     }
 
     public List<Citizen> getCitizens() {
-        try (PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens;")) {
+        try (PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE archived = false")) {
             ResultSet citizensResult = getCitizens.executeQuery();
             Citizen citizen = null;
 

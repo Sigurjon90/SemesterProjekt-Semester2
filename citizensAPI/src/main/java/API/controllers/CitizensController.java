@@ -55,7 +55,6 @@ public class CitizensController {
     // Get all Citizens
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getCitizens() {
-        // TJEK ARCHIVEd
         List<CitizenDTO> citizens = citizensService.getCitizens();
 
         if (citizens != null) {
