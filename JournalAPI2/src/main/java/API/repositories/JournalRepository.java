@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.dbutils.DbUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Repository;
 public class JournalRepository implements IJournalRepository {
 
     private Connection connection = null;
-    
+
     // @Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password
     public JournalRepository(@Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password) {
 
@@ -48,18 +49,18 @@ public class JournalRepository implements IJournalRepository {
     @Override
     public List<Journal> getJournals() {
         List<Journal> journalList = new ArrayList();
-        try {
+        try (PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID);")) {
             /*
             PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM (SELECT * FROM journals INNER JOIN journal_events ON journals.id = journal_events.journal_ID) "
                     + "as IJ INNER JOIN (SELECT journal_ID, max(date_modified) as MaxDate FROM journal_events GROUP BY journal_ID) "
                     + "AS Middle on Middle.journal_ID = IJ.journal_ID and IJ.date_modified = Middle.MaxDate;");
-            */
-            PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID);");
+             */
             ResultSet journalsResult = getJournals.executeQuery();
-            
 
             while (journalsResult.next()) {
-                if(journalsResult.getString("type").equals("deleted")) continue;
+                if (journalsResult.getString("type").equals("deleted")) {
+                    continue;
+                }
                 journalList.add(new Journal((UUID) journalsResult.getObject("journal_id"), journalsResult.getString("date_start"),
                         (UUID) journalsResult.getObject("citizens_id"), journalsResult.getString("content"),
                         (UUID) journalsResult.getObject("author_id"), journalsResult.getString("date_modified")));
@@ -73,9 +74,7 @@ public class JournalRepository implements IJournalRepository {
 
     @Override
     public Journal findJournal(UUID id) {
-        try {
-
-            PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
+        try(PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?")) {
             findJournal.setObject(1, id, Types.OTHER);
             ResultSet journalResultSet = findJournal.executeQuery();
             Journal journal = null;
@@ -96,11 +95,10 @@ public class JournalRepository implements IJournalRepository {
 
         return null;
     }
-        @Override
-        public Journal findJournalByCitizen(UUID id) {
-        try {
 
-            PreparedStatement findJournal = connection.prepareStatement("select * from journals join journal_events on journal_events.id = (select id from journal_events where journal_events.journal_ID = journals.id order by date_modified desc limit 1) where journals.citizens_id = ? order by journals.date_start DESC LIMIT 1;");
+    @Override
+    public Journal findJournalByCitizen(UUID id) {
+        try(PreparedStatement findJournal = connection.prepareStatement("select * from journals join journal_events on journal_events.id = (select id from journal_events where journal_events.journal_ID = journals.id order by date_modified desc limit 1) where journals.citizens_id = ? order by journals.date_start DESC LIMIT 1")) {
             findJournal.setObject(1, id, Types.OTHER);
             ResultSet journalResultSet = findJournal.executeQuery();
             Journal journal = null;
@@ -159,6 +157,8 @@ public class JournalRepository implements IJournalRepository {
 
         } catch (SQLException ex) {
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DbUtils.closeQuietly(connection);
         }
 
         return null;
@@ -201,6 +201,8 @@ public class JournalRepository implements IJournalRepository {
             } catch (SQLException ex1) {
                 Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex1);
             }
+        } finally {
+            DbUtils.closeQuietly(connection);
         }
         return null;
     }
@@ -212,9 +214,7 @@ public class JournalRepository implements IJournalRepository {
      */
     @Override
     public Journal modifyJournal(JournalDTO journalDTO) {
-
         try {
-
             PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
             checker.setObject(1, journalDTO.getId(), Types.OTHER);
             ResultSet checkResultSet = checker.executeQuery();
@@ -248,6 +248,8 @@ public class JournalRepository implements IJournalRepository {
         } catch (SQLException ex) {
             System.out.println("Possible JournalID Error -> Custom SQL statement from code");
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DbUtils.closeQuietly(connection);
         }
         return null;
     }
