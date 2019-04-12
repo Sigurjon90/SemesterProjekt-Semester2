@@ -46,16 +46,9 @@ public class CitizensService {
     }
 
     public List<CitizenDTO> getCitizens() {
-
         List<Citizen> citizensList = citizensRepository.getCitizens();
-        List<CitizenDTO> citizensDTOList = new ArrayList();
-
-        for (Citizen citizen : citizensList) {
-            CitizenDTO citizenDTO = modelMapper.map(citizen, CitizenDTO.class);
-            citizensDTOList.add(citizenDTO);
-        }
-
-        return citizensDTOList;
+        if (citizensList == null) return null;
+        return citizensList.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
     }
 
     public CitizenDTO findCitizen(UUID id) {
