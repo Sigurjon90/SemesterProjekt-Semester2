@@ -22,14 +22,14 @@ public class JournalService implements IJournalService {
     private IJournalRepository journalRepository;
 
     @Autowired
-    private ModelMapper mm;
+    private ModelMapper modelMapper;
 
     @Override
     public List<JournalDTO> getJournals() {
         List<Journal> journalList = journalRepository.getJournals();
         List<JournalDTO> journalDTOList = new ArrayList();
         for (Journal journal : journalList) {
-            journalDTOList.add(mm.map(journal, JournalDTO.class));
+            journalDTOList.add(modelMapper.map(journal, JournalDTO.class));
         }
         return journalDTOList;
     }
@@ -40,7 +40,7 @@ public class JournalService implements IJournalService {
         Journal journal = journalRepository.deleteJournal(id, authorID);
 
         if (journal != null) {
-            return mm.map(journal, JournalDTO.class);
+            return modelMapper.map(journal, JournalDTO.class);
         }
 
         return null;
@@ -51,7 +51,7 @@ public class JournalService implements IJournalService {
     public JournalDTO findJournal(UUID id) {
         Journal journal = journalRepository.findJournal(id);
         if (journal != null) {
-            return mm.map(journal, JournalDTO.class);
+            return modelMapper.map(journal, JournalDTO.class);
         }
         return null;
     }
@@ -59,7 +59,7 @@ public class JournalService implements IJournalService {
     public JournalDTO findJournaByCitizen(UUID id) {
         Journal journal = journalRepository.findJournalByCitizen(id);
         if (journal != null) {
-            return mm.map(journal, JournalDTO.class);
+            return modelMapper.map(journal, JournalDTO.class);
         }
         return null;
     }
@@ -73,7 +73,7 @@ public class JournalService implements IJournalService {
         Journal journal = journalRepository.modifyJournal(journalDTO);
 
         if (journal != null) {
-            return mm.map(journal, JournalDTO.class);
+            return modelMapper.map(journal, JournalDTO.class);
         }
         return null;
     }
@@ -81,10 +81,10 @@ public class JournalService implements IJournalService {
     // CREATE JOURNAL
     @Override
     public JournalDTO createJournal(JournalDTO journalDTO) {
-        Journal journal = mm.map(journalDTO, Journal.class);
+        Journal journal = modelMapper.map(journalDTO, Journal.class);
         Journal journalCreated = journalRepository.createJournal(journal);
         if (journalCreated != null) {
-            return mm.map(journalCreated, JournalDTO.class);
+            return modelMapper.map(journalCreated, JournalDTO.class);
         }
 
         return null;
