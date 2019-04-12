@@ -100,7 +100,7 @@ public class CitizensController {
     
     // Delete 
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity deleteJournal(@RequestBody DeleteDTO deleteDTO) {
+    public ResponseEntity deleteCitizen(@RequestBody DeleteDTO deleteDTO) {
 
         boolean bool = citizensService.deleteCitizen(deleteDTO);
 
