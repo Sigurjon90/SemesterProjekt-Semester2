@@ -33,11 +33,14 @@ public class CitizensService {
 
     // Create Citizen from CreateDTO
     public CitizenDTO createCitizen(CreateDTO createDTO) {
-
-        Citizen citizen = citizensRepository.createCitizen(createDTO);
+        
+        // map to citizen
+        Citizen citizen = modelMapper.map(createDTO, Citizen.class);
+        
+        Citizen citizenCreated = citizensRepository.createCitizen(citizen);
 
         if (citizen != null) {
-            return modelMapper.map(citizen, CitizenDTO.class);
+            return modelMapper.map(citizenCreated, CitizenDTO.class);
         }
         return null;
     }
@@ -82,6 +85,7 @@ public class CitizensService {
     }
 
     public boolean deleteCitizen(DeleteDTO deleteDTO) {
-        return citizensRepository.deleteCitizen(deleteDTO);
+        Citizen citizen = modelMapper.map(deleteDTO, Citizen.class);
+        return citizensRepository.deleteCitizen(citizen);
     }
 }
