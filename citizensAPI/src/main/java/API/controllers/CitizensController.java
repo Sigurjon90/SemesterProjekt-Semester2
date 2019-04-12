@@ -112,7 +112,7 @@ public class CitizensController {
         boolean bool = citizensService.deleteCitizen(deleteDTO);
 
         if (bool) {
-            return new ResponseEntity(bool, HttpStatus.OK);
+            return new ResponseEntity(HttpStatus.OK);
         }
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
