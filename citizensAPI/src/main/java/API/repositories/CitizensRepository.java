@@ -10,9 +10,6 @@ package API.repositories;
  * @author sigur
  */
 import API.entities.Citizen;
-import API.entities.CitizenDTO;
-import API.entities.CreateDTO;
-import API.entities.DeleteDTO;
 import java.sql.Array;
 
 import java.sql.Connection;
@@ -20,13 +17,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
