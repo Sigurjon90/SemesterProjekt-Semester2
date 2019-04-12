@@ -5,7 +5,6 @@
  */
 package API.entities;
 
-import java.sql.Date;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -3,7 +3,6 @@ package API.services;
 import API.entities.Journal;
 import API.entities.JournalDTO;
 import API.repositories.IJournalRepository;
-import API.repositories.JournalRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
