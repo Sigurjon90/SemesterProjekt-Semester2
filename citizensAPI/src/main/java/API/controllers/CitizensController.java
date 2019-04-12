@@ -64,7 +64,7 @@ public class CitizensController {
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity findJournal(@PathVariable("id") String stringID) {
+    public ResponseEntity findCitizen(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
 
         CitizenDTO citizens = citizensService.findCitizen(id);

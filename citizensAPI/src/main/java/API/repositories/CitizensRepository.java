@@ -60,12 +60,13 @@ public class CitizensRepository {
     
 
     public List<Citizen> getCitizens() {
-        try {
+         try {
             PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens;");
             ResultSet citizensResult = getCitizens.executeQuery();
             Citizen citizen = null;
+            
             List<Citizen> citizensList = new ArrayList<>();
-
+             
             while (citizensResult.next()) {
                 
                 Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
@@ -75,8 +76,15 @@ public class CitizensRepository {
                 // List<String> listString = Arrays.asList(arr);
                 // Arrays.asList(citizensResult.getArray("diagnoses"))
                 
-                citizen = new Citizen((UUID)citizensResult.getObject("id"), citizensResult.getString("name"), citizensResult.getString("adress"),
-                citizensResult.getString("city"), citizensResult.getInt("zip"), citizensResult.getString("cpr"), citizensResult.getInt("phone"), listOfDiagnoses, citizensResult.getBoolean("archived"));
+                citizen = new Citizen((UUID)citizensResult.getObject("id"), 
+                        citizensResult.getString("name"), 
+                        citizensResult.getString("adress"),
+                        citizensResult.getString("city"), 
+                        citizensResult.getInt("zip"), 
+                        citizensResult.getString("cpr"), 
+                        citizensResult.getInt("phone"), 
+                        listOfDiagnoses, 
+                        citizensResult.getBoolean("archived"));
                 citizensList.add(citizen);
             }
             
@@ -91,11 +99,28 @@ public class CitizensRepository {
 
     public Citizen findCitizen(UUID id) {
         try {
-            PreparedStatement findCitizen = connection.prepareStatement("SELECT * FROM Citizens WHERE id = '" + id + "'");
+            PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) "
+                    + "AS diagnoses FROM citizens"
+                    + "WHERE id = ?");
+            findCitizen.setObject(1, id);
+            
             ResultSet citizenResultSet = findCitizen.executeQuery();
             Citizen citizen = null;
             while (citizenResultSet.next()) {
                 
+                Array sqlArrayOfDiagnoses = citizenResultSet.getArray("diagnoses");
+                String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
+                List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
+                
+                citizen = new Citizen((UUID) citizenResultSet.getObject("id"),
+                citizenResultSet.getString("name"),
+                citizenResultSet.getString("adress"),
+                citizenResultSet.getString("city"),
+                citizenResultSet.getInt("zip"),
+                citizenResultSet.getString("cpr"),
+                citizenResultSet.getInt("phone"),
+                listOfDiagnoses,
+                citizenResultSet.getBoolean("archived"));
             }
 
             return citizen;
