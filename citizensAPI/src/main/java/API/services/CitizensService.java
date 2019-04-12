@@ -10,7 +10,6 @@ import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
 import API.entities.DeleteDTO;
 import API.repositories.CitizensRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @author sigur
  */
 @Service
-public class CitizensService {
+public class CitizensService implements ICitizensService {
 
     @Autowired
     private CitizensRepository citizensRepository;
@@ -32,6 +31,7 @@ public class CitizensService {
     private ModelMapper modelMapper;
 
     // Create Citizen from CreateDTO
+    @Override
     public CitizenDTO createCitizen(CreateDTO createDTO) {
         
         // map to citizen
@@ -45,12 +45,14 @@ public class CitizensService {
         return null;
     }
 
+    @Override
     public List<CitizenDTO> getCitizens() {
         List<Citizen> citizensList = citizensRepository.getCitizens();
         if (citizensList == null) return null;
         return citizensList.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
     }
 
+    @Override
     public CitizenDTO findCitizen(UUID id) {
 
         Citizen citizen = citizensRepository.findCitizen(id);
@@ -62,6 +64,7 @@ public class CitizensService {
         return null;
     }
 
+    @Override
     public List<CitizenDTO> batchUpdate(List<CitizenDTO> citizenDTOList) {
 
         List<Citizen> citizensList = citizenDTOList.stream().map(citizenDTO
@@ -77,6 +80,7 @@ public class CitizensService {
 
     }
 
+    @Override
     public boolean deleteCitizen(DeleteDTO deleteDTO) {
         Citizen citizen = modelMapper.map(deleteDTO, Citizen.class);
         return citizensRepository.deleteCitizen(citizen);

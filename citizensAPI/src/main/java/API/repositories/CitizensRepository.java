@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CitizensRepository {
+public class CitizensRepository implements ICitizensRepository {
 
     private Connection connection = null;
 
@@ -54,6 +54,7 @@ public class CitizensRepository {
         }
     }
 
+    @Override
     public List<Citizen> getCitizens() {
         try (PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE archived = false")) {
             ResultSet citizensResult = getCitizens.executeQuery();
@@ -93,6 +94,7 @@ public class CitizensRepository {
         return null;
     }
 
+    @Override
     public Citizen findCitizen(UUID id) {
         try(PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ? AND archived = false")) {
             findCitizen.setObject(1, id);
@@ -130,6 +132,7 @@ public class CitizensRepository {
         return null;
     }
 
+    @Override
     public boolean deleteCitizen(Citizen citizen) {
         try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = ?, author_id = ? WHERE id = ?")) {
             deleteCitizen.setBoolean(1, true);
@@ -149,6 +152,7 @@ public class CitizensRepository {
         return true;
     }
 
+    @Override
     public List<Citizen> batchUpdate(List<Citizen> citizenList) {
         List<Citizen> citizensListReturned = new ArrayList<>();
 
@@ -233,6 +237,7 @@ public class CitizensRepository {
     return null;
     }
 
+    @Override
     public Citizen createCitizen(Citizen citizen) {
 
         try {
