@@ -70,10 +70,10 @@ public class CitizensService {
     
     public CitizenDTO findCitizen(UUID id){
         
-        Citizen c = citizensRepository.findCitizen(id);
+        Citizen citizen = citizensRepository.findCitizen(id);
         
-        if(c != null){
-            return modelMapper.map(c, CitizenDTO.class);
+        if(citizen != null){
+            return modelMapper.map(citizen, CitizenDTO.class);
         }
         
         return null;

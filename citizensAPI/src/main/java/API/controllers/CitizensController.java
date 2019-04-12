@@ -62,7 +62,8 @@ public class CitizensController {
 
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
-
+    
+    // Find Citizen by ID
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity findCitizen(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
@@ -70,7 +71,7 @@ public class CitizensController {
         CitizenDTO citizens = citizensService.findCitizen(id);
 
         if (citizens != null) {
-            return new ResponseEntity(citizensService.findCitizen(id), HttpStatus.OK);
+            return new ResponseEntity(citizens, HttpStatus.OK);
         }
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);

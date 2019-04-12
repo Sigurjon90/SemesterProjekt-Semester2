@@ -99,13 +99,12 @@ public class CitizensRepository {
 
     public Citizen findCitizen(UUID id) {
         try {
-            PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) "
-                    + "AS diagnoses FROM citizens"
-                    + "WHERE id = ?");
+            PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ?");
             findCitizen.setObject(1, id);
             
             ResultSet citizenResultSet = findCitizen.executeQuery();
             Citizen citizen = null;
+            
             while (citizenResultSet.next()) {
                 
                 Array sqlArrayOfDiagnoses = citizenResultSet.getArray("diagnoses");
@@ -124,6 +123,7 @@ public class CitizensRepository {
             }
 
             return citizen;
+            
         } catch (SQLException ex) {
             System.out.println("SQL Exception....");
             System.out.println("Read the Exeption");
