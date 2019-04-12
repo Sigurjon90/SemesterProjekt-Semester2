@@ -6,6 +6,7 @@ import API.repositories.IJournalRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,7 @@ public class JournalService implements IJournalService {
     @Override
     public List<JournalDTO> getJournals() {
         List<Journal> journalList = journalRepository.getJournals();
-        List<JournalDTO> journalDTOList = new ArrayList();
-        for (Journal journal : journalList) {
-            journalDTOList.add(modelMapper.map(journal, JournalDTO.class));
-        }
-        return journalDTOList;
+        return journalList.stream().map(journal -> modelMapper.map(journal, JournalDTO.class)).collect(Collectors.toList());
     }
 
     // Delete Journal
