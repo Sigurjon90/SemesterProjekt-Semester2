@@ -99,7 +99,7 @@ public class CitizensRepository {
     }
 
     public Citizen findCitizen(UUID id) {
-        try(PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ?")) {
+        try(PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ? AND archived = false")) {
             findCitizen.setObject(1, id);
 
             ResultSet citizenResultSet = findCitizen.executeQuery();
@@ -124,9 +124,6 @@ public class CitizensRepository {
                         (UUID) citizenResultSet.getObject("author_id"));
             }
 
-            if (citizen.isArchived()) {
-                return null;
-            }
             return citizen;
 
         } catch (SQLException ex) {
