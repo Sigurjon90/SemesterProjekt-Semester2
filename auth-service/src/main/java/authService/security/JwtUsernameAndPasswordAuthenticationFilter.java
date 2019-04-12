@@ -17,8 +17,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -59,7 +61,8 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         Long now = System.currentTimeMillis();
         String token = Jwts.builder()
                 .setSubject(auth.getName())
-                .setId("1")
+                .setId(UUID.randomUUID().toString())
+                .setHeaderParam("citizens", Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()))
                 // Convert to list of strings.
                 // This is important because it affects the way we get them back in the Gateway.
                 .claim("authorities", auth.getAuthorities().stream()

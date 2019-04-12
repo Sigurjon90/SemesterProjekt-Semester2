@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
@@ -37,7 +38,9 @@ public class GalleryController {
 
     @RequestMapping("/{id}")
     public Gallery getGallery(@RequestHeader HttpHeaders headers, @PathVariable final int id) {
-        String userId = jwtUtils.getUserId(headers.get("authorization").get(0));
+        String token = headers.get("authorization").get(0);
+        UUID userId = jwtUtils.getUserId(token);
+        List<UUID> myCitizens = jwtUtils.getMyCitizens(token);
         Gallery gallery = new Gallery();
         gallery.setId(id);
 
