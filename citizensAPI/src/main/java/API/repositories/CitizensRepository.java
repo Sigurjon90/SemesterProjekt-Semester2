@@ -125,7 +125,10 @@ public class CitizensRepository {
                         citizenResultSet.getString("date_created"),
                         (UUID) citizenResultSet.getObject("author_id"));
             }
-
+            
+            if(citizen.isArchived()) {
+                return null;
+            }
             return citizen;
 
         } catch (SQLException ex) {
