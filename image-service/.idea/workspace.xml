@@ -4,21 +4,12 @@
     <list default="true" id="61e1fd84-afd8-4e32-987a-bcf440058d02" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../EurekaServer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../EurekaServer/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../auth-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-service/src/main/java/commonService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/src/main/java/commonService/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-service/src/main/java/commonService/security/JwtConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/src/main/java/commonService/security/JwtConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-service/src/main/java/commonService/security/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/src/main/java/commonService/security/JwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-service/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../common-service/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/target/maven-archiver/pom.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gallery-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/controllers/GalleryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/controllers/GalleryController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gateway-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/swagger/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/swagger/SwaggerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -72,9 +63,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="414">
+              <caret line="45" column="19" lean-forward="true" selection-start-line="45" selection-start-column="19" selection-end-line="45" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/imageService/Application.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/imageService/controllers/ImageController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="8" selection-start-column="8" selection-end-column="32" />
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -133,6 +146,41 @@
             <path>
               <item name="image-service" type="b2602c69:ProjectViewProjectNode" />
               <item name="image-service" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="image-service" type="b2602c69:ProjectViewProjectNode" />
+              <item name="image-service" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="image-service" type="b2602c69:ProjectViewProjectNode" />
+              <item name="image-service" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="image-service" type="b2602c69:ProjectViewProjectNode" />
+              <item name="image-service" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="image-service" type="b2602c69:ProjectViewProjectNode" />
+              <item name="image-service" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="imageService" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="image-service" type="b2602c69:ProjectViewProjectNode" />
+              <item name="image-service" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="imageService" type="462c0819:PsiDirectoryNode" />
+              <item name="controllers" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -259,8 +307,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/imageService/controllers/ImageController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="21" column="29" selection-start-line="21" selection-start-column="29" selection-end-line="21" selection-end-column="29" />
+        <state>
+          <caret column="8" selection-start-column="8" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -273,13 +321,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/imageService/Application.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        <state relative-caret-position="150">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="45" column="19" lean-forward="true" selection-start-line="45" selection-start-column="19" selection-end-line="45" selection-end-column="19" />
+        </state>
+      </provider>
     </entry>
   </component>
   <component name="masterDetails">

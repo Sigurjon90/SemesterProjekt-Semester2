@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig {
 
     @Autowired
@@ -36,6 +37,7 @@ public class SwaggerConfig {
     private SwaggerResource createResource(String name, String location, String version) {
         SwaggerResource swaggerResource = new SwaggerResource();
         swaggerResource.setName(name);
+        System.out.println("/" + location + "/v2/api-docs");
         swaggerResource.setLocation("/" + location + "/v2/api-docs");
         swaggerResource.setSwaggerVersion(version);
         return swaggerResource;
