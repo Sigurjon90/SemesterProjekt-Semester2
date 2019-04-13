@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author sigur
+ * @author thinkbuntu
  */
 @RestController
 @RequestMapping("/citizens")
@@ -40,25 +41,26 @@ public class CitizensController {
     
     // Test Array Method
     
-    @RequestMapping(path = "/limited", method = RequestMethod.GET)
-    public ResponseEntity getLimited() {
-        List<Citizen> idList = citizensRepository.getLimited();
-        return new ResponseEntity(idList, HttpStatus.OK);
+    @RequestMapping(path = "/myusers", method = RequestMethod.GET)
+    public ResponseEntity getMyUsers() {
+        
+        // Here we need list of UUID on Users you have assigned to you
+        List<UUID> listOfId = new ArrayList();
+        listOfId.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
+        listOfId.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
+        
+        List<CitizenDTO> citizensDTOList = citizensService.getMyUsers(listOfId);
+        if(citizensDTOList != null) return new ResponseEntity(citizensDTOList, HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        
+        
+       
     }
     
     // Create Citizen from CreateDTO
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createCitizen(@RequestBody CreateDTO createDTO) {
         
-        List<UUID> listOfId = new ArrayList();
-        listOfId.add(UUID.fromString("dd24aa7b-9833-4a81-9302-f03ceba60dff"));
-        listOfId.add(UUID.fromString("758badd7-5ca5-473e-9669-23c0eabab899"));
-        listOfId.add(UUID.fromString("3f936a2f-9821-48d5-a452-fcc52a82058b"));
-        
-        listOfId.toArray();
-        
-        
-
         CitizenDTO citizenDTO = citizensService.createCitizen(createDTO);
 
         if (citizenDTO != null) {

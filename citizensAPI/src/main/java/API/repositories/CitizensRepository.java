@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.dbutils.DbUtils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -54,10 +53,7 @@ public class CitizensRepository implements ICitizensRepository {
         }
     }
 
-    public List<Citizen> getLimited() {
-        List<UUID> listOfId = new ArrayList();
-        listOfId.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
-        listOfId.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
+    public List<Citizen> getMyUsers(List<UUID> listOfId) {
        
         try (PreparedStatement getLimited = connection.prepareStatement("SELECT * FROM citizens WHERE id = ANY(?)")) {
             java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfId.toArray());
