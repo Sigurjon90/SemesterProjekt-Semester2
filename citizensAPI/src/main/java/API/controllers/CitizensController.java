@@ -42,7 +42,7 @@ public class CitizensController {
     // Test Array Method
     
     @RequestMapping(path = "/myusers", method = RequestMethod.GET)
-    public ResponseEntity getMyUsers() {
+    public ResponseEntity getMyCitizens() {
         
         // Here we need list of UUID on Users you have assigned to you
         // THIS IS A TEST LIST
@@ -50,11 +50,9 @@ public class CitizensController {
         listOfId.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
         listOfId.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
         
-        List<CitizenDTO> citizensDTOList = citizensService.getMyUsers(listOfId);
+        List<CitizenDTO> citizensDTOList = citizensService.getMyCitizens(listOfId);
         if(citizensDTOList != null) return new ResponseEntity(citizensDTOList, HttpStatus.OK);
         return new ResponseEntity(HttpStatus.NOT_FOUND);
-        
-        
        
     }
     

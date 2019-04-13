@@ -52,9 +52,9 @@ public class CitizensService implements ICitizensService {
         return citizensList.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
     }
     
-    public List<CitizenDTO> getMyUsers(List<UUID> listOfId) {
+    public List<CitizenDTO> getMyCitizens(List<UUID> listOfId) {
         
-        List<Citizen> citizensList = citizensRepository.getMyUsers(listOfId);
+        List<Citizen> citizensList = citizensRepository.getMyCitizens(listOfId);
         if (citizensList == null) return null;
         return citizensList.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
         
