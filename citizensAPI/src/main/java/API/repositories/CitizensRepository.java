@@ -54,6 +54,32 @@ public class CitizensRepository implements ICitizensRepository {
         }
     }
 
+    public List<Citizen> getLimited() {
+        List<UUID> listOfId = new ArrayList();
+        listOfId.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
+        listOfId.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
+       
+        try (PreparedStatement getLimited = connection.prepareStatement("SELECT * FROM citizens WHERE id = ANY(?)")) {
+            java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfId.toArray());
+            getLimited.setArray(1, sqlArray);
+            ResultSet limitedResult = getLimited.executeQuery();
+            List<Citizen> citizenList = new ArrayList();
+            Citizen citizen;
+            while (limitedResult.next()) {
+                citizen = new Citizen((UUID) limitedResult.getObject("id"), limitedResult.getString("name"), null, null, 0, null, 0, null, true, null, null);
+                citizenList.add(citizen);
+
+            }
+
+            return citizenList;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
     @Override
     public List<Citizen> getCitizens() {
         try (PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE archived = false")) {
@@ -96,7 +122,7 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public Citizen findCitizen(UUID id) {
-        try(PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ? AND archived = false")) {
+        try (PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ? AND archived = false")) {
             findCitizen.setObject(1, id);
 
             ResultSet citizenResultSet = findCitizen.executeQuery();
@@ -163,7 +189,7 @@ public class CitizensRepository implements ICitizensRepository {
                 PreparedStatement deleteDiagnoses = this.connection.prepareStatement("DELETE FROM diagnose WHERE citizens_id = ?");
                 deleteDiagnoses.setObject(1, citizen.getId());
                 deleteDiagnoses.execute();
-                
+
             }
             for (Citizen citizen : citizenList) {
                 // Adding all new diagnoses
@@ -188,7 +214,7 @@ public class CitizensRepository implements ICitizensRepository {
                 updateCitizen.setInt(5, citizen.getPhoneNumber());
                 updateCitizen.setObject(6, citizen.getAuthorId());
                 updateCitizen.setObject(7, citizen.getId());
-                
+
                 updateCitizen.execute();
             }
 
@@ -223,23 +249,21 @@ public class CitizensRepository implements ICitizensRepository {
                 }
 
             }
-        connection.commit();
+            connection.commit();
         } catch (SQLException ex) {
             Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            DbUtils.closeQuietly(connection);
-        }
-        
-        if(citizensListReturned != null) {
+        } 
+
+        if (citizensListReturned != null) {
             return citizensListReturned;
         }
-        
-    return null;
+
+        return null;
     }
 
     @Override
     public Citizen createCitizen(Citizen citizen) {
-
+            
         try {
             connection.setAutoCommit(false);
             PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, adress, city, zip, cpr, phone, archived, date_created, author_id;");
@@ -275,10 +299,7 @@ public class CitizensRepository implements ICitizensRepository {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            DbUtils.closeQuietly(connection);
-        }
-
+        } 
         return null;
     }
 
