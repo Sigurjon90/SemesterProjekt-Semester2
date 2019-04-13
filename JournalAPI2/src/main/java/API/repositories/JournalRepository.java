@@ -157,9 +157,7 @@ public class JournalRepository implements IJournalRepository {
 
         } catch (SQLException ex) {
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            DbUtils.closeQuietly(connection);
-        }
+        } 
 
         return null;
 
@@ -201,9 +199,7 @@ public class JournalRepository implements IJournalRepository {
             } catch (SQLException ex1) {
                 Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex1);
             }
-        } finally {
-            DbUtils.closeQuietly(connection);
-        }
+        } 
         return null;
     }
 
@@ -248,9 +244,7 @@ public class JournalRepository implements IJournalRepository {
         } catch (SQLException ex) {
             System.out.println("Possible JournalID Error -> Custom SQL statement from code");
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            DbUtils.closeQuietly(connection);
-        }
+        } 
         return null;
     }
 
