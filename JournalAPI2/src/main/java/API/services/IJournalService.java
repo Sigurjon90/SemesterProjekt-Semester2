@@ -24,14 +24,14 @@ public interface IJournalService {
     // Find Journal
     JournalDTO findJournal(UUID id);
 
-    List<JournalDTO> getJournals();
+    List<JournalDTO> getJournals(List<UUID> list);
 
     /*
     Maps Event to EventDTO
     Returns EventDTO or null
      */
     JournalDTO modifyJournal(JournalDTO journalDTO);
-    
+
     JournalDTO findJournaByCitizen(UUID id);
-    
+
 }

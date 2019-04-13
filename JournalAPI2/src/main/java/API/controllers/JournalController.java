@@ -7,6 +7,7 @@ package API.controllers;
 // Handles requests from URL
 import API.entities.JournalDTO;
 import API.services.IJournalService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,48 +20,52 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/journals") // Prefixed URL for request -> "Alle requests skal ske genne dette URL"
+@RequestMapping("/journals")
 public class JournalController {
 
     @Autowired
     IJournalService journalService;
 
-    // Find all journals
+    // Find all journals ASSIGNED TO YOU by Citizens ID
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getJournals() {
-        List<JournalDTO> journals = journalService.getJournals();
-        
-            return new ResponseEntity(journals, HttpStatus.OK);
+
+        List<UUID> listOfId = new ArrayList();
+        listOfId.add(UUID.fromString("c8b300cf-8acd-4b3d-9b93-cb53570f44a2"));
+        listOfId.add(UUID.fromString("150e7ddb-1c87-423d-8786-657c83cdc38b"));
+        List<JournalDTO> journals = journalService.getJournals(listOfId);
+
+        return new ResponseEntity(journals, HttpStatus.OK);
     }
 
     // Find JournalDTO on ID
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity findJournal(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
-        
+
         JournalDTO journal = journalService.findJournal(id);
-        
-        if(journal != null) {
-        return new ResponseEntity(journal, HttpStatus.OK);
+
+        if (journal != null) {
+            return new ResponseEntity(journal, HttpStatus.OK);
         }
-        
+
         return new ResponseEntity(HttpStatus.NOT_FOUND);
-        
+
     }
-    
+
     // Find Journal på Citizen ID
     @RequestMapping(path = "/citizen/{id}", method = RequestMethod.GET)
     public ResponseEntity findJournalByCitizen(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
-        
+
         JournalDTO journal = journalService.findJournaByCitizen(id);
-        
-        if(journal != null) {
-        return new ResponseEntity(journal, HttpStatus.OK);
+
+        if (journal != null) {
+            return new ResponseEntity(journal, HttpStatus.OK);
         }
-        
+
         return new ResponseEntity(HttpStatus.NOT_FOUND);
-        
+
     }
 
     // Create Journal
@@ -73,7 +78,7 @@ public class JournalController {
             return new ResponseEntity(journal, HttpStatus.CREATED);
         }
 
-           return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     // Modify Journal
@@ -99,7 +104,7 @@ public class JournalController {
         if (journal != null) {
             return new ResponseEntity(journal, HttpStatus.OK);
         }
-        
+
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }

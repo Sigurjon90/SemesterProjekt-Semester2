@@ -22,7 +22,7 @@ public interface IJournalRepository {
 
     Journal findJournal(UUID id);
 
-    List<Journal> getJournals();
+    List<Journal> getJournals(List<UUID> listOfId);
 
     Journal findJournalByCitizen(UUID id);
 

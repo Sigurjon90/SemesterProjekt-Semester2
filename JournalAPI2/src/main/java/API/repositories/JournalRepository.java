@@ -47,14 +47,11 @@ public class JournalRepository implements IJournalRepository {
     }
 
     @Override
-    public List<Journal> getJournals() {
+    public List<Journal> getJournals(List<UUID> listOfId) {
         List<Journal> journalList = new ArrayList();
-        try (PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID);")) {
-            /*
-            PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM (SELECT * FROM journals INNER JOIN journal_events ON journals.id = journal_events.journal_ID) "
-                    + "as IJ INNER JOIN (SELECT journal_ID, max(date_modified) as MaxDate FROM journal_events GROUP BY journal_ID) "
-                    + "AS Middle on Middle.journal_ID = IJ.journal_ID and IJ.date_modified = Middle.MaxDate;");
-             */
+        try (PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journals.citizens_id = ANY(?);")) {
+            java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfId.toArray());
+            getJournals.setArray(1, sqlArray);
             ResultSet journalsResult = getJournals.executeQuery();
 
             while (journalsResult.next()) {

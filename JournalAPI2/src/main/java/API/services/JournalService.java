@@ -25,8 +25,8 @@ public class JournalService implements IJournalService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<JournalDTO> getJournals() {
-        List<Journal> journalList = journalRepository.getJournals();
+    public List<JournalDTO> getJournals(List<UUID> listOfId) {
+        List<Journal> journalList = journalRepository.getJournals(listOfId);
         return journalList.stream().map(journal -> modelMapper.map(journal, JournalDTO.class)).collect(Collectors.toList());
     }
 
