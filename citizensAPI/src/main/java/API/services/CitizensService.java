@@ -34,7 +34,7 @@ public class CitizensService implements ICitizensService {
     @Override
     public CitizenDTO createCitizen(CreateDTO createDTO) {
         
-        // map to citizen
+        // Map to citizen
         Citizen citizen = modelMapper.map(createDTO, Citizen.class);
         
         Citizen citizenCreated = citizensRepository.createCitizen(citizen);

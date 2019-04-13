@@ -39,8 +39,7 @@ public class CitizensController {
     @Autowired
     CitizensService citizensService;
     
-    // Test Array Method
-    
+    // Get assigned citizens
     @RequestMapping(path = "/myusers", method = RequestMethod.GET)
     public ResponseEntity getMyCitizens() {
         
@@ -84,7 +83,7 @@ public class CitizensController {
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity findCitizen(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
-
+        
         CitizenDTO citizens = citizensService.findCitizen(id);
 
         if (citizens != null) {
