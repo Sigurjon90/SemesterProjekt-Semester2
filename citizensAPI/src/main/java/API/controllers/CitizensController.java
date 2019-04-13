@@ -45,6 +45,7 @@ public class CitizensController {
     public ResponseEntity getMyUsers() {
         
         // Here we need list of UUID on Users you have assigned to you
+        // THIS IS A TEST LIST
         List<UUID> listOfId = new ArrayList();
         listOfId.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
         listOfId.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
