@@ -12,9 +12,9 @@ export default class App extends Component {
 			<div className='wrapper'>
 				<Route
 					exact
-					path='/citizens'
+					path='/'
 					render={props => (
-						<LazyRoute {...props} component={import('./CitizensList')} />
+						<LazyRoute {...props} component={import('./TodoList')} />
 					)}
 				/>
 

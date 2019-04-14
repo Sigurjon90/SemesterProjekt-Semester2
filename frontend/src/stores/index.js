@@ -1,5 +1,5 @@
-import citizensStore from './CitizensStore'
+import todoStore from './TodosStore'
 
-export default { 
-  citizensStore
-}
+export default {
+  todoStore
+} 
