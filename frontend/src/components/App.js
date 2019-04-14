@@ -12,13 +12,6 @@ export default class App extends Component {
 			<div className='wrapper'>
 				<Route
 					exact
-					path='/'
-					render={props => (
-						<LazyRoute {...props} component={import('./TodoList')} />
-					)}
-				/>
-				<Route
-					exact
 					path='/citizens'
 					render={props => (
 						<LazyRoute {...props} component={import('./CitizensList')} />
