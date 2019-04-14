@@ -6,10 +6,10 @@
       <change beforePath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/swagger/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/swagger/SwaggerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../image-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../image-service/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -188,7 +188,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555164907350" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555172753788" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />

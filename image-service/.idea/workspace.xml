@@ -6,10 +6,10 @@
       <change beforePath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../auth-service/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../common-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../common-service/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gallery-service/src/main/java/galleryService/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/Application.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/swagger/SwaggerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/src/main/java/gatewayService/swagger/SwaggerConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gateway-service/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway-service/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />

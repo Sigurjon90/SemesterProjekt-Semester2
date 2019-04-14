@@ -11,6 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableZuulProxy
+@EnableSwagger2
 public class Application {
 
     public static void main(String[] args) {
