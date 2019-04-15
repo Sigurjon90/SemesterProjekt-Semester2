@@ -17,6 +17,20 @@ export default class App extends Component {
 						<LazyRoute {...props} component={import('./TodoList')} />
 					)}
 				/>
+				<Route
+					exact
+					path='/posts'
+					render={props => (
+						<LazyRoute {...props} component={import('./PostsList')} />
+					)}
+				/>
+				<Route
+					exact
+					path='/posts/:id'
+					render={props => (
+						<LazyRoute {...props} component={import('./Post')} />
+					)}
+				/>
 
 				<DevTools />
 			</div>
