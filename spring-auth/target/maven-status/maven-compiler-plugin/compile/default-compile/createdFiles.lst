@@ -1,0 +1,6 @@
+main/java/security/JwtUsernameAndPasswordAuthenticationFilter$UserCredentials.class
+main/java/security/Application.class
+main/java/security/SecurityCredentialsConfig.class
+main/java/security/JwtUsernameAndPasswordAuthenticationFilter.class
+main/java/security/UserDetailsServiceImpl$AppUser.class
+main/java/security/UserDetailsServiceImpl.class
