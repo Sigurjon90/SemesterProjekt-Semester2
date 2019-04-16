@@ -1,5 +1,7 @@
-import citizensStore from './CitizensStore'
+import citizensStore from "./CitizensStore";
+import loginStore from "./LoginStore";
 
-export default { 
-  citizensStore
-}
+export default {
+  citizensStore,
+  loginStore
+};

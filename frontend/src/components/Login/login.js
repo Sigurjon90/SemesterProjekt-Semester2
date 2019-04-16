@@ -1,9 +1,17 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import "antd/dist/antd.css";
+import axios from "axios";
 import { Row, Col, Form, Icon, Input, Button, Card } from "antd";
 
+@inject("loginStore")
+@observer
 class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.test = () => this.props.loginStore.authUser();
+  }
+
   handleSubmit = e => {
     e.preventDefault();
 
@@ -12,27 +20,16 @@ class Login extends Component {
         console.log("Received values of form: ", values);
       }
     });
-    fetch("https://httpbin.org/post", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ a: 1, b: "Textual content" })
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    this.props.loginStore.authUser();
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <div style={{ background: "#ECECEC", padding: "30px", height: "100%" }}>
+      <div
+        className="login"
+        style={{ background: "#ECECEC", padding: "30px", height: "100%" }}
+      >
         <Row
           type="flex"
           justify="space-between"
@@ -42,7 +39,7 @@ class Login extends Component {
           <Col span={6} offset="9" style={{ height: "300" }}>
             <Card title="Log ind" bordered={false} style={{ width: 350 }}>
               <Form onSubmit={this.handleSubmit} className="login-form">
-                <Form.Item label="dsadsdsads">
+                <Form.Item label="Brugernavn">
                   {getFieldDecorator("userName", {
                     rules: [
                       { required: true, message: "Please input your username!" }
@@ -95,6 +92,6 @@ class Login extends Component {
   }
 }
 
-const loginForm = Form.create({ name: "normal_login" })(Login);
+const loginForm = Form.create({ name: "normal_losgin" })(Login);
 
 export default loginForm;
