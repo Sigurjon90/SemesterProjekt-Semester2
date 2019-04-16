@@ -50,7 +50,8 @@ public class JournalRepository implements IJournalRepository {
     public List<Journal> getJournals(List<UUID> listOfId) {
         List<Journal> journalList = new ArrayList();
         try (PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id "
-                + "WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journals.citizens_id = ANY(?);")) {
+                + "WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) "
+                + "FROM journal_events GROUP BY journal_ID) AND journals.citizens_id = ANY(?);")) {
             java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfId.toArray());
             getJournals.setArray(1, sqlArray);
             ResultSet journalsResult = getJournals.executeQuery();
@@ -59,9 +60,12 @@ public class JournalRepository implements IJournalRepository {
                 if (journalsResult.getString("type").equals("deleted")) {
                     continue;
                 }
-                journalList.add(new Journal((UUID) journalsResult.getObject("journal_id"), journalsResult.getString("date_start"),
-                        (UUID) journalsResult.getObject("citizens_id"), journalsResult.getString("content"),
-                        (UUID) journalsResult.getObject("author_id"), journalsResult.getString("date_modified")));
+                journalList.add(new Journal((UUID) journalsResult.getObject("journal_id"), 
+                        journalsResult.getString("date_start"),
+                        (UUID) journalsResult.getObject("citizens_id"), 
+                        journalsResult.getString("content"),
+                        (UUID) journalsResult.getObject("author_id"), 
+                        journalsResult.getString("date_modified")));
             }
 
         } catch (SQLException ex) {
@@ -83,7 +87,12 @@ public class JournalRepository implements IJournalRepository {
                 if (journalResultSet.getString("type").equals("deleted")) {
                     return null;
                 }
-                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
+                journal = new Journal((UUID) journalResultSet.getObject("id"), 
+                        journalResultSet.getString("date_start"), 
+                        (UUID) journalResultSet.getObject("citizens_id"), 
+                        journalResultSet.getString("content"), 
+                        (UUID) journalResultSet.getObject("author_id"), 
+                        journalResultSet.getString("date_modified"));
             }
 
             if (journal != null) {
@@ -111,7 +120,12 @@ public class JournalRepository implements IJournalRepository {
                 if (journalResultSet.getString("type").equals("deleted")) {
                     return null;
                 }
-                journal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("content"), (UUID) journalResultSet.getObject("author_id"), journalResultSet.getString("date_modified"));
+                journal = new Journal((UUID) journalResultSet.getObject("id"), 
+                        journalResultSet.getString("date_start"), 
+                        (UUID) journalResultSet.getObject("citizens_id"), 
+                        journalResultSet.getString("content"), 
+                        (UUID) journalResultSet.getObject("author_id"), 
+                        journalResultSet.getString("date_modified"));
             }
 
             if (journal != null) {
@@ -130,7 +144,9 @@ public class JournalRepository implements IJournalRepository {
     public Journal deleteJournal(UUID id, UUID authorID) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
+            PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events "
+                    + "WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) "
+                    + "FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
             checker.setObject(1, id, Types.OTHER);
             ResultSet checkResultSet = checker.executeQuery();
             String stringType = "";
@@ -163,6 +179,7 @@ public class JournalRepository implements IJournalRepository {
 
         } catch (SQLException ex) {
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } 
 
         return null;
@@ -200,6 +217,7 @@ public class JournalRepository implements IJournalRepository {
             return createdJournal;
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
             try {
                 connection.rollback();
@@ -246,13 +264,19 @@ public class JournalRepository implements IJournalRepository {
                 if (modifyResultSet.getString("type").equals("deleted")) {
                     return null;
                 }
-                journal = new Journal((UUID) modifyResultSet.getObject("journal_id"), null, null, modifyResultSet.getString("content"), (UUID) modifyResultSet.getObject("author_id"), modifyResultSet.getString("date_modified"));
+                journal = new Journal((UUID) modifyResultSet.getObject("journal_id"), 
+                        null, 
+                        null, 
+                        modifyResultSet.getString("content"), 
+                        (UUID) modifyResultSet.getObject("author_id"), 
+                        modifyResultSet.getString("date_modified"));
             }
 
             return journal;
 
         } catch (SQLException ex) {
             System.out.println("Possible JournalID Error -> Custom SQL statement from code");
+            ex.printStackTrace();
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return null;
