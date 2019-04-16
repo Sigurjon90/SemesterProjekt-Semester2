@@ -52,6 +52,7 @@ public class JournalService implements IJournalService {
         return null;
     }
 
+    @Override
     public JournalDTO findJournaByCitizen(UUID id) {
         Journal journal = journalRepository.findJournalByCitizen(id);
         if (journal != null) {

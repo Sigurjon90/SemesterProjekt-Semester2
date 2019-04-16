@@ -49,7 +49,8 @@ public class JournalRepository implements IJournalRepository {
     @Override
     public List<Journal> getJournals(List<UUID> listOfId) {
         List<Journal> journalList = new ArrayList();
-        try (PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journals.citizens_id = ANY(?);")) {
+        try (PreparedStatement getJournals = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id "
+                + "WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journals.citizens_id = ANY(?);")) {
             java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfId.toArray());
             getJournals.setArray(1, sqlArray);
             ResultSet journalsResult = getJournals.executeQuery();
@@ -68,10 +69,21 @@ public class JournalRepository implements IJournalRepository {
         }
         return journalList;
     }
+    
+//    
+//    select * from journals join journal_events on journal_events.id = (
+//    select id from journal_events
+//    where journal_events.journal_ID = journals.id
+//    order by date_stamp desc
+//    limit 1
+//) WHERE journals.id = '916f98ab-2864-423e-9675-b7608e3ba95d';
 
     @Override
     public Journal findJournal(UUID id) {
-        try(PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journal_events JOIN journals ON journal_events.journal_ID = journals.id WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?")) {
+        try(PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journals join journal_events ON journal_events.id = "
+                + "(SELECT id FROM journal_events "
+                + "WHERE journal_events.journal_ID = journals.id order by date_stamp desc limit 1) "
+                + "WHERE journals.id = ? ")) {
             findJournal.setObject(1, id, Types.OTHER);
             ResultSet journalResultSet = findJournal.executeQuery();
             Journal journal = null;
@@ -88,6 +100,7 @@ public class JournalRepository implements IJournalRepository {
 
         } catch (SQLException e) {
             System.out.println("SQL Exception...");
+            e.printStackTrace();
         }
 
         return null;
@@ -95,7 +108,10 @@ public class JournalRepository implements IJournalRepository {
 
     @Override
     public Journal findJournalByCitizen(UUID id) {
-        try(PreparedStatement findJournal = connection.prepareStatement("select * from journals join journal_events on journal_events.id = (select id from journal_events where journal_events.journal_ID = journals.id order by date_modified desc limit 1) where journals.citizens_id = ? order by journals.date_start DESC LIMIT 1")) {
+        try(PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journals JOIN journal_events ON journal_events.id = "
+                + "(SELECT id FROM journal_events WHERE journal_events.journal_ID = journals.id "
+                + "ORDER BY date_modified DESC limit 1) "
+                + "WHERE journals.citizens_id = ? ORDER BY journals.date_start DESC LIMIT 1")) {
             findJournal.setObject(1, id, Types.OTHER);
             ResultSet journalResultSet = findJournal.executeQuery();
             Journal journal = null;
@@ -112,6 +128,7 @@ public class JournalRepository implements IJournalRepository {
 
         } catch (SQLException e) {
             System.out.println("SQL Exception...");
+            e.printStackTrace();
         }
 
         return null;
@@ -167,6 +184,7 @@ public class JournalRepository implements IJournalRepository {
             PreparedStatement createJournal = connection.prepareStatement("INSERT INTO journals(id, citizens_id) VALUES (?, ?) RETURNING id, date_start, citizens_id");
             createJournal.setObject(1, UUID.randomUUID(), Types.OTHER);
             createJournal.setObject(2, journal.getCitizensID(), Types.OTHER);
+            
             ResultSet journalResultSet = createJournal.executeQuery();
             Journal createdJournal = null;
             while (journalResultSet.next()) {
@@ -208,7 +226,9 @@ public class JournalRepository implements IJournalRepository {
     @Override
     public Journal modifyJournal(JournalDTO journalDTO) {
         try {
-            PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
+            PreparedStatement checker = connection.prepareStatement("SELECT type FROM journal_events "
+                    + "WHERE (journal_ID, date_modified) IN (SELECT journal_ID, MAX(date_modified) "
+                    + "FROM journal_events GROUP BY journal_ID) AND journal_events.journal_ID = ?;");
             checker.setObject(1, journalDTO.getId(), Types.OTHER);
             ResultSet checkResultSet = checker.executeQuery();
             String stringType = "";
@@ -221,7 +241,8 @@ public class JournalRepository implements IJournalRepository {
                 return null;
             }
 
-            PreparedStatement modifyJournal = connection.prepareStatement("INSERT INTO journal_events(id, type, content, author_id, journal_id) VALUES (?, ?, ?, ?, ?) RETURNING id, journal_id, content, type, date_modified, author_id");
+            PreparedStatement modifyJournal = connection.prepareStatement("INSERT INTO journal_events(id, type, content, author_id, journal_id) VALUES (?, ?, ?, ?, ?) "
+                    + "RETURNING id, journal_id, content, type, date_modified, author_id");
             modifyJournal.setObject(1, UUID.randomUUID(), Types.OTHER);
             modifyJournal.setString(2, "modified");
             modifyJournal.setString(3, journalDTO.getContent());
