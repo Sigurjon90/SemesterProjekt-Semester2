@@ -254,7 +254,7 @@ public class JournalRepository implements IJournalRepository {
                 if (modifyResultSet.getString("type").equals("deleted")) {
                     return null;
                 }
-                journal = new Journal((UUID) modifyResultSet.getObject("id"), null, null, modifyResultSet.getString("content"), (UUID) modifyResultSet.getObject("author_id"), modifyResultSet.getString("date_modified"));
+                journal = new Journal((UUID) modifyResultSet.getObject("journal_id"), null, null, modifyResultSet.getString("content"), (UUID) modifyResultSet.getObject("author_id"), modifyResultSet.getString("date_modified"));
             }
 
             return journal;
