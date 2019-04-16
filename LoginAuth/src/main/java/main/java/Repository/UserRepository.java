@@ -72,12 +72,9 @@ public class UserRepository {
         if (usernameExist(user.getUsername())) {
             return null;
         }
-        
-        
 
-     
-
-        try (PreparedStatement createUser = this.connection.prepareStatement(" INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ? ) RETURNING id,username, email, active, adress,role, cpr")) {
+        try {
+            PreparedStatement createUser = this.connection.prepareStatement(" INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ? ) RETURNING id,username, email, active, adress,role, cpr");
             connection.setAutoCommit(false);
             createUser.setObject(1, UUID.randomUUID(), Types.OTHER);
             createUser.setString(2, user.getUsername());
@@ -88,9 +85,17 @@ public class UserRepository {
             createUser.setString(7, user.getRole());
             createUser.setString(8, user.getCpr());
             ResultSet userResult = createUser.executeQuery();
+            User userReturn = null;
             while (userResult.next()) {
-                return new User((UUID) userResult.getObject("id"), userResult.getString("username"), userResult.getString("email"), userResult.getBoolean("active"), userResult.getString("adress"), userResult.getString("role"), userResult.getString("cpr"));
+                userReturn = new User((UUID) userResult.getObject("id"), userResult.getString("username"), userResult.getString("email"), userResult.getBoolean("active"), userResult.getString("adress"), userResult.getString("role"), userResult.getString("cpr"));
+
             }
+            PreparedStatement insertIntoMyCitizens = this.connection.prepareStatement("INSERT INTO my_citizens(user_id) VALUES (?)");
+            insertIntoMyCitizens.setObject(1, userReturn.getId());
+            insertIntoMyCitizens.execute();
+            connection.commit();
+            
+            return userReturn;
         } catch (SQLException e) {
             e.printStackTrace();
         }
