@@ -69,20 +69,12 @@ public class JournalRepository implements IJournalRepository {
         }
         return journalList;
     }
-    
-//    
-//    select * from journals join journal_events on journal_events.id = (
-//    select id from journal_events
-//    where journal_events.journal_ID = journals.id
-//    order by date_stamp desc
-//    limit 1
-//) WHERE journals.id = '916f98ab-2864-423e-9675-b7608e3ba95d';
 
     @Override
     public Journal findJournal(UUID id) {
         try(PreparedStatement findJournal = connection.prepareStatement("SELECT * FROM journals join journal_events ON journal_events.id = "
                 + "(SELECT id FROM journal_events "
-                + "WHERE journal_events.journal_ID = journals.id order by date_stamp desc limit 1) "
+                + "WHERE journal_events.journal_ID = journals.id order by date_modified desc limit 1) "
                 + "WHERE journals.id = ? ")) {
             findJournal.setObject(1, id, Types.OTHER);
             ResultSet journalResultSet = findJournal.executeQuery();
