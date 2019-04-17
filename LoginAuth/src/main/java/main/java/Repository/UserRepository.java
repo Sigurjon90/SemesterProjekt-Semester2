@@ -68,8 +68,8 @@ public class UserRepository implements IUserRepository {
         }
 
         try {
-            PreparedStatement createUser = this.connection.prepareStatement("INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ? ) RETURNING id, username, email, active, adress, role, cpr");
             connection.setAutoCommit(false);
+            PreparedStatement createUser = this.connection.prepareStatement("INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ? ) RETURNING id, username, email, active, adress, role, cpr");
             createUser.setObject(1, UUID.randomUUID(), Types.OTHER);
             createUser.setString(2, user.getUsername());
             createUser.setString(3, user.getPassword());
@@ -112,7 +112,6 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User findUserByUsername(String username) {
-
         try (PreparedStatement findUser = this.connection.prepareStatement("SELECT * FROM users WHERE username = ? AND active=true")) {
             findUser.setString(1, username);
             ResultSet findUsernameResult = findUser.executeQuery();
