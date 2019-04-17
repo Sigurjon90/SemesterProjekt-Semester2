@@ -63,9 +63,7 @@ public class CitizensRepository implements ICitizensRepository {
             List<Citizen> citizenList = new ArrayList();
             Citizen citizen;
             while (limitedResult.next()) {
-                citizen = new Citizen((UUID) limitedResult.getObject("id"), limitedResult.getString("name"), null, null, 0, null, 0, null, true, null, null);
-                citizenList.add(citizen);
-
+                citizenList.add(new Citizen((UUID) limitedResult.getObject("id"), limitedResult.getString("name"), null, null, 0, null, 0, null, true, null, null));
             }
 
             return citizenList;
