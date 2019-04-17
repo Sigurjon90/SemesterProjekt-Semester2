@@ -19,6 +19,6 @@ export default class Journal extends Component {
   render() {
     const { journalStore } = this.props;
     const { journal } = journalStore;
-    return <div>{journal.}</div>;
+    return <div>{journal.id}</div>;
   }
 }
