@@ -25,6 +25,6 @@ public interface IJournalRepository {
 
     Journal findJournalByCitizen(UUID id);
 
-    Journal modifyJournal (Journal journal);
+    Journal modifyJournal(Journal journal);
     
 }
