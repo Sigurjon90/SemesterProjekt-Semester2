@@ -33,7 +33,6 @@ public class CitizensService implements ICitizensService {
     // Create Citizen from CreateDTO
     @Override
     public CitizenDTO createCitizen(CreateDTO createDTO) {
-        
         // Map to citizen
         Citizen citizen = modelMapper.map(createDTO, Citizen.class);
         
@@ -52,17 +51,15 @@ public class CitizensService implements ICitizensService {
         return citizensList.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
     }
     
-    public List<CitizenDTO> getMyCitizens(List<UUID> listOfId) {
-        
-        List<Citizen> citizensList = citizensRepository.getMyCitizens(listOfId);
+    @Override
+    public List<CitizenDTO> getMyCitizens(List<UUID> listOfCitizensIds) {
+        List<Citizen> citizensList = citizensRepository.getMyCitizens(listOfCitizensIds);
         if (citizensList == null) return null;
         return citizensList.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
-        
     }
 
     @Override
     public CitizenDTO findCitizen(UUID id) {
-
         Citizen citizen = citizensRepository.findCitizen(id);
 
         if (citizen != null) {
@@ -74,7 +71,6 @@ public class CitizensService implements ICitizensService {
 
     @Override
     public List<CitizenDTO> batchUpdate(List<CitizenDTO> citizenDTOList) {
-
         List<Citizen> citizensList = citizenDTOList.stream().map(citizenDTO
                 -> modelMapper.map(citizenDTO, Citizen.class)).collect(Collectors.toList());
 

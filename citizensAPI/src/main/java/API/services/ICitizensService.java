@@ -28,4 +28,5 @@ public interface ICitizensService {
 
     List<CitizenDTO> getCitizens();
     
+    List<CitizenDTO> getMyCitizens(List<UUID> listOfCitizensIds);
 }
