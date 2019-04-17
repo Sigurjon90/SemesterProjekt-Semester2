@@ -35,7 +35,6 @@ public class CitizensRepository implements ICitizensRepository {
     private Connection connection = null;
 
     public CitizensRepository(@Value("${database.connection}") String connector, @Value("${database.username}") String username, @Value("${database.password}") String password) {
-
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(connector,
@@ -55,7 +54,6 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public List<Citizen> getMyCitizens(List<UUID> listOfCitizensIds) {
-       
         try (PreparedStatement getLimited = connection.prepareStatement("SELECT * FROM citizens WHERE id = ANY(?)")) {
             java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfCitizensIds.toArray());
             getLimited.setArray(1, sqlArray);
@@ -64,9 +62,7 @@ public class CitizensRepository implements ICitizensRepository {
             while (limitedResult.next()) {
                 citizenList.add(new Citizen((UUID) limitedResult.getObject("id"), limitedResult.getString("name"), null, null, 0, null, 0, null, true, null, null));
             }
-
             return citizenList;
-
         } catch (SQLException ex) {
             Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -99,9 +95,7 @@ public class CitizensRepository implements ICitizensRepository {
                         citizensResult.getString("date_created"),
                         (UUID) citizensResult.getObject("author_id")));
             }
-
             return citizensList;
-
         } catch (SQLException ex) {
             Logger.getLogger(Repository.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -113,17 +107,14 @@ public class CitizensRepository implements ICitizensRepository {
     public Citizen findCitizen(UUID id) {
         try (PreparedStatement findCitizen = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ? AND archived = false")) {
             findCitizen.setObject(1, id);
-
             ResultSet citizenResultSet = findCitizen.executeQuery();
-            Citizen citizen = null;
 
             while (citizenResultSet.next()) {
-
                 Array sqlArrayOfDiagnoses = citizenResultSet.getArray("diagnoses");
                 String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
                 List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
 
-                citizen = new Citizen((UUID) citizenResultSet.getObject("id"),
+                return new Citizen((UUID) citizenResultSet.getObject("id"),
                         citizenResultSet.getString("name"),
                         citizenResultSet.getString("adress"),
                         citizenResultSet.getString("city"),
@@ -135,9 +126,6 @@ public class CitizensRepository implements ICitizensRepository {
                         citizenResultSet.getString("date_created"),
                         (UUID) citizenResultSet.getObject("author_id"));
             }
-
-            return citizen;
-
         } catch (SQLException ex) {
             System.out.println("SQL Exception....");
             System.out.println("Read the Exeption");
@@ -159,7 +147,6 @@ public class CitizensRepository implements ICitizensRepository {
             if (affectedRows == 0) {
                 return false;
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
             return false;
@@ -170,7 +157,6 @@ public class CitizensRepository implements ICitizensRepository {
     @Override
     public List<Citizen> batchUpdate(List<Citizen> citizenList) {
         List<Citizen> citizensListReturned = new ArrayList<>();
-
         // Deleting all diagnoses
         try {
             connection.setAutoCommit(false);
@@ -251,8 +237,7 @@ public class CitizensRepository implements ICitizensRepository {
     }
 
     @Override
-    public Citizen createCitizen(Citizen citizen) {
-            
+    public Citizen createCitizen(Citizen citizen) {      
         try {
             connection.setAutoCommit(false);
             PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, adress, city, zip, cpr, phone, archived, date_created, author_id;");
@@ -282,10 +267,8 @@ public class CitizensRepository implements ICitizensRepository {
                 setDiagnoses.setString(2, diagnoseString);
                 setDiagnoses.execute();
             }
-
             connection.commit();
             return citizenCreated;
-
         } catch (SQLException e) {
             e.printStackTrace();
         } 
