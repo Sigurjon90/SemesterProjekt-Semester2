@@ -5,7 +5,6 @@
  */
 package API.controllers;
 
-import API.entities.Citizen;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
 import API.entities.DeleteDTO;
@@ -18,7 +17,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @author sigur
  * @author thinkbuntu
  */
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/citizens")
 public class CitizensController {
