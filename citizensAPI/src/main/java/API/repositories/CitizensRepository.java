@@ -144,7 +144,7 @@ public class CitizensRepository implements ICitizensRepository {
         } catch (SQLException ex) {
             System.out.println("SQL Exception....");
             System.out.println("Read the Exeption");
-            ex.printStackTrace();
+            Logger.getLogger(Repository.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return null;
@@ -179,9 +179,7 @@ public class CitizensRepository implements ICitizensRepository {
                 PreparedStatement deleteDiagnoses = this.connection.prepareStatement("DELETE FROM diagnose WHERE citizens_id = ?");
                 deleteDiagnoses.setObject(1, citizen.getId());
                 deleteDiagnoses.execute();
-
-            }
-            for (Citizen citizen : citizenList) {
+                
                 // Adding all new diagnoses
                 for (String diagnoseString : citizen.getDiagnoses()) {
                     PreparedStatement setDiagnoses = connection.prepareStatement("INSERT INTO diagnose(citizens_id, diagnose) VALUES (?, ?) RETURNING diagnose;");
@@ -189,13 +187,9 @@ public class CitizensRepository implements ICitizensRepository {
                     setDiagnoses.setString(2, diagnoseString);
                     setDiagnoses.execute();
                 }
-            }
-
-            // Updating all Citizens
-            for (Citizen citizen : citizenList) {
 
                 PreparedStatement updateCitizen = this.connection.prepareStatement("UPDATE citizens SET name = ?,"
-                        + "adress = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ?");
+                        + "adress = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ? RETURNING id, name, adress, city, zip, cpr, phone, archibed, date_created, author_id, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses");
 
                 updateCitizen.setString(1, citizen.getName());
                 updateCitizen.setString(2, citizen.getAdress());
@@ -205,25 +199,14 @@ public class CitizensRepository implements ICitizensRepository {
                 updateCitizen.setObject(6, citizen.getAuthorId());
                 updateCitizen.setObject(7, citizen.getId());
 
-                updateCitizen.execute();
-            }
-
-            // Returning all Citizens changed
-            for (Citizen citizen : citizenList) {
-                PreparedStatement getCitizensChanged = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses FROM citizens WHERE id = ?;");
-                getCitizensChanged.setObject(1, citizen.getId());
-                getCitizensChanged.setObject(2, citizen.getId());
-                ResultSet citizensChangedResult = getCitizensChanged.executeQuery();
+                ResultSet citizensChangedResult = updateCitizen.executeQuery();
 
                 while (citizensChangedResult.next()) {
-
                     Array sqlArrayOfDiagnoses = citizensChangedResult.getArray("diagnoses");
                     String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
                     List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
 
-                    // List<String> listString = Arrays.asList(arr);
-                    // Arrays.asList(citizensChangedResult.getArray("diagnoses"))
-                    citizen = new Citizen((UUID) citizensChangedResult.getObject("id"),
+                    citizensListReturned.add(new Citizen((UUID) citizensChangedResult.getObject("id"),
                             citizensChangedResult.getString("name"),
                             citizensChangedResult.getString("adress"),
                             citizensChangedResult.getString("city"),
@@ -233,20 +216,14 @@ public class CitizensRepository implements ICitizensRepository {
                             listOfDiagnoses,
                             citizensChangedResult.getBoolean("archived"),
                             citizensChangedResult.getString("date_created"),
-                            (UUID) citizensChangedResult.getObject("author_id"));
-
-                    citizensListReturned.add(citizen);
+                            (UUID) citizensChangedResult.getObject("author_id")));
                 }
-
             }
             connection.commit();
+            return citizensListReturned;
         } catch (SQLException ex) {
             Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
         } 
-
-        if (citizensListReturned != null) {
-            return citizensListReturned;
-        }
 
         return null;
     }
@@ -284,8 +261,8 @@ public class CitizensRepository implements ICitizensRepository {
             }
             connection.commit();
             return citizenCreated;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            Logger.getLogger(Repository.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return null;
     }
