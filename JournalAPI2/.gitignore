@@ -169,13 +169,8 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-**/node_modules/ 
-
 # Windows shortcuts
 *.lnk
 
 # End of https://www.gitignore.io/api/java,macos,windows,netbeans,intellij
-
-/citizensAPI/target/
 /JournalAPI2/target/
-
