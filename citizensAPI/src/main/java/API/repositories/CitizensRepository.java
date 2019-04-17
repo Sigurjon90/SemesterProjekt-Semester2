@@ -53,10 +53,11 @@ public class CitizensRepository implements ICitizensRepository {
         }
     }
 
-    public List<Citizen> getMyCitizens(List<UUID> listOfId) {
+    @Override
+    public List<Citizen> getMyCitizens(List<UUID> listOfCitizensIds) {
        
         try (PreparedStatement getLimited = connection.prepareStatement("SELECT * FROM citizens WHERE id = ANY(?)")) {
-            java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfId.toArray());
+            java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfCitizensIds.toArray());
             getLimited.setArray(1, sqlArray);
             ResultSet limitedResult = getLimited.executeQuery();
             List<Citizen> citizenList = new ArrayList();
