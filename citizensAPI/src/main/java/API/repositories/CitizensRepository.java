@@ -54,13 +54,28 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public List<Citizen> getMyCitizens(List<UUID> listOfCitizensIds) {
-        try (PreparedStatement getLimited = connection.prepareStatement("SELECT * FROM citizens WHERE id = ANY(?)")) {
+        
+        try (PreparedStatement getLimited = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ANY(?) AND archived = false")) {
             java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfCitizensIds.toArray());
             getLimited.setArray(1, sqlArray);
-            ResultSet limitedResult = getLimited.executeQuery();
+            ResultSet citizensResult = getLimited.executeQuery();
             List<Citizen> citizenList = new ArrayList();
-            while (limitedResult.next()) {
-                citizenList.add(new Citizen((UUID) limitedResult.getObject("id"), limitedResult.getString("name"), null, null, 0, null, 0, null, true, null, null));
+            while (citizensResult.next()) {
+                Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
+                String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
+                List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
+                
+                citizenList.add(new Citizen((UUID) citizensResult.getObject("id"),
+                        citizensResult.getString("name"),
+                        citizensResult.getString("adress"),
+                        citizensResult.getString("city"),
+                        citizensResult.getInt("zip"),
+                        citizensResult.getString("cpr"),
+                        citizensResult.getInt("phone"),
+                        listOfDiagnoses,
+                        citizensResult.getBoolean("archived"),
+                        citizensResult.getString("date_created"),
+                        (UUID) citizensResult.getObject("author_id")));
             }
             return citizenList;
         } catch (SQLException ex) {
