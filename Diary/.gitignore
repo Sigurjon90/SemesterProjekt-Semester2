@@ -5,10 +5,6 @@
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-
-#database
-*.properties
-
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -36,10 +32,9 @@
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
- .idea/modules.xml
- .idea/*.iml
- .idea/modules
-
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
 
 # CMake
 cmake-build-*/
@@ -170,15 +165,8 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-**/node_modules/ 
-
 # Windows shortcuts
 *.lnk
 
-**/.idea/**
-**/target/**
-
 # End of https://www.gitignore.io/api/java,macos,windows,netbeans,intellij
 /Diary/target/
-/citizensAPI/target/
-/JournalAPI2/target/
