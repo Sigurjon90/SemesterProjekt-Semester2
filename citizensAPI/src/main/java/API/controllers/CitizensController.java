@@ -44,11 +44,11 @@ public class CitizensController {
         
         // Here we need list of UUID on Users you have assigned to you
         // THIS IS A TEST LIST
-        List<UUID> listOfId = new ArrayList();
-        listOfId.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
-        listOfId.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
+        List<UUID> listOfCitizensIds = new ArrayList();
+        listOfCitizensIds.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
+        listOfCitizensIds.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
         
-        List<CitizenDTO> citizensDTOList = citizensService.getMyCitizens(listOfId);
+        List<CitizenDTO> citizensDTOList = citizensService.getMyCitizens(listOfCitizensIds);
         if(citizensDTOList != null) return new ResponseEntity(citizensDTOList, HttpStatus.OK);
         return new ResponseEntity(HttpStatus.NOT_FOUND);
        
