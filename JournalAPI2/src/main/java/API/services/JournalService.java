@@ -25,8 +25,8 @@ public class JournalService implements IJournalService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<JournalDTO> getJournals(List<UUID> listOfId) {
-        List<Journal> journalList = journalRepository.getJournals(listOfId);
+    public List<JournalDTO> getJournals(List<UUID> listOfCitizensIds) {
+        List<Journal> journalList = journalRepository.getJournals(listOfCitizensIds);
         return journalList.stream().map(journal -> modelMapper.map(journal, JournalDTO.class)).collect(Collectors.toList());
     }
 
@@ -67,10 +67,11 @@ public class JournalService implements IJournalService {
      */
     @Override
     public JournalDTO modifyJournal(JournalDTO journalDTO) {
-        Journal journal = journalRepository.modifyJournal(journalDTO);
+        Journal journal = modelMapper.map(journalDTO, Journal.class);
+        Journal journalMoified = journalRepository.modifyJournal(journal);
 
-        if (journal != null) {
-            return modelMapper.map(journal, JournalDTO.class);
+        if (journalMoified != null) {
+            return modelMapper.map(journalMoified, JournalDTO.class);
         }
         return null;
     }

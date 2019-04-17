@@ -6,7 +6,6 @@
 package API.repositories;
 
 import API.entities.Journal;
-import API.entities.JournalDTO;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,19 +21,10 @@ public interface IJournalRepository {
 
     Journal findJournal(UUID id);
 
-    List<Journal> getJournals(List<UUID> listOfId);
+    List<Journal> getJournals(List<UUID> listOfCitizensIds);
 
     Journal findJournalByCitizen(UUID id);
 
-        /*
-    Param: journalDTO
-    Purpose: createsEvent from journalDTO
-    Returns: Event object
-         */
-        Journal modifyJournal
-        (JournalDTO journalDTO
-    
-
-);
+    Journal modifyJournal (Journal journal);
     
 }

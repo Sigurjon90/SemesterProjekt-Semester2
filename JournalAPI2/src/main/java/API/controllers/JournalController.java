@@ -30,10 +30,10 @@ public class JournalController {
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getJournals() {
 
-        List<UUID> listOfId = new ArrayList();
-        listOfId.add(UUID.fromString("40de45b8-0fc5-439a-8b64-e74ac9350d4b"));
-        listOfId.add(UUID.fromString("150e7ddb-1c87-423d-8786-657c83cdc38b"));
-        List<JournalDTO> journals = journalService.getJournals(listOfId);
+        List<UUID> listOfCitizensIds = new ArrayList();
+        listOfCitizensIds.add(UUID.fromString("40de45b8-0fc5-439a-8b64-e74ac9350d4b"));
+        listOfCitizensIds.add(UUID.fromString("150e7ddb-1c87-423d-8786-657c83cdc38b"));
+        List<JournalDTO> journals = journalService.getJournals(listOfCitizensIds);
 
         return new ResponseEntity(journals, HttpStatus.OK);
     }

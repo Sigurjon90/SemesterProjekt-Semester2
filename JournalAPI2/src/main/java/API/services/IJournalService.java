@@ -24,7 +24,7 @@ public interface IJournalService {
     // Find Journal
     JournalDTO findJournal(UUID id);
 
-    List<JournalDTO> getJournals(List<UUID> list);
+    List<JournalDTO> getJournals(List<UUID> listOfCitizensIds);
 
     /*
     Maps Event to EventDTO
