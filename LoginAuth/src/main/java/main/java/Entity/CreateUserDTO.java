@@ -19,16 +19,12 @@ import lombok.Setter;
 @AllArgsConstructor 
 @NoArgsConstructor
 public class CreateUserDTO {
+    
     private String username; 
     private String password; 
     private String role;
     private String email; 
     private String Cpr; 
     private String adress; 
-    
-    
-    
-    
-    
     
 }
