@@ -1,49 +1,88 @@
-import React, { Component } from 'react'
-import { inject, observer } from 'mobx-react'
-import CitizenName from './Citizen'
-import CitizenExtra from './CitizenExtra'
-import {
-  List, Skeleton, Avatar, Spin,
-} from 'antd';
+import React, { Component } from "react";
+import { inject, observer } from "mobx-react";
+import { Link } from "react-router-dom";
+import { List, Skeleton, Avatar, Table, Divider, Tag } from "antd";
 
-@inject('citizensStore')
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    render: (text, data) => <Link to={`/citizens/${data.id}`}>{text}</Link>
+  },
+  {
+    title: "Address",
+    dataIndex: "adress",
+    key: "adress"
+  },
+  {
+    title: "City",
+    dataIndex: "city",
+    key: "city"
+  },
+  {
+    title: "ZIP Code",
+    dataIndex: "zip",
+    key: "zip"
+  },
+  {
+    title: "Phone",
+    dataIndex: "phoneNumber",
+    key: "phoneNumber"
+  },
+  {
+    title: "Diagnoses",
+    key: "diagnoses",
+    dataIndex: "diagnoses",
+    render: tags => (
+      <span>
+        {tags.map(tag => {
+          let color = tag.length > 5 ? "geekblue" : "green";
+          if (tag === "PHP-programmør") {
+            color = "volcano";
+          }
+          return (
+            <Tag color={color} key={tag}>
+              {tag.toUpperCase()}
+            </Tag>
+          );
+        })}
+      </span>
+    )
+  }
+];
+
+const config = {
+  pagination: {
+    defaultPageSize: 8
+  }
+};
+
+@inject("citizensStore")
 @observer
 export default class CitizensList extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     // Maps a method over in another metod -> getCitizens is now the same as fetchCitizens
-    this.getCitizens = () => this.props.citizensStore.fetchCitizens()
+    this.getCitizens = () => this.props.citizensStore.fetchCitizens();
   }
 
   componentWillMount() {
-    this.getCitizens()
+    this.getCitizens();
   }
 
   render() {
-    const { citizensStore } = this.props
-    const { citizens, isFetching } = citizensStore
+    const { citizensStore } = this.props;
+    const { citizens } = citizensStore;
     return (
       <div>
-        <List
-            dataSource={citizens}
-            renderItem={citizen => (
-              <List.Item key={citizen.name}>
-                <Skeleton loading={isFetching} active>
-                  <List.Item.Meta
-                    avatar={<Avatar src="https://webiconspng.com/wp-content/uploads/2017/09/Donald-Trump-PNG-Image-27422.png" />}
-                    title={<a href="https://ant.design">{citizen.name.last}</a>}
-                    description={citizen.adress}
-                  />
-                  <div>{citizen.zip}</div>
-                </Skeleton>
-              </List.Item>
-            )}
-          >
-        </List>
-        {citizens.map((citizen) => <CitizenName {...citizen}/>)}
-        {citizens.map((citizenExtra) => <CitizenExtra {...citizenExtra}/>)}
-        {"Penis"}
+        <Table
+          {...citizens}
+          {...config}
+          columns={columns}
+          dataSource={citizens}
+        />
       </div>
-    )
+    );
   }
 }
