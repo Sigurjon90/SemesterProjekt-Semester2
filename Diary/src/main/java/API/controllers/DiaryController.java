@@ -5,21 +5,11 @@
  */
 package API.controllers;
 
-import API.entities.Diary;
-
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import API.entities.DiaryDTO;
-import API.repositories.DiaryRepository;
-import API.repositories.IDiaryRepository;
-import API.services.DiaryService;
 import API.services.IDiaryService;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/diaries")
 
 public class DiaryController {
+    
     @Autowired
     private IDiaryService diaryService;
     
@@ -41,22 +32,22 @@ public class DiaryController {
      return new ResponseEntity(diaryService.getDiaries(), HttpStatus.OK);
     }
 
-
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity getDiary(@PathVariable("id") String id){
         Optional diary = diaryService.findById(UUID.fromString(id));
         if(diary.isPresent()) {
             return new ResponseEntity(diary.get(), HttpStatus.OK);
         }
-        return new ResponseEntity("not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
-    @RequestMapping(path = "/{citizenID}", method = RequestMethod.GET)
-    public ResponseEntity getByCitizenID(@PathVariable("citizenID") String citizenID){
-        Optional diary = diaryService.findByCitizenId(UUID.fromString(citizenID));
+    
+    @RequestMapping(path = "/citizen/{id}", method = RequestMethod.GET)
+    public ResponseEntity getByCitizenID(@PathVariable("id") String id){
+        Optional diary = diaryService.findByCitizenId(UUID.fromString(id));
         if (diary.isPresent()){
             return new ResponseEntity(diary.get(), HttpStatus.OK);
         }
-        return new ResponseEntity("not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -76,6 +67,7 @@ public class DiaryController {
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
+    
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity deleteDiary(@RequestBody DiaryDTO diaryDTO){
         boolean isDeleted = diaryService.deleteDiary(diaryDTO);
