@@ -14,11 +14,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.java.Entity.User;
-import main.java.Entity.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +23,7 @@ import org.springframework.stereotype.Repository;
  * @author jacobwowkjorgensen
  */
 @Repository
-public class UserRepository {
+public class UserRepository implements IUserRepository {
 
     private Connection connection;
 
@@ -44,6 +40,7 @@ public class UserRepository {
         }
     }
 
+    @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList();
         try (PreparedStatement getUsers = this.connection.prepareStatement("SELECT *  FROM users WHERE active=true")) {
@@ -58,23 +55,20 @@ public class UserRepository {
         return users;
     }
 
+    @Override
     public boolean usernameExist(String username) {
         User user = findUserByUsername(username);
-
-        if (user != null) {
-            return true;
-        }
-        return false;
+        return user != null;
     }
 
+    @Override
     public User CreateUser(User user) {
-
         if (usernameExist(user.getUsername())) {
             return null;
         }
 
         try {
-            PreparedStatement createUser = this.connection.prepareStatement(" INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ? ) RETURNING id,username, email, active, adress,role, cpr");
+            PreparedStatement createUser = this.connection.prepareStatement("INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ? ) RETURNING id, username, email, active, adress, role, cpr");
             connection.setAutoCommit(false);
             createUser.setObject(1, UUID.randomUUID(), Types.OTHER);
             createUser.setString(2, user.getUsername());
@@ -102,14 +96,13 @@ public class UserRepository {
         return null;
     }
 
+    @Override
     public User findUserById(UUID id) {
-
         try (PreparedStatement findUser = this.connection.prepareStatement("SELECT * FROM users WHERE id = ? AND active=true")) {
             findUser.setObject(1, id, Types.OTHER);
             ResultSet findUserResult = findUser.executeQuery();
             while (findUserResult.next()) {
-                User user = new User((UUID) findUserResult.getObject("id"), findUserResult.getString("username"), findUserResult.getBoolean("active"), findUserResult.getString("role"), findUserResult.getString("email"), findUserResult.getString("adress"));
-                return user;
+                return new User((UUID) findUserResult.getObject("id"), findUserResult.getString("username"), findUserResult.getBoolean("active"), findUserResult.getString("role"), findUserResult.getString("email"), findUserResult.getString("adress"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,6 +110,7 @@ public class UserRepository {
         return null;
     }
 
+    @Override
     public User findUserByUsername(String username) {
 
         try (PreparedStatement findUser = this.connection.prepareStatement("SELECT * FROM users WHERE username = ? AND active=true")) {
@@ -131,6 +125,7 @@ public class UserRepository {
         return null;
     }
 
+    @Override
     public boolean deleteUserById(UUID id) {
         try (PreparedStatement deleteUser = this.connection.prepareStatement("UPDATE users SET active = false WHERE id = ? ")) {
             deleteUser.setObject(1, id, Types.OTHER);
@@ -145,28 +140,9 @@ public class UserRepository {
         return true;
     }
 
-//    public User updateUser(User user) {
-//        try (PreparedStatement updateUser = this.connection.prepareStatement("UPDATE users SET username = ?, password = ? , email = ?, adress = ?,  WHERE id = ? ")) {
-//            updateUser.setString(1, user.getUsername());
-//            updateUser.setString(2, user.getPassword());
-//            updateUser.setString(3, user.getEmail());
-//            updateUser.setString(4, user.getAdress());
-//            updateUser.setObject(5, user.getId());
-//
-//            ResultSet updateResult = updateUser.executeQuery();
-//            while (updateResult.next()) {
-//                return new User((UUID) updateResult.getObject("id"), updateResult.getString("username"), updateResult.getString("email"), updateResult.getBoolean("active"), updateResult.getString("adress"), updateResult.getString("role"), updateResult.getString("cpr"));
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
+    @Override
     public User updateUser(User user) {
-        try {
-            PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ?, password = ? , email = ? , adress = ?  WHERE id = ?  RETURNING id , username, password, email, active, adress, role, cpr");
-
+        try (PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ?, password = ? , email = ? , adress = ?  WHERE id = ?  RETURNING id , username, password, email, active, adress, role, cpr")) {
             update.setString(1, user.getUsername());
             update.setString(2, user.getPassword());
             update.setString(3, user.getEmail());
@@ -175,17 +151,14 @@ public class UserRepository {
             ResultSet updateResult = update.executeQuery();
             while (updateResult.next()) {
                 return new User((UUID) updateResult.getObject("id"), updateResult.getString("username"), updateResult.getString("password"), updateResult.getString("email"), updateResult.getBoolean("active"), updateResult.getString("adress"), updateResult.getString("role"), updateResult.getString("cpr"), null);
-
             }
-
-            return user;
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    @Override
     public List<UUID> findCitizensById(UUID id) {
         List<UUID> citizens = new ArrayList<>();
         try (PreparedStatement findCitizen = this.connection.prepareStatement("SELECT * FROM my_citizens WHERE user_id = ?")) {
@@ -199,7 +172,6 @@ public class UserRepository {
             e.printStackTrace();
         }
         return null;
-
     }
 
 }
