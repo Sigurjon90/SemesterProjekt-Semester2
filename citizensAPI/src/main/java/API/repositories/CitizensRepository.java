@@ -78,19 +78,16 @@ public class CitizensRepository implements ICitizensRepository {
     public List<Citizen> getCitizens() {
         try (PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE archived = false")) {
             ResultSet citizensResult = getCitizens.executeQuery();
-            Citizen citizen = null;
-
             List<Citizen> citizensList = new ArrayList<>();
 
             while (citizensResult.next()) {
-
                 Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
                 String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
                 List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
 
                 // List<String> listString = Arrays.asList(arr);
                 // Arrays.asList(citizensChangedResult.getArray("diagnoses"))
-                citizen = new Citizen((UUID) citizensResult.getObject("id"),
+                citizensList.add(new Citizen((UUID) citizensResult.getObject("id"),
                         citizensResult.getString("name"),
                         citizensResult.getString("adress"),
                         citizensResult.getString("city"),
@@ -100,9 +97,7 @@ public class CitizensRepository implements ICitizensRepository {
                         listOfDiagnoses,
                         citizensResult.getBoolean("archived"),
                         citizensResult.getString("date_created"),
-                        (UUID) citizensResult.getObject("author_id"));
-
-                citizensList.add(citizen);
+                        (UUID) citizensResult.getObject("author_id")));
             }
 
             return citizensList;
