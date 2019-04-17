@@ -40,7 +40,6 @@
  .idea/*.iml
  .idea/modules
 
-
 # CMake
 cmake-build-*/
 
@@ -170,15 +169,7 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-**/node_modules/ 
-
 # Windows shortcuts
 *.lnk
 
-**/.idea/**
-**/target/**
-
 # End of https://www.gitignore.io/api/java,macos,windows,netbeans,intellij
-/Diary/target/
-/citizensAPI/target/
-/JournalAPI2/target/
