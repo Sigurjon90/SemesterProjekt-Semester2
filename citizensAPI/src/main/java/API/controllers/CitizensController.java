@@ -39,7 +39,7 @@ public class CitizensController {
     CitizensService citizensService;
     
     // Get assigned citizens
-    @RequestMapping(path = "/myusers", method = RequestMethod.GET)
+    @RequestMapping(path = "/mycitizens", method = RequestMethod.GET)
     public ResponseEntity getMyCitizens() {
         
         // Here we need list of UUID on Users you have assigned to you
