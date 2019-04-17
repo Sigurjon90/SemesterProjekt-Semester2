@@ -61,7 +61,6 @@ public class CitizensRepository implements ICitizensRepository {
             getLimited.setArray(1, sqlArray);
             ResultSet limitedResult = getLimited.executeQuery();
             List<Citizen> citizenList = new ArrayList();
-            Citizen citizen;
             while (limitedResult.next()) {
                 citizenList.add(new Citizen((UUID) limitedResult.getObject("id"), limitedResult.getString("name"), null, null, 0, null, 0, null, true, null, null));
             }
