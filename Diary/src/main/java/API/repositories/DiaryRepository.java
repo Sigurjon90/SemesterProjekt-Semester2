@@ -3,13 +3,9 @@ package API.repositories;
 import API.entities.Diary;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import sun.reflect.generics.tree.TypeSignature;
 
-import javax.management.Query;
-import javax.print.attribute.DateTimeSyntax;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,19 +25,15 @@ public class DiaryRepository implements IDiaryRepository {
         try {
             Class.forName("org.postgresql.Driver");
             this.connection = DriverManager.getConnection(connection, username, password);
-
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
-
     }
-
 
     @Override
     public Optional<Diary> createDiary(Diary diary) {
-        try {
-            PreparedStatement diaryCreate = this.connection.prepareStatement(
-                    "INSERT INTO Diaries(id, content, author_id, citizen_id, title) Values(?, ?, ?, ?, ?) returning id, title, content, author_ID, citizen_ID, date_created, date_modified");
+        try (PreparedStatement diaryCreate = this.connection.prepareStatement(
+                    "INSERT INTO Diaries(id, content, author_id, citizen_id, title) Values(?, ?, ?, ?, ?) returning id, title, content, author_ID, citizen_ID, date_created, date_modified")) {
             diaryCreate.setObject(1, UUID.randomUUID(), Types.OTHER);
             diaryCreate.setString(2, diary.getContent());
             diaryCreate.setObject(3, diary.getAuthorID(), Types.OTHER);
@@ -68,9 +60,8 @@ public class DiaryRepository implements IDiaryRepository {
 
     @Override
     public Optional<Diary> findById(UUID id) {
-        try {
-            PreparedStatement diaryLookup = this.connection.prepareStatement(
-                    "SELECT * FROM diaries WHERE id = ? AND archived = false");
+        try (PreparedStatement diaryLookup = this.connection.prepareStatement(
+                    "SELECT * FROM diaries WHERE id = ? AND archived = false")) {
             diaryLookup.setObject(1, id, Types.OTHER);
             ResultSet diaryResult = diaryLookup.executeQuery();
             while (diaryResult.next()) {
@@ -91,9 +82,8 @@ public class DiaryRepository implements IDiaryRepository {
 
     @Override
     public Optional<Diary> findByCitizenID(UUID citizenID) {
-        try {
-            PreparedStatement diaryLookup = this.connection.prepareStatement(
-                    "SELECT * FROM diaries WHERE citizen_id = ? AND archived = false returning id, citizen_id, author_id, content");
+        try (PreparedStatement diaryLookup = this.connection.prepareStatement(
+                    "SELECT * FROM diaries WHERE citizen_id = ? AND archived = false returning id, citizen_id, author_id, content")) {
             diaryLookup.setObject(1, citizenID, Types.OTHER);
             ResultSet diaryResult = diaryLookup.executeQuery();
             while (diaryResult.next()) {
@@ -115,8 +105,7 @@ public class DiaryRepository implements IDiaryRepository {
     @Override
     public List<Diary> getDiaries() {
         List<Diary> diaries = new ArrayList<>();
-        try {
-            PreparedStatement diariesLookup = this.connection.prepareStatement("SELECT * FROM diaries WHERE archived = false");
+        try (PreparedStatement diariesLookup = this.connection.prepareStatement("SELECT * FROM diaries WHERE archived = false")) {
             ResultSet dairiesResult = diariesLookup.executeQuery();
             while (dairiesResult.next()) {
                 diaries.add(new Diary(
@@ -137,9 +126,8 @@ public class DiaryRepository implements IDiaryRepository {
 
     @Override
     public Optional<Diary> updateDiary(Diary diary) {
-        try {
-            PreparedStatement diaryUpdate = this.connection.prepareStatement(
-                    "UPDATE Diaries SET content = ? WHERE id = ?  returning id, content, author_ID, citizen_ID, date_created, date_modified, title");
+        try (PreparedStatement diaryUpdate = this.connection.prepareStatement(
+                    "UPDATE Diaries SET content = ? WHERE id = ?  returning id, content, author_ID, citizen_ID, date_created, date_modified, title")) {
             diaryUpdate.setString(1, diary.getContent());
             diaryUpdate.setObject(2, diary.getId(), Types.OTHER);
             ResultSet updateDiaryResult = diaryUpdate.executeQuery();
