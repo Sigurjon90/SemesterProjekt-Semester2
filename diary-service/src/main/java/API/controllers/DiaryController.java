@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Jonas
  */
 @RestController
-@RequestMapping("/diaries")
+@RequestMapping("/")
 
 public class DiaryController {
     

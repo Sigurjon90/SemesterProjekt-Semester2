@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author thinkbuntu
  */
 @RestController
-@RequestMapping("/citizens")
+@RequestMapping("/")
 public class CitizensController {
 
     @Autowired
