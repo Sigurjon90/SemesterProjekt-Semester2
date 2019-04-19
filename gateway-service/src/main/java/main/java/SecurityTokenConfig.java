@@ -12,7 +12,6 @@ package main.java;
 import java.util.Arrays;
 import javax.servlet.http.HttpServletResponse;
 
-import main.java.security.JwtConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -25,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import security.JwtConfig;
 
 @EnableWebSecurity 	// Enable security config. This annotation denotes config for spring security.
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
