@@ -6,18 +6,15 @@ import { action, computed, observable } from "mobx";
 class CitizensStore {
   @observable error = null;
   @observable isFetching = false;
+  @observable isFetching = false;
   @observable citizens = [];
+  @observable citizen = null;
 
   @action async fetchCitizens() {
     this.isFetching = true;
     this.error = null;
     try {
-      // Const = Bare en variabel -> Type er ikke nødvendigt i JS = immutable
-      //Let lever i begrænset scope og kan assignes new value
-      //Var har højere scope
       const response = await axios.get("http://localhost:1338/citizens");
-      console.log(response.data);
-      // Data bliver smidt  i array
       this.citizens = response.data;
       this.isFetching = false;
     } catch (error) {
@@ -25,6 +22,21 @@ class CitizensStore {
       this.isFetching = false;
     }
   }
+
+  @action async fetchCitizen(id) {
+    this.isFetching = true;
+    this.error = null;
+    try {
+      const response = await axios.get(`http://localhost:1338/citizens/${id}`);
+      this.citizen = response.data;
+      console.log(this.citizen)
+      this.isFetching = false;
+    } catch (error) {
+      this.error = error;
+      this.isFetching = false;
+    }
+  }
+
 }
 
 const citizensStore = new CitizensStore();
