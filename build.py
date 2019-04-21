@@ -15,7 +15,7 @@ def log(out, dir):
 def run(dir):
   os.chdir(dir)
   process = subprocess.Popen(
-    "mvn clean package exec:java",
+    "mvn clean package",
     shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
   )
   out, err = process.communicate()

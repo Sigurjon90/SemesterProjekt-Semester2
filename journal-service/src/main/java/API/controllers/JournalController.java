@@ -11,13 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import security.JwtUtils;
 
 @RestController
 @RequestMapping("/")
@@ -26,13 +24,14 @@ public class JournalController {
     @Autowired
     IJournalService journalService;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     // Find all journals ASSIGNED TO YOU by Citizens ID
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getJournals() {
-
-        List<UUID> listOfCitizensIds = new ArrayList();
-        listOfCitizensIds.add(UUID.fromString("40de45b8-0fc5-439a-8b64-e74ac9350d4b"));
-        listOfCitizensIds.add(UUID.fromString("150e7ddb-1c87-423d-8786-657c83cdc38b"));
+    public ResponseEntity getJournals(@RequestHeader HttpHeaders httpHeaders) {
+        String token = httpHeaders.get("authorization").get(0);
+        List<UUID> listOfCitizensIds = jwtUtils.getMyCitizens(token);
         List<JournalDTO> journals = journalService.getJournals(listOfCitizensIds);
 
         return new ResponseEntity(journals, HttpStatus.OK);

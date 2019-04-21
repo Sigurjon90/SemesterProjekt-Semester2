@@ -11,6 +11,7 @@ import java.util.UUID;
 import API.Entity.CreateUserDTO;
 import API.Entity.User;
 import API.Entity.UserDTO;
+import API.Entity.ValidatedUserDTO;
 import API.Repository.IUserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +61,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO findUserByUsername(String username) {
+    public ValidatedUserDTO findUserByUsername(String username) {
         User userDTO = userRepository.findUserByUsername(username);
         if (userDTO != null) {
-            return modelMapper.map(userDTO, UserDTO.class);
+            return modelMapper.map(userDTO, ValidatedUserDTO.class);
         }
         return null;
     }

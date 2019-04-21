@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
+import security.JwtConfig;
+import security.JwtUtils;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,5 +29,13 @@ public class Application {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
+
+    @Bean
+    public JwtUtils jwtUtils() {
+        return new JwtUtils();
+    }
+
+    @Bean
+    public JwtConfig jwtConfig() { return new JwtConfig(); }
 
 }

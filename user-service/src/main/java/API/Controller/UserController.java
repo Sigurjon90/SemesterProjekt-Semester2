@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import API.Entity.CreateUserDTO;
 import API.Entity.UserDTO;
+import API.Entity.ValidatedUserDTO;
 import API.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,7 +69,7 @@ public class UserController {
 
     @RequestMapping(path = "/username/{username}", method = RequestMethod.GET)
     public ResponseEntity findUserByUsername(@PathVariable("username") String username) {
-        UserDTO user = userService.findUserByUsername(username);
+        ValidatedUserDTO user = userService.findUserByUsername(username);
 
         if (user != null) {
             return new ResponseEntity(user, HttpStatus.OK);
@@ -98,4 +99,5 @@ public class UserController {
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+
 }

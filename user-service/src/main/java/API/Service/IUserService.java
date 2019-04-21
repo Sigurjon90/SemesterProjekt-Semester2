@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import API.Entity.CreateUserDTO;
 import API.Entity.UserDTO;
+import API.Entity.ValidatedUserDTO;
 
 /**
  *
@@ -24,10 +25,9 @@ public interface IUserService {
 
     UserDTO findUserById(UUID id);
 
-    UserDTO findUserByUsername(String username);
+    ValidatedUserDTO findUserByUsername(String username);
 
     List<UserDTO> getAllUsers();
 
     UserDTO updateUser(UserDTO userDTO);
-    
 }

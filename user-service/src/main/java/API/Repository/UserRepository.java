@@ -5,13 +5,9 @@
  */
 package API.Repository;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import API.Entity.User;
@@ -82,11 +78,16 @@ public class UserRepository implements IUserRepository {
             User userReturn = null;
             while (userResult.next()) {
                 userReturn = new User((UUID) userResult.getObject("id"), userResult.getString("username"), userResult.getString("email"), userResult.getBoolean("active"), userResult.getString("adress"), userResult.getString("role"), userResult.getString("cpr"));
-
             }
-            PreparedStatement insertIntoMyCitizens = this.connection.prepareStatement("INSERT INTO my_citizens(user_id) VALUES (?)");
-            insertIntoMyCitizens.setObject(1, userReturn.getId());
-            insertIntoMyCitizens.execute();
+            if (user.getCitizensIDList() != null) {
+                for (UUID citizenId : user.getCitizensIDList()) {
+                    PreparedStatement insertIntoMyCitizens = this.connection.prepareStatement("INSERT INTO my_citizens VALUES (?, ?)");
+                    insertIntoMyCitizens.setObject(1, userReturn.getId(), Types.OTHER);
+                    insertIntoMyCitizens.setObject(2, citizenId, Types.OTHER);
+                    insertIntoMyCitizens.execute();
+                }
+            }
+
             connection.commit();
             
             return userReturn;
@@ -112,11 +113,13 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User findUserByUsername(String username) {
-        try (PreparedStatement findUser = this.connection.prepareStatement("SELECT * FROM users WHERE username = ? AND active=true")) {
+        try (PreparedStatement findUser = this.connection.prepareStatement("SELECT *, (SELECT array(SELECT citizen_id FROM my_citizens WHERE my_citizens.user_id = users.id)) AS assignedCitizens FROM users WHERE username = ? AND active=true")) {
             findUser.setString(1, username);
             ResultSet findUsernameResult = findUser.executeQuery();
             while (findUsernameResult.next()) {
-                return new User((UUID) findUsernameResult.getObject("id"), findUsernameResult.getString("username"), findUsernameResult.getBoolean("active"), findUsernameResult.getString("role"), findUsernameResult.getString("email"), findUsernameResult.getString("adress"));
+                Array arrayOfCitizens = findUsernameResult.getArray("assignedCitizens");
+                List<UUID> myCitizens = Arrays.asList((UUID[])arrayOfCitizens.getArray());
+                return new User((UUID) findUsernameResult.getObject("id"), findUsernameResult.getString("username"), findUsernameResult.getString("password"), findUsernameResult.getString("role"), findUsernameResult.getBoolean("active"), findUsernameResult.getString("email"), findUsernameResult.getString("cpr"), findUsernameResult.getString("adress"), myCitizens);
             }
         } catch (SQLException e) {
             e.printStackTrace();
