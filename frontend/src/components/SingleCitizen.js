@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import { PageHeader } from "antd";
 import axios from "axios";
-import { Row, Col, Tag } from "antd";
+import { Row, Col, Tag, Divider, Input, Button } from "antd";
 import Journal from "./Journal";
+import EditJournal from "./EditJournal";
 
 export default class SingleCitizen extends Component {
   state = {
     citizen: {
       diagnoses: []
-    }
+    },
+    isClicked: false
   };
 
+  // Get from store
   componentWillMount() {
     const {
       match: { params }
@@ -23,20 +25,26 @@ export default class SingleCitizen extends Component {
       });
   }
 
+  handleClick = () => {
+    const { isClicked } = this.state;
+    this.setState({ isClicked: !isClicked })
+  }
+
+  submitChanges = () => {
+    this.props.editJournal.putJournalChanges();
+  }
+
 
   render() {
-    const { citizen } = this.state;
+    const { citizen, isClicked } = this.state;
     const theId = citizen.id
+    const { TextArea } = Input;
     console.log(theId)
 
     return (
       <div>
         <div>
-          <Row>
-            <Col span={24}>
-              <h3>Borger information:</h3>
-            </Col>
-          </Row>
+          <Divider><strong>Borger</strong></Divider>
           <Row>
             <Col span={4}>
               <h4>Navn</h4>
@@ -67,20 +75,26 @@ export default class SingleCitizen extends Component {
             <Col span={4}>{citizen.phoneNumber}</Col>
             <Col span={4}>
               {citizen.diagnoses.map(diagnose => (
-                <Tag color="green">{diagnose}</Tag>
+                <Tag color="green" key={diagnose}>{diagnose}</Tag>
               ))}
             </Col>
           </Row>
+          <Divider><strong>Journal</strong></Divider>
           <Row>
             <Col span={24}>
-              <h3>Journal</h3>
+
+              {!isClicked && (typeof theId !== 'undefined') && <Journal citizenID={theId} handleClick={this.handleClick} />}
+              {isClicked && <EditJournal handleClick={this.handleClick} />}
+
+              <Row>
+                <Col span={8}>
+                </Col>
+                <Col span={16}>
+                </Col>
+              </Row>
             </Col>
           </Row>
-          <Row>
-            <Col span={24}>
-              {(typeof theId !== 'undefined') && <Journal citizenID={theId} />}
-            </Col>
-          </Row>
+          <Divider><strong>Dagbog</strong></Divider>
           <Row>
             <Col span={24}>
               <h3>Dagbog</h3>

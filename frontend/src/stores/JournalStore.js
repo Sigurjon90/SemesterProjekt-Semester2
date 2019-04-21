@@ -27,7 +27,23 @@ class JournalStore {
       this.isFetching = false;
     }
   }
+
+  @action async putJournalChanges(updatedJournal) {
+    this.isFetching = true;
+    this.error = null;
+    try {
+      const response = await axios.put('http://localhost:1339/journals', updatedJournal);
+      this.journal = response.data;
+      this.isFetching = false;
+
+    } catch (error) {
+      this.error = error
+      this.isFetching = false;
+    }
+  }
 }
+
+
 
 const journalStore = new JournalStore();
 export default journalStore;

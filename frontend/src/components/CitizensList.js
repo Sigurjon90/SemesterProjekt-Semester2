@@ -37,8 +37,8 @@ const columns = [
     render: tags => (
       <span>
         {tags.map(tag => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "PHP-programmør") {
+          let color = tag.length > 2 ? "geekblue" : "green";
+          if (tag === "Psykotisk") {
             color = "volcano";
           }
           return (
