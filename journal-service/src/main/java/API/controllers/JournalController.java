@@ -30,7 +30,7 @@ public class JournalController {
     // Find all journals ASSIGNED TO YOU by Citizens ID
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getJournals(@RequestHeader HttpHeaders httpHeaders) {
-        String token = httpHeaders.get("authorization").get(0);
+        String token = httpHeaders.getFirst("authorization");
         List<UUID> listOfCitizensIds = jwtUtils.getMyCitizens(token);
         List<JournalDTO> journals = journalService.getJournals(listOfCitizensIds);
 

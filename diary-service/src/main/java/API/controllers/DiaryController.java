@@ -5,15 +5,18 @@
  */
 package API.controllers;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import API.entities.DiaryDTO;
 import API.services.IDiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import security.JwtUtils;
 
 /**
  *
@@ -26,10 +29,16 @@ public class DiaryController {
     
     @Autowired
     private IDiaryService diaryService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
     
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getDiaries(){
-     return new ResponseEntity(diaryService.getDiaries(), HttpStatus.OK);
+    public ResponseEntity getDiaries(@RequestHeader HttpHeaders httpHeaders){
+        String token = httpHeaders.getFirst("authorization");
+        List<UUID> listOfCitizensIds = jwtUtils.getMyCitizens(token);
+        List<DiaryDTO> diaries = diaryService.getDiaries(listOfCitizensIds);
+        return new ResponseEntity(diaries, HttpStatus.OK);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)

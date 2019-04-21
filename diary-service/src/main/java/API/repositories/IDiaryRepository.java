@@ -21,7 +21,7 @@ public interface IDiaryRepository {
 
         Optional<Diary> findByCitizenID(UUID id);
         
-        List<Diary> getDiaries();
+        List<Diary> getDiaries(List<UUID> listOfCitizensIds);
 
         Optional<Diary> updateDiary(Diary diary);
 

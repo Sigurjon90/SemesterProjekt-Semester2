@@ -103,9 +103,11 @@ public class DiaryRepository implements IDiaryRepository {
     }
 
     @Override
-    public List<Diary> getDiaries() {
+    public List<Diary> getDiaries(List<UUID> listOfCitizensIds) {
         List<Diary> diaries = new ArrayList<>();
-        try (PreparedStatement diariesLookup = this.connection.prepareStatement("SELECT * FROM diaries WHERE archived = false")) {
+        try (PreparedStatement diariesLookup = this.connection.prepareStatement("SELECT * FROM diaries WHERE archived = false AND citizen_ID = ANY(?)")) {
+            Array citizensArray = connection.createArrayOf("UUID", listOfCitizensIds.toArray());
+            diariesLookup.setArray(1, citizensArray);
             ResultSet dairiesResult = diariesLookup.executeQuery();
             while (dairiesResult.next()) {
                 diaries.add(new Diary(

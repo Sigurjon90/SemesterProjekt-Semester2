@@ -52,8 +52,8 @@ public class DiaryService implements IDiaryService {
     }
 
     @Override
-    public List<DiaryDTO> getDiaries() {
-        List<Diary> diaries = diaryRepository.getDiaries();
+    public List<DiaryDTO> getDiaries(List<UUID> listOfCitizensIds) {
+        List<Diary> diaries = diaryRepository.getDiaries(listOfCitizensIds);
         return diaries.stream().map(source -> modelMapper.map(source, DiaryDTO.class)).collect(Collectors.toList());
     }
 

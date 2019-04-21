@@ -14,7 +14,7 @@ public interface IDiaryService {
 
     Optional<DiaryDTO> findByCitizenId(UUID id);
 
-    List<DiaryDTO> getDiaries();
+    List<DiaryDTO> getDiaries(List<UUID> listOfCitizensIds);
 
     Optional<DiaryDTO> updateDiary(DiaryDTO diaryDTO);
 

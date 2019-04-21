@@ -28,6 +28,7 @@ import security.JwtConfig;
 
 @EnableWebSecurity    // Enable security config. This annotation denotes config for spring security.
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private JwtConfig jwtConfig;
 
