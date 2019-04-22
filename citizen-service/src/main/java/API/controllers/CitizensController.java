@@ -8,6 +8,7 @@ package API.controllers;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
 import API.entities.DeleteDTO;
+import API.entities.GetCitizensDTO;
 import API.repositories.CitizensRepository;
 import API.services.CitizensService;
 
@@ -43,10 +44,10 @@ public class CitizensController {
     public ResponseEntity getMyCitizens(@RequestHeader HttpHeaders httpHeaders) {
         String token = httpHeaders.getFirst("authorization");
         List<UUID> listOfCitizensIds = jwtUtils.getMyCitizens(token);
+        UUID careCenterId = jwtUtils.getCareCenterId(token);
 
-        List<CitizenDTO> citizensDTOList = citizensService.getMyCitizens(listOfCitizensIds);
-        if (citizensDTOList != null) return new ResponseEntity(citizensDTOList, HttpStatus.OK);
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
+        GetCitizensDTO getCitizensDTO = citizensService.getMyCitizens(listOfCitizensIds, careCenterId);
+        return new ResponseEntity(getCitizensDTO, HttpStatus.OK);
     }
 
     // Create Citizen from CreateDTO

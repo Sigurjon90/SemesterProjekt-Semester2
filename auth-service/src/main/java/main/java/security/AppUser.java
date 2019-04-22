@@ -22,6 +22,7 @@ public class AppUser implements UserDetails {
     private String username;
     private String password;
     private String role;
+    private UUID careCenterId;
     private List<UUID> citizensIDList;
 
     @Override

@@ -18,6 +18,7 @@ public class ValidatedUserDTO {
     private String username;
     private String password;
     private String role;
+    private UUID careCenterId;
     private List<UUID> citizensIDList;
 
 }

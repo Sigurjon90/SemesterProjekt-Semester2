@@ -17,7 +17,7 @@ import API.Entity.ValidatedUserDTO;
  */
 public interface IUserService {
 
-    UserDTO createUser(CreateUserDTO userDTO);
+    UserDTO createUser(CreateUserDTO userDTO, UUID careCenterId);
 
     boolean deleteUserById(UUID id);
 

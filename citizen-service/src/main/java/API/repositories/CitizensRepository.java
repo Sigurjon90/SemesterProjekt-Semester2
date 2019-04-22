@@ -54,61 +54,62 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public List<Citizen> getMyCitizens(List<UUID> listOfCitizensIds) {
+        List<Citizen> citizenList = new ArrayList();
         try (PreparedStatement getLimited = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ANY(?) AND archived = false")) {
             java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfCitizensIds.toArray());
             getLimited.setArray(1, sqlArray);
             ResultSet citizensResult = getLimited.executeQuery();
-            List<Citizen> citizenList = new ArrayList();
-            while (citizensResult.next()) {
-                Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
-                String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
-                List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
-                
-                citizenList.add(new Citizen((UUID) citizensResult.getObject("id"),
-                        citizensResult.getString("name"),
-                        citizensResult.getString("adress"),
-                        citizensResult.getString("city"),
-                        citizensResult.getInt("zip"),
-                        citizensResult.getString("cpr"),
-                        citizensResult.getInt("phone"),
-                        listOfDiagnoses,
-                        citizensResult.getBoolean("archived"),
-                        citizensResult.getString("date_created"),
-                        (UUID) citizensResult.getObject("author_id")));
-            }
-            return citizenList;
+            citizenList = getCitizens(citizensResult);
         } catch (SQLException ex) {
             Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return null;
+        return citizenList;
+    }
+
+    @Override
+    public List<Citizen> getCareCenterCitizens(UUID careCenterId, List<UUID> listOfCitizensIds) {
+        List<Citizen> citizenList = new ArrayList();
+        try (PreparedStatement getLimited = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE care_center_id = ? AND archived = false AND NOT(id = ANY(?))")) {
+            getLimited.setObject(1, careCenterId, Types.OTHER);
+            java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfCitizensIds.toArray());
+            getLimited.setArray(2, sqlArray);
+            ResultSet citizensResult = getLimited.executeQuery();
+            citizenList = getCitizens(citizensResult);
+        } catch (SQLException ex) {
+            Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return citizenList;
+    }
+
+    private List<Citizen> getCitizens(ResultSet citizensResult) throws SQLException {
+        List<Citizen> citizenList = new ArrayList();
+        while (citizensResult.next()) {
+            Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
+            String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
+            List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
+
+            citizenList.add(new Citizen((UUID) citizensResult.getObject("id"),
+                    citizensResult.getString("name"),
+                    citizensResult.getString("adress"),
+                    citizensResult.getString("city"),
+                    citizensResult.getInt("zip"),
+                    citizensResult.getString("cpr"),
+                    citizensResult.getInt("phone"),
+                    listOfDiagnoses,
+                    citizensResult.getBoolean("archived"),
+                    citizensResult.getString("date_created"),
+                    (UUID) citizensResult.getObject("author_id")));
+        }
+        return citizenList;
     }
 
     @Override
     public List<Citizen> getCitizens() {
         try (PreparedStatement getCitizens = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE archived = false")) {
             ResultSet citizensResult = getCitizens.executeQuery();
-            List<Citizen> citizensList = new ArrayList<>();
-
-            while (citizensResult.next()) {
-                Array sqlArrayOfDiagnoses = citizensResult.getArray("diagnoses");
-                String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
-                List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
-
-                // List<String> listString = Arrays.asList(arr);
-                // Arrays.asList(citizensChangedResult.getArray("diagnoses"))
-                citizensList.add(new Citizen((UUID) citizensResult.getObject("id"),
-                        citizensResult.getString("name"),
-                        citizensResult.getString("adress"),
-                        citizensResult.getString("city"),
-                        citizensResult.getInt("zip"),
-                        citizensResult.getString("cpr"),
-                        citizensResult.getInt("phone"),
-                        listOfDiagnoses,
-                        citizensResult.getBoolean("archived"),
-                        citizensResult.getString("date_created"),
-                        (UUID) citizensResult.getObject("author_id")));
-            }
+            List<Citizen> citizensList = getCitizens(citizensResult);
             return citizensList;
         } catch (SQLException ex) {
             Logger.getLogger(Repository.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,23 +201,7 @@ public class CitizensRepository implements ICitizensRepository {
 
                 ResultSet citizensChangedResult = updateCitizen.executeQuery();
 
-                while (citizensChangedResult.next()) {
-                    Array sqlArrayOfDiagnoses = citizensChangedResult.getArray("diagnoses");
-                    String[] stringArrayOfDiagnoses = (String[]) sqlArrayOfDiagnoses.getArray();
-                    List<String> listOfDiagnoses = Arrays.asList(stringArrayOfDiagnoses);
-
-                    citizensListReturned.add(new Citizen((UUID) citizensChangedResult.getObject("id"),
-                            citizensChangedResult.getString("name"),
-                            citizensChangedResult.getString("adress"),
-                            citizensChangedResult.getString("city"),
-                            citizensChangedResult.getInt("zip"),
-                            citizensChangedResult.getString("cpr"),
-                            citizensChangedResult.getInt("phone"),
-                            listOfDiagnoses,
-                            citizensChangedResult.getBoolean("archived"),
-                            citizensChangedResult.getString("date_created"),
-                            (UUID) citizensChangedResult.getObject("author_id")));
-                }
+                citizensListReturned = getCitizens(citizensChangedResult);
             }
             connection.commit();
             return citizensListReturned;

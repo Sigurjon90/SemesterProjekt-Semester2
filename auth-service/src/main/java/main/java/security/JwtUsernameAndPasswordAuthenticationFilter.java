@@ -76,6 +76,7 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 			.setSubject(auth.getName())
 			.setId(user.getId().toString())
 			.setHeaderParam("citizens", user.getCitizensIDList())
+			.setHeaderParam("carecenter", user.getCareCenterId())
 			// Convert to list of strings. 
 			// This is important because it affects the way we get them back in the Gateway.
 			.claim("authorities", auth.getAuthorities().stream()

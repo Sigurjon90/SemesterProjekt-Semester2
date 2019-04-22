@@ -5,10 +5,7 @@
  */
 package API.services;
 
-import API.entities.Citizen;
-import API.entities.CitizenDTO;
-import API.entities.CreateDTO;
-import API.entities.DeleteDTO;
+import API.entities.*;
 import API.repositories.CitizensRepository;
 import java.util.List;
 import java.util.UUID;
@@ -54,10 +51,13 @@ public class CitizensService implements ICitizensService {
     }
     
     @Override
-    public List<CitizenDTO> getMyCitizens(List<UUID> listOfCitizensIds) {
-        List<Citizen> citizensList = citizensRepository.getMyCitizens(listOfCitizensIds);
-        if (citizensList == null) return null;
-        return citizensList.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
+    public GetCitizensDTO getMyCitizens(List<UUID> listOfCitizensIds, UUID careCenterId) {
+        List<Citizen> myCitizens = citizensRepository.getMyCitizens(listOfCitizensIds);
+        List<Citizen> careCenterCitizens = citizensRepository.getCareCenterCitizens(careCenterId, listOfCitizensIds);
+
+        List<CitizenDTO> myCitizensDTO = myCitizens.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
+        List<CitizenDTO> careCenterCitizensDTO = careCenterCitizens.stream().map(citizen -> modelMapper.map(citizen, CitizenDTO.class)).collect(Collectors.toList());
+        return new GetCitizensDTO(myCitizensDTO, careCenterCitizensDTO);
     }
 
     @Override

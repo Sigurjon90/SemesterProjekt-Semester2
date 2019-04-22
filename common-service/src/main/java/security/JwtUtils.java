@@ -36,4 +36,9 @@ public class JwtUtils {
         return (List<UUID>)headers.get("citizens");
     }
 
+    public UUID getCareCenterId(String jwt) {
+        JwsHeader headers = getClaims(jwt).getHeader();
+        return UUID.fromString((String)headers.get("carecenter"));
+    }
+
 }

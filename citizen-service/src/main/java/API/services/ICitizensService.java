@@ -8,6 +8,8 @@ package API.services;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
 import API.entities.DeleteDTO;
+import API.entities.GetCitizensDTO;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +29,6 @@ public interface ICitizensService {
     CitizenDTO findCitizen(UUID id);
 
     List<CitizenDTO> getCitizens();
-    
-    List<CitizenDTO> getMyCitizens(List<UUID> listOfCitizensIds);
+
+    GetCitizensDTO getMyCitizens(List<UUID> listOfCitizensIds, UUID careCenterId);
 }

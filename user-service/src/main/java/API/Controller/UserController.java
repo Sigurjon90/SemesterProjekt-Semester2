@@ -12,13 +12,11 @@ import API.Entity.UserDTO;
 import API.Entity.ValidatedUserDTO;
 import API.Service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import security.JwtUtils;
 
 /**
  *
@@ -31,6 +29,9 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private JwtUtils jwtUtils;
+
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
@@ -38,8 +39,10 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createUser(@RequestBody CreateUserDTO userDTO) {
-        UserDTO createUser = userService.createUser(userDTO);
+    public ResponseEntity createUser(@RequestHeader HttpHeaders httpHeaders, @RequestBody CreateUserDTO userDTO) {
+        String token = httpHeaders.getFirst("");
+        UUID careCenterId = jwtUtils.getCareCenterId(token);
+        UserDTO createUser = userService.createUser(userDTO, careCenterId);
         if (createUser != null) {
 
             return new ResponseEntity(createUser, HttpStatus.CREATED);

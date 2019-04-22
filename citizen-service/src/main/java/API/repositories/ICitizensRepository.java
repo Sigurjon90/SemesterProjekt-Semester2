@@ -26,4 +26,6 @@ public interface ICitizensRepository {
     List<Citizen> getCitizens();
     
     List<Citizen> getMyCitizens(List<UUID> listOfCitizensIds);
+
+    List<Citizen> getCareCenterCitizens(UUID careCenterId, List<UUID> listOfCitizensIds);
 }

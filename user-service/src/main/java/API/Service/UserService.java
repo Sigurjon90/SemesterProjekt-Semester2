@@ -42,9 +42,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO createUser(CreateUserDTO userDTO) {
+    public UserDTO createUser(CreateUserDTO userDTO, UUID careCenterId) {
         User user = modelMapper.map(userDTO, User.class);
-        User userCreated = userRepository.CreateUser(user);
+        User userCreated = userRepository.CreateUser(user, careCenterId);
         if (userCreated != null) {
             return modelMapper.map(userCreated, UserDTO.class);
         }

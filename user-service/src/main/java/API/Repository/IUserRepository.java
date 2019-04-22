@@ -15,7 +15,7 @@ import API.Entity.User;
  */
 public interface IUserRepository {
 
-    User CreateUser(User user);
+    User CreateUser(User user, UUID careCenterId);
 
     boolean deleteUserById(UUID id);
 

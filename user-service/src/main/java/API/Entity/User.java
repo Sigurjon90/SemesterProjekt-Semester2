@@ -23,6 +23,7 @@ public class User {
     private String cpr;
     private String adress;
     private List<UUID> citizensIDList;
+    private UUID careCenterId;
 
     public User(UUID id, String username, boolean active, String role, String email, String adress) {
         this.id = id;

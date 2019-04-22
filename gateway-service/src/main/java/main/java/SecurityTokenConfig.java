@@ -48,13 +48,13 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // allow all who are accessing "auth" service
                 .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
-                // must be an admin to access users and citizens services/api
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/citizens/**").hasRole("ADMIN")
+                // must be an admin to access users services/api
+                .antMatchers("/users/**").hasRole("admin")
                 // must be a/an 'caseworker' or 'admin' to access journals api
-                .antMatchers("/journals/**").hasAnyRole("ADMIN", "CASEWORKER")
-                // must be a/an 'admin' 'caseworker' or 'caretaker' to access diaries
-                .antMatchers("/diaries/**").hasAnyRole("ADMIN", "CASEWORKER", "CARETAKER")
+                .antMatchers("/journals/**").hasAnyRole("admin", "caseworker")
+                // must be a/an 'admin' 'caseworker' or 'caregiver' to access diaries/citizens
+                .antMatchers("/citizens/**").hasAnyRole("admin", "caseworker", "caregiver")
+                .antMatchers("/diaries/**").hasAnyRole("admin", "caseworker", "caregiver")
                 // Any other request must be authenticated
                 .anyRequest().authenticated();
     }
