@@ -7,7 +7,6 @@ package API.services;
 
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
-import API.entities.DeleteDTO;
 import API.entities.GetCitizensDTO;
 
 import java.util.List;
@@ -19,12 +18,12 @@ import java.util.UUID;
  */
 public interface ICitizensService {
 
-    List<CitizenDTO> batchUpdate(List<CitizenDTO> citizenDTOList);
+    List<CitizenDTO> batchUpdate(List<CitizenDTO> citizenDTOList, UUID authorId);
 
     // Create Citizen from CreateDTO
-    CitizenDTO createCitizen(CreateDTO createDTO);
+    CitizenDTO createCitizen(CreateDTO createDTO, UUID authorId);
 
-    boolean deleteCitizen(DeleteDTO deleteDTO);
+    boolean deleteCitizen(UUID id, UUID authorId);
 
     CitizenDTO findCitizen(UUID id);
 

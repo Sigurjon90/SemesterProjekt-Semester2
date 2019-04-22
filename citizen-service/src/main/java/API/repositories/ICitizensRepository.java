@@ -15,11 +15,11 @@ import java.util.UUID;
  */
 public interface ICitizensRepository {
 
-    List<Citizen> batchUpdate(List<Citizen> citizenList);
+    List<Citizen> batchUpdate(List<Citizen> citizenList, UUID authorId);
 
-    Citizen createCitizen(Citizen citizen);
+    Citizen createCitizen(Citizen citizen, UUID authorId);
 
-    boolean deleteCitizen(Citizen citizen);
+    boolean deleteCitizen(UUID id, UUID authorId);
 
     Citizen findCitizen(UUID id);
 

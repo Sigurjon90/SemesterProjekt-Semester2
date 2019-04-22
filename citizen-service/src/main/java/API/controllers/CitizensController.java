@@ -7,12 +7,8 @@ package API.controllers;
 
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
-import API.entities.DeleteDTO;
 import API.entities.GetCitizensDTO;
-import API.repositories.CitizensRepository;
-import API.services.CitizensService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -52,9 +48,10 @@ public class CitizensController {
 
     // Create Citizen from CreateDTO
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createCitizen(@RequestBody CreateDTO createDTO) {
-
-        CitizenDTO citizenDTO = citizensService.createCitizen(createDTO);
+    public ResponseEntity createCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody CreateDTO createDTO) {
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
+        CitizenDTO citizenDTO = citizensService.createCitizen(createDTO, authorId);
 
         if (citizenDTO != null) {
             return new ResponseEntity(citizenDTO, HttpStatus.OK);
@@ -89,15 +86,16 @@ public class CitizensController {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateCitizen(@RequestBody CitizenDTO citizenDTO) {
-        return batchUpdateCitizen(Arrays.asList(citizenDTO));
+    public ResponseEntity updateCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody CitizenDTO citizenDTO) {
+        return batchUpdateCitizen(httpHeaders, Arrays.asList(citizenDTO));
     }
 
     // Batch
     @RequestMapping(path = "/batch", method = RequestMethod.PUT)
-    public ResponseEntity batchUpdateCitizen(@RequestBody List<CitizenDTO> citizenDTOList) {
-
-        List<CitizenDTO> citizenDTOListReturned = citizensService.batchUpdate(citizenDTOList);
+    public ResponseEntity batchUpdateCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody List<CitizenDTO> citizenDTOList) {
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
+        List<CitizenDTO> citizenDTOListReturned = citizensService.batchUpdate(citizenDTOList, authorId);
 
         if (citizenDTOListReturned != null) {
             return new ResponseEntity(citizenDTOListReturned, HttpStatus.OK);
@@ -108,10 +106,12 @@ public class CitizensController {
     }
 
     // Delete 
-    @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity deleteCitizen(@RequestBody DeleteDTO deleteDTO) {
-
-        boolean bool = citizensService.deleteCitizen(deleteDTO);
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteCitizen(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") String stringID) {
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
+        UUID id = UUID.fromString(stringID);
+        boolean bool = citizensService.deleteCitizen(id, authorId);
 
         if (bool) {
             return new ResponseEntity(HttpStatus.OK);

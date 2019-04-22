@@ -21,7 +21,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class CreateDTO {
     
     /*
@@ -37,5 +36,4 @@ public class CreateDTO {
     private String cpr;
     private int phoneNumber;
     private List<String> diagnoses;
-    private UUID authorId;
 }

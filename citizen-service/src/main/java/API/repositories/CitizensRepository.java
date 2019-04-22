@@ -151,11 +151,11 @@ public class CitizensRepository implements ICitizensRepository {
     }
 
     @Override
-    public boolean deleteCitizen(Citizen citizen) {
+    public boolean deleteCitizen(UUID id, UUID authorId) {
         try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = ?, author_id = ? WHERE id = ?")) {
             deleteCitizen.setBoolean(1, true);
-            deleteCitizen.setObject(2, citizen.getAuthorId());
-            deleteCitizen.setObject(3, citizen.getId());
+            deleteCitizen.setObject(2, authorId);
+            deleteCitizen.setObject(3, id);
 
             int affectedRows = deleteCitizen.executeUpdate();
 
@@ -170,7 +170,7 @@ public class CitizensRepository implements ICitizensRepository {
     }
 
     @Override
-    public List<Citizen> batchUpdate(List<Citizen> citizenList) {
+    public List<Citizen> batchUpdate(List<Citizen> citizenList, UUID authorId) {
         List<Citizen> citizensListReturned = new ArrayList<>();
         // Deleting all diagnoses
         try {
@@ -213,7 +213,7 @@ public class CitizensRepository implements ICitizensRepository {
     }
 
     @Override
-    public Citizen createCitizen(Citizen citizen) {      
+    public Citizen createCitizen(Citizen citizen, UUID authorId) {
         try {
             connection.setAutoCommit(false);
             PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, adress, city, zip, cpr, phone, archived, date_created, author_id;");
@@ -225,7 +225,7 @@ public class CitizensRepository implements ICitizensRepository {
             createCitizen.setString(6, citizen.getCpr());
             createCitizen.setInt(7, citizen.getPhoneNumber());
             createCitizen.setBoolean(8, false);
-            createCitizen.setObject(9, citizen.getAuthorId());
+            createCitizen.setObject(9, authorId, Types.OTHER);
 
             ResultSet createCitizenResult = createCitizen.executeQuery();
             Citizen citizenCreated = null;
