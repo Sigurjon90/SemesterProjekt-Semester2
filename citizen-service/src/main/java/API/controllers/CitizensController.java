@@ -10,21 +10,21 @@ import API.entities.CreateDTO;
 import API.entities.DeleteDTO;
 import API.repositories.CitizensRepository;
 import API.services.CitizensService;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import API.services.ICitizensService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import security.JwtUtils;
 
 /**
- *
  * @author sigur
  * @author thinkbuntu
  */
@@ -33,31 +33,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class CitizensController {
 
     @Autowired
-    CitizensRepository citizensRepository;
+    ICitizensService citizensService;
 
     @Autowired
-    CitizensService citizensService;
-    
+    private JwtUtils jwtUtils;
+
     // Get assigned citizens
     @RequestMapping(path = "/mycitizens", method = RequestMethod.GET)
-    public ResponseEntity getMyCitizens() {
-        
-        // Here we need list of UUID on Users you have assigned to you
-        // THIS IS A TEST LIST
-        List<UUID> listOfCitizensIds = new ArrayList();
-        listOfCitizensIds.add(UUID.fromString("9499beb5-8cfc-4608-853c-abcc93bd2c67"));
-        listOfCitizensIds.add(UUID.fromString("68da22e6-3ff8-473a-a535-bb4c867d63d9"));
-        
+    public ResponseEntity getMyCitizens(@RequestHeader HttpHeaders httpHeaders) {
+        String token = httpHeaders.getFirst("authorization");
+        List<UUID> listOfCitizensIds = jwtUtils.getMyCitizens(token);
+
         List<CitizenDTO> citizensDTOList = citizensService.getMyCitizens(listOfCitizensIds);
-        if(citizensDTOList != null) return new ResponseEntity(citizensDTOList, HttpStatus.OK);
+        if (citizensDTOList != null) return new ResponseEntity(citizensDTOList, HttpStatus.OK);
         return new ResponseEntity(HttpStatus.NOT_FOUND);
-       
     }
-    
+
     // Create Citizen from CreateDTO
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createCitizen(@RequestBody CreateDTO createDTO) {
-        
+
         CitizenDTO citizenDTO = citizensService.createCitizen(createDTO);
 
         if (citizenDTO != null) {
@@ -82,7 +77,7 @@ public class CitizensController {
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity findCitizen(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
-        
+
         CitizenDTO citizens = citizensService.findCitizen(id);
 
         if (citizens != null) {
@@ -91,26 +86,26 @@ public class CitizensController {
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
-    
+
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateCitizen(@RequestBody CitizenDTO citizenDTO) {
         return batchUpdateCitizen(Arrays.asList(citizenDTO));
     }
-    
+
     // Batch
     @RequestMapping(path = "/batch", method = RequestMethod.PUT)
     public ResponseEntity batchUpdateCitizen(@RequestBody List<CitizenDTO> citizenDTOList) {
 
         List<CitizenDTO> citizenDTOListReturned = citizensService.batchUpdate(citizenDTOList);
-        
-        if(citizenDTOListReturned != null) {
+
+        if (citizenDTOListReturned != null) {
             return new ResponseEntity(citizenDTOListReturned, HttpStatus.OK);
         }
-        
+
         return new ResponseEntity(HttpStatus.NOT_FOUND);
-        
+
     }
-    
+
     // Delete 
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity deleteCitizen(@RequestBody DeleteDTO deleteDTO) {

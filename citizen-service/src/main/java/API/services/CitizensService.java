@@ -13,6 +13,8 @@ import API.repositories.CitizensRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import API.repositories.ICitizensRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Service;
 public class CitizensService implements ICitizensService {
 
     @Autowired
-    private CitizensRepository citizensRepository;
+    private ICitizensRepository citizensRepository;
 
     @Autowired
     private ModelMapper modelMapper;

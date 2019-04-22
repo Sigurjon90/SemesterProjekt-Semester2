@@ -54,7 +54,6 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public List<Citizen> getMyCitizens(List<UUID> listOfCitizensIds) {
-        
         try (PreparedStatement getLimited = connection.prepareStatement("SELECT *, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = citizens.id)) AS diagnoses FROM citizens WHERE id = ANY(?) AND archived = false")) {
             java.sql.Array sqlArray = connection.createArrayOf("UUID", listOfCitizensIds.toArray());
             getLimited.setArray(1, sqlArray);
