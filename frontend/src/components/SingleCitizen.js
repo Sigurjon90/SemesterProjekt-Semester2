@@ -24,7 +24,6 @@ export default class SingleCitizen extends Component {
     const {
       match: { params }, citizensStore
     } = this.props;
-    console.log(params.id)
     this.getCitizen(params.id)
   }
 

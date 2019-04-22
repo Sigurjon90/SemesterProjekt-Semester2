@@ -23,9 +23,8 @@ export default class EditJournal extends Component {
         const updatedJournal = {
             id: journal.id,
             content: this.state.content,
-            authorId: 'afda2cd5-6fd9-40ff-a0db-938af02a281c'
+            authorID: 'afda2cd5-6fd9-40ff-a0db-938af02a281c'
         }
-
         this.props.journalStore.putJournalChanges(updatedJournal)
         this.props.handleClick()
 
@@ -37,8 +36,7 @@ export default class EditJournal extends Component {
     }
 
     componentWillMount() {
-        const { citizenID } = this.props;
-        this.getJournal(citizenID);
+
     }
 
     render() {

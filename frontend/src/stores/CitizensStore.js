@@ -2,7 +2,6 @@ import axios from "axios";
 
 import { action, computed, observable } from "mobx";
 
-// HVORFOR IKKE OBSERVER HER? ####
 class CitizensStore {
   @observable error = null;
   @observable isFetching = false;
