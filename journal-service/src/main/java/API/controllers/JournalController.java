@@ -10,6 +10,9 @@ import API.services.IJournalService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.JwtUtils;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/")
 public class JournalController {
@@ -69,8 +73,9 @@ public class JournalController {
 
     // Create Journal
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createJournal(@RequestBody JournalDTO journalDTO) {
-
+    public ResponseEntity createJournal(@RequestHeader HttpHeaders httpHeaders, @RequestBody JournalDTO journalDTO) {
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
         JournalDTO journal = journalService.createJournal(journalDTO);
 
         if (journal != null) {
