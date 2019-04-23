@@ -53,6 +53,8 @@ export default class Journal extends Component {
     const { journal, isFetching, error } = journalStore;
     const isLoaded = !isFetching && error === null
     const { TextArea } = Input
+    console.log("LOGS")
+    console.log(journal)
     return (<div>
       {isFetching && <Spin />}
       {journal == null &&

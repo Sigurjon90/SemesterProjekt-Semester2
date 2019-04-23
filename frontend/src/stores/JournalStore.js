@@ -22,6 +22,7 @@ class JournalStore {
       this.journal = response.data;
       this.isFetching = false;
     } catch (error) {
+      this.journal = null;
       this.error = error;
       this.isFetching = false;
     }
