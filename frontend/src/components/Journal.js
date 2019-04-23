@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Row, Col, Alert, Button, Spin, Input } from "antd";
 import moment from "moment";
+import ReactMarkdown from "react-markdown"
 
 @inject("journalStore")
 @observer
@@ -82,7 +83,9 @@ export default class Journal extends Component {
             <h3>{moment(journal.dateModified).format('DD-MM-YYYY HH:mm')}</h3>
           </Col>
           <Col span={16}>
-            <h3>{journal.content}</h3>
+            <h3>
+              <ReactMarkdown source={`${journal.content}`} />
+            </h3>
           </Col>
         </Row>
         <Row>
