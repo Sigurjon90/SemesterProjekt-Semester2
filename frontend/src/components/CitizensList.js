@@ -5,33 +5,33 @@ import { List, Skeleton, Avatar, Table, Divider, Tag } from "antd";
 
 const columns = [
   {
-    title: "Name",
+    title: "Navn",
     dataIndex: "name",
     key: "name",
     render: (text, data) => <Link to={`/citizens/${data.id}`}>{text}</Link>
   },
   {
-    title: "Address",
+    title: "Addresse",
     dataIndex: "adress",
     key: "adress"
   },
   {
-    title: "City",
+    title: "By",
     dataIndex: "city",
     key: "city"
   },
   {
-    title: "ZIP Code",
+    title: "Postnummer",
     dataIndex: "zip",
     key: "zip"
   },
   {
-    title: "Phone",
+    title: "Telefon",
     dataIndex: "phoneNumber",
     key: "phoneNumber"
   },
   {
-    title: "Diagnoses",
+    title: "Diagnoser",
     key: "diagnoses",
     dataIndex: "diagnoses",
     render: tags => (
@@ -54,7 +54,7 @@ const columns = [
 
 const config = {
   pagination: {
-    defaultPageSize: 8
+    defaultPageSize: 5
   }
 };
 

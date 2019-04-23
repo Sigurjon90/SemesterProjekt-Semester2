@@ -64,7 +64,7 @@ export default class Journal extends Component {
           </Col>
           <Col span={16}>
             <h3><Alert message="Der eksisterer endnu ingen journal på denne borger. Du kan oprette en nu." type="warning" /></h3>
-            <TextArea rows={4} onChange={this.onChangeHandler} />
+            <TextArea rows={10} onChange={this.onChangeHandler} />
             <Button type="primary" size="default" onClick={this.createJournal}>Opret journal på borger</Button>
           </Col>
         </Row>
@@ -83,9 +83,7 @@ export default class Journal extends Component {
             <h3>{moment(journal.dateModified).format('DD-MM-YYYY HH:mm')}</h3>
           </Col>
           <Col span={16}>
-            <h3>
-              <ReactMarkdown source={`${journal.content}`} />
-            </h3>
+            <ReactMarkdown source={`${journal.content}`} />
           </Col>
         </Row>
         <Row>

@@ -50,7 +50,7 @@ export default class EditJournal extends Component {
                 </Col>
                 <Col span={16}>
                     <h3>Senest redigeret {moment(journal.dateModified).locale("dk").fromNow()}</h3>
-                    <TextArea rows={4} onChange={this.onChangeHandler} defaultValue={journal.content} />
+                    <TextArea rows={10} onChange={this.onChangeHandler} defaultValue={journal.content} />
                 </Col>
             </Row>
             <Row>
