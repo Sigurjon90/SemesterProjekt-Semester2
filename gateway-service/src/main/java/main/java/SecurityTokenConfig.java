@@ -47,7 +47,6 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
                 // authorization requests config
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
-                .antMatchers("/journal-service/v2/api-docs").permitAll()
                 // allow all who are accessing "auth" service
                 .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
                 // must be an admin to access users services/api

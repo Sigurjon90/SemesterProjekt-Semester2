@@ -26,7 +26,8 @@ public class SwaggerConfig {
             List<SwaggerResource> resources = new ArrayList<>();
             properties.getRoutes().values().stream()
                     .forEach(route -> resources
-                            .add(createResource(route.getServiceId(), route.getServiceId(), "2.0")));
+                            .add(createResource(route.getServiceId(), route.getPath().replace("**", "v2/api-docs"), "2.0")));
+            resources.removeIf(route -> route.getName() == "AUTH-SERVICE");
             return resources;
         };
     }
@@ -34,7 +35,7 @@ public class SwaggerConfig {
     private SwaggerResource createResource(String name, String location, String version) {
         SwaggerResource swaggerResource = new SwaggerResource();
         swaggerResource.setName(name);
-        swaggerResource.setLocation("/" + location + "/v2/api-docs");
+        swaggerResource.setLocation(location);
         swaggerResource.setSwaggerVersion(version);
         return swaggerResource;
     }

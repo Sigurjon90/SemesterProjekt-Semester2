@@ -1,4 +1,4 @@
-package API.Entity;
+package API.entities;
 
 import java.util.List;
 import java.util.UUID;

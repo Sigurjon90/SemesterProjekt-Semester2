@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package API.Service;
+package API.services;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import API.Entity.CreateUserDTO;
-import API.Entity.User;
-import API.Entity.UserDTO;
-import API.Entity.ValidatedUserDTO;
-import API.Repository.IUserRepository;
+import API.entities.CreateUserDTO;
+import API.entities.User;
+import API.entities.UserDTO;
+import API.entities.ValidatedUserDTO;
+import API.repositories.IUserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

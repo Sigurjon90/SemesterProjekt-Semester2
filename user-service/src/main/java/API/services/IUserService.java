@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package API.Service;
+package API.services;
 
 import java.util.List;
 import java.util.UUID;
-import API.Entity.CreateUserDTO;
-import API.Entity.UserDTO;
-import API.Entity.ValidatedUserDTO;
+import API.entities.CreateUserDTO;
+import API.entities.UserDTO;
+import API.entities.ValidatedUserDTO;
 
 /**
  *

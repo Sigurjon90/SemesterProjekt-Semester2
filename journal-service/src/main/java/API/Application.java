@@ -46,10 +46,10 @@ public class Application {
     public JwtConfig jwtConfig() { return new JwtConfig(); }
 
     @Bean
-    public Docket swaggerPersonApi10() {
+    public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("API.controllers"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(

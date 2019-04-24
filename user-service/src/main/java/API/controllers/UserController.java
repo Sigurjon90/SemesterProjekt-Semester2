@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package API.Controller;
+package API.controllers;
 
 import java.util.List;
 import java.util.UUID;
-import API.Entity.CreateUserDTO;
-import API.Entity.UserDTO;
-import API.Entity.ValidatedUserDTO;
-import API.Service.IUserService;
+import API.entities.CreateUserDTO;
+import API.entities.UserDTO;
+import API.entities.ValidatedUserDTO;
+import API.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

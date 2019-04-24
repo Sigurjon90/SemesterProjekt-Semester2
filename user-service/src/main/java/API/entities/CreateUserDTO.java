@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package API.Entity;
+package API.entities;
 
 import API.utils.BCryptPasswordDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
