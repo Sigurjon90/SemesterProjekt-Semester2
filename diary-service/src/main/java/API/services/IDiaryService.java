@@ -18,5 +18,5 @@ public interface IDiaryService {
 
     Optional<DiaryDTO> updateDiary(DiaryDTO diaryDTO);
 
-    boolean deleteDiary(DiaryDTO diaryDTO);
+    boolean deleteDiary(UUID id, UUID authorId);
 }

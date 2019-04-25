@@ -101,15 +101,14 @@ public class JournalController {
     }
 
     // Delete Journal on ID
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteJournal(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") String stringID) {
+    @RequestMapping(path = "/{citizenId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteJournalByCitizenId(@RequestHeader HttpHeaders httpHeaders, @PathVariable("citizenId") String stringID) {
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
         UUID id = UUID.fromString(stringID);
-        JournalDTO journal = journalService.deleteJournal(id, authorId);
-
-        if (journal != null) {
-            return new ResponseEntity(journal, HttpStatus.OK);
+        boolean isDeleted = journalService.deleteJournal(id, authorId);
+        if (isDeleted) {
+            return new ResponseEntity(HttpStatus.OK);
         }
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);

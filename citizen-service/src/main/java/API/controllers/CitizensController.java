@@ -14,11 +14,13 @@ import java.util.List;
 import java.util.UUID;
 
 import API.services.ICitizensService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import security.JwtUtils;
 
 /**
@@ -35,8 +37,12 @@ public class CitizensController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
+
     // Get assigned citizens
-    @RequestMapping(path = "/mycitizens", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getMyCitizens(@RequestHeader HttpHeaders httpHeaders) {
         String token = httpHeaders.getFirst("authorization");
         List<UUID> listOfCitizensIds = jwtUtils.getMyCitizens(token);
@@ -56,18 +62,6 @@ public class CitizensController {
         if (citizenDTO != null) {
             return new ResponseEntity(citizenDTO, HttpStatus.OK);
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
-    }
-
-    // Get all Citizens
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getCitizens() {
-        List<CitizenDTO> citizens = citizensService.getCitizens();
-
-        if (citizens != null) {
-            return new ResponseEntity(citizens, HttpStatus.OK);
-        }
-
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
@@ -105,7 +99,7 @@ public class CitizensController {
 
     }
 
-    // Delete 
+    @HystrixCommand(fallbackMethod = "fallback", ignoreExceptions = {NotFoundException.class})
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteCitizen(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") String stringID) {
         String token = httpHeaders.getFirst("authorization");
@@ -113,11 +107,34 @@ public class CitizensController {
         UUID id = UUID.fromString(stringID);
         boolean bool = citizensService.deleteCitizen(id, authorId);
 
-        if (bool) {
+        List<Integer> listOfResponseCodes = Arrays.asList(
+            deleteFromApi("http://diary-service/" + id, httpHeaders),
+            deleteFromApi("http://journal-service/" + id, httpHeaders)
+        );
+
+        if (bool && listOfResponseCodes.stream().allMatch(resp -> resp == 200)) {
             return new ResponseEntity(HttpStatus.OK);
         }
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
+    private Integer deleteFromApi(String url, HttpHeaders httpHeaders) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.addAll(httpHeaders);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+        ResponseEntity<String> response = null;
+        try {
+            response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
+        }
+        catch (Exception ex) {
+            return 500;
+        }
+
+        return response.getStatusCodeValue();
+    }
+
+    public ResponseEntity fallback(HttpHeaders httpHeaders, String stringId, Throwable hystrixCommand) {
+        return new ResponseEntity("", HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }

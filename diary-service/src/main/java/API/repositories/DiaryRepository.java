@@ -151,13 +151,28 @@ public class DiaryRepository implements IDiaryRepository {
     }
 
     @Override
-    public boolean deleteDiary(Diary diary) {
+    public boolean deleteDiary(UUID id, UUID authorId) {
         try (PreparedStatement deleteDiary = this.connection.prepareStatement(
-                "UPDATE diaries SET archived = true, author_id = ? WHERE id = ?")) {
-            deleteDiary.setObject(2, diary.getId(), Types.OTHER);
-            deleteDiary.setObject(1, diary.getAuthorID(), Types.OTHER);
-            int afftecRows = deleteDiary.executeUpdate();
-            if (afftecRows == 0) return false;
+                "UPDATE diaries SET archived = true, author_id = ? WHERE citizen_id = ?")) {
+            deleteDiary.setObject(2, id, Types.OTHER);
+            deleteDiary.setObject(1, authorId, Types.OTHER);
+            int affectedRows = deleteDiary.executeUpdate();
+            if (affectedRows == 0) return false;
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean deleteDiaryByCitizenId(UUID id, UUID authorId) {
+        try (PreparedStatement deleteDiary = this.connection.prepareStatement(
+                "UPDATE diaries SET archived = true, author_id = ? WHERE citizen_ID = ?")) {
+            deleteDiary.setObject(2, id, Types.OTHER);
+            deleteDiary.setObject(1, authorId, Types.OTHER);
+            int affectedRows = deleteDiary.executeUpdate();
+            if (affectedRows == 0) return false;
         } catch (SQLException e1) {
             e1.printStackTrace();
             return false;

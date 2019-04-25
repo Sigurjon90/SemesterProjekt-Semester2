@@ -152,10 +152,9 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public boolean deleteCitizen(UUID id, UUID authorId) {
-        try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = ?, author_id = ? WHERE id = ?")) {
-            deleteCitizen.setBoolean(1, true);
-            deleteCitizen.setObject(2, authorId);
-            deleteCitizen.setObject(3, id);
+        try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = false, author_id = ? WHERE id = ?")) {
+            deleteCitizen.setObject(1, authorId);
+            deleteCitizen.setObject(2, id);
 
             int affectedRows = deleteCitizen.executeUpdate();
 

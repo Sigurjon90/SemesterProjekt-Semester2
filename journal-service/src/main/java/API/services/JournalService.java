@@ -32,14 +32,8 @@ public class JournalService implements IJournalService {
 
     // Delete Journal
     @Override
-    public JournalDTO deleteJournal(UUID id, UUID authorID) {
-        Journal journal = journalRepository.deleteJournal(id, authorID);
-
-        if (journal != null) {
-            return modelMapper.map(journal, JournalDTO.class);
-        }
-
-        return null;
+    public boolean deleteJournal(UUID id, UUID authorID) {
+        return journalRepository.deleteDiaryByCitizenId(id, authorID);
     }
 
     // Find Journal

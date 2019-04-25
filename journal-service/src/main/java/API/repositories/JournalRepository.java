@@ -171,7 +171,6 @@ public class JournalRepository implements IJournalRepository {
         } 
 
         return null;
-
     }
 
     @Override
@@ -266,6 +265,23 @@ public class JournalRepository implements IJournalRepository {
             Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
         } 
         return null;
+    }
+
+    @Override
+    public boolean deleteDiaryByCitizenId(UUID citizenId, UUID authorID) {
+        try (PreparedStatement deleteJournal = connection.prepareStatement("INSERT INTO journal_events(id, journal_ID, type, author_id) select ?, (SELECT id FROM journals WHERE citizens_id = ?), 'deleted', ? where not exists (SELECT type FROM journal_events WHERE journal_id = (SELECT id FROM journals WHERE citizens_id = ?) AND type = 'deleted') RETURNING id, journal_ID, type, author_id, date_modified")) {
+            deleteJournal.setObject(1, UUID.randomUUID(), Types.OTHER);
+            deleteJournal.setObject(2, citizenId, Types.OTHER);
+            deleteJournal.setObject(3, authorID, Types.OTHER);
+            deleteJournal.setObject(4, citizenId, Types.OTHER);
+            ResultSet deletedResult = deleteJournal.executeQuery();
+            while(deletedResult.next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JournalRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
 }

@@ -19,6 +19,8 @@ public interface IJournalRepository {
 
     Journal deleteJournal(UUID id, UUID authorID);
 
+    boolean deleteDiaryByCitizenId(UUID id, UUID authorID);
+
     Journal findJournal(UUID id);
 
     List<Journal> getJournals(List<UUID> listOfCitizensIds);

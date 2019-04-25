@@ -69,9 +69,8 @@ public class DiaryService implements IDiaryService {
     }
 
     @Override
-    public boolean deleteDiary(DiaryDTO diaryDTO) {
-        Diary diary = modelMapper.map(diaryDTO, Diary.class);
-        return diaryRepository.deleteDiary(diary);
+    public boolean deleteDiary(UUID id, UUID authorId) {
+        return diaryRepository.deleteDiaryByCitizenId(id, authorId);
     }
 
 }

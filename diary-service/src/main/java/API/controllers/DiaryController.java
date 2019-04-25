@@ -83,12 +83,12 @@ public class DiaryController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
     
-    @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity deleteDiary(@RequestHeader HttpHeaders httpHeaders, @RequestBody DiaryDTO diaryDTO){
+    @RequestMapping(path="/{citizenId}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteDiaryByCitizenId(@RequestHeader HttpHeaders httpHeaders, @PathVariable("citizenId") String stringID){
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
-        diaryDTO.setAuthorID(authorId);
-        boolean isDeleted = diaryService.deleteDiary(diaryDTO);
+        UUID id = UUID.fromString(stringID);
+        boolean isDeleted = diaryService.deleteDiary(id, authorId);
         if(isDeleted){
             return new ResponseEntity(HttpStatus.OK);
         }

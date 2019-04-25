@@ -19,7 +19,7 @@ public interface IJournalService {
     JournalDTO createJournal(JournalDTO journalDTO);
 
     // Delete Journal
-    JournalDTO deleteJournal(UUID id, UUID authorID);
+    boolean deleteJournal(UUID id, UUID authorID);
 
     // Find Journal
     JournalDTO findJournal(UUID id);

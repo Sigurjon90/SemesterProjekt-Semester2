@@ -25,5 +25,7 @@ public interface IDiaryRepository {
 
         Optional<Diary> updateDiary(Diary diary);
 
-        boolean deleteDiary(Diary diary);
+        boolean deleteDiary(UUID id, UUID authorId);
+
+        boolean deleteDiaryByCitizenId(UUID id, UUID authorId);
 }
