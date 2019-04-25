@@ -28,6 +28,6 @@ public class CreateUserDTO {
     private String role;
     private String email; 
     private String Cpr; 
-    private String adress; 
+    private String address;
 
 }

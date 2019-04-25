@@ -30,7 +30,7 @@ public class CreateDTO {
     
   // private UUID id; // Generates automatically in the repository
     private String name;
-    private String adress;
+    private String address;
     private String city;
     private int zip;
     private String cpr;

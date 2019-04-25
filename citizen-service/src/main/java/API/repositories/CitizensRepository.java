@@ -92,7 +92,7 @@ public class CitizensRepository implements ICitizensRepository {
 
             citizenList.add(new Citizen((UUID) citizensResult.getObject("id"),
                     citizensResult.getString("name"),
-                    citizensResult.getString("adress"),
+                    citizensResult.getString("address"),
                     citizensResult.getString("city"),
                     citizensResult.getInt("zip"),
                     citizensResult.getString("cpr"),
@@ -131,7 +131,7 @@ public class CitizensRepository implements ICitizensRepository {
 
                 return new Citizen((UUID) citizenResultSet.getObject("id"),
                         citizenResultSet.getString("name"),
-                        citizenResultSet.getString("adress"),
+                        citizenResultSet.getString("address"),
                         citizenResultSet.getString("city"),
                         citizenResultSet.getInt("zip"),
                         citizenResultSet.getString("cpr"),
@@ -188,10 +188,10 @@ public class CitizensRepository implements ICitizensRepository {
                 }
 
                 PreparedStatement updateCitizen = this.connection.prepareStatement("UPDATE citizens SET name = ?,"
-                        + "adress = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ? RETURNING id, name, adress, city, zip, cpr, phone, archibed, date_created, author_id, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses");
+                        + "address = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ? RETURNING id, name, address, city, zip, cpr, phone, archibed, date_created, author_id, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses");
 
                 updateCitizen.setString(1, citizen.getName());
-                updateCitizen.setString(2, citizen.getAdress());
+                updateCitizen.setString(2, citizen.getAddress());
                 updateCitizen.setString(3, citizen.getCity());
                 updateCitizen.setInt(4, citizen.getZip());
                 updateCitizen.setInt(5, citizen.getPhoneNumber());
@@ -216,10 +216,10 @@ public class CitizensRepository implements ICitizensRepository {
     public Citizen createCitizen(Citizen citizen, UUID authorId) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, adress, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, adress, city, zip, cpr, phone, archived, date_created, author_id;");
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id;");
             createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
             createCitizen.setString(2, citizen.getName());
-            createCitizen.setString(3, citizen.getAdress());
+            createCitizen.setString(3, citizen.getAddress());
             createCitizen.setString(4, citizen.getCity());
             createCitizen.setInt(5, citizen.getZip());
             createCitizen.setString(6, citizen.getCpr());
@@ -232,7 +232,7 @@ public class CitizensRepository implements ICitizensRepository {
 
             // Most values could also be gotten from citizen (besides "id")
             while (createCitizenResult.next()) {
-                citizenCreated = new Citizen((UUID) createCitizenResult.getObject("id"), createCitizenResult.getString("name"), createCitizenResult.getString("adress"),
+                citizenCreated = new Citizen((UUID) createCitizenResult.getObject("id"), createCitizenResult.getString("name"), createCitizenResult.getString("address"),
                         createCitizenResult.getString("city"), createCitizenResult.getInt("zip"), createCitizenResult.getString("cpr"),
                         createCitizenResult.getInt("phone"), citizen.getDiagnoses(), createCitizenResult.getBoolean("archived"), createCitizenResult.getString("date_created"), (UUID) createCitizenResult.getObject("author_id"));
             }

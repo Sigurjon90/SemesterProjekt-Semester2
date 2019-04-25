@@ -44,7 +44,7 @@ public class UserRepository implements IUserRepository {
             ResultSet usersResult = getUsers.executeQuery();
 
             while (usersResult.next()) {
-                users.add(new User((UUID) usersResult.getObject("id"), usersResult.getString("username"), usersResult.getString("email"), usersResult.getString("adress"), usersResult.getString("role"), usersResult.getString("cpr")));
+                users.add(new User((UUID) usersResult.getObject("id"), usersResult.getString("username"), usersResult.getString("email"), usersResult.getString("address"), usersResult.getString("role"), usersResult.getString("cpr")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,7 +66,7 @@ public class UserRepository implements IUserRepository {
 
         try {
             connection.setAutoCommit(false);
-            PreparedStatement createUser = this.connection.prepareStatement("INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ?, ?) RETURNING id, username, email, active, adress, role, cpr");
+            PreparedStatement createUser = this.connection.prepareStatement("INSERT INTO users VALUES (?, ?, ? , ? , ? , ? , ?, ?, ?) RETURNING id, username, email, active, address, role, cpr");
             createUser.setObject(1, UUID.randomUUID(), Types.OTHER);
             createUser.setString(2, user.getUsername());
             createUser.setString(3, user.getPassword());
@@ -74,13 +74,13 @@ public class UserRepository implements IUserRepository {
             createUser.setBoolean(5, true);
             createUser.setString(6, user.getEmail());
             createUser.setString(7, user.getCpr());
-            createUser.setString(8, user.getAdress());
+            createUser.setString(8, user.getAddress());
             createUser.setObject(9, careCenterId, Types.OTHER);
 
             ResultSet userResult = createUser.executeQuery();
             User userReturn = null;
             while (userResult.next()) {
-                userReturn = new User((UUID) userResult.getObject("id"), userResult.getString("username"), userResult.getString("email"), userResult.getBoolean("active"), userResult.getString("adress"), userResult.getString("role"), userResult.getString("cpr"));
+                userReturn = new User((UUID) userResult.getObject("id"), userResult.getString("username"), userResult.getString("email"), userResult.getBoolean("active"), userResult.getString("address"), userResult.getString("role"), userResult.getString("cpr"));
             }
             if (user.getCitizensIDList() != null) {
                 for (UUID citizenId : user.getCitizensIDList()) {
@@ -106,7 +106,7 @@ public class UserRepository implements IUserRepository {
             findUser.setObject(1, id, Types.OTHER);
             ResultSet findUserResult = findUser.executeQuery();
             while (findUserResult.next()) {
-                return new User((UUID) findUserResult.getObject("id"), findUserResult.getString("username"), findUserResult.getBoolean("active"), findUserResult.getString("role"), findUserResult.getString("email"), findUserResult.getString("adress"));
+                return new User((UUID) findUserResult.getObject("id"), findUserResult.getString("username"), findUserResult.getBoolean("active"), findUserResult.getString("role"), findUserResult.getString("email"), findUserResult.getString("address"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class UserRepository implements IUserRepository {
                         findUsernameResult.getBoolean("active"),
                         findUsernameResult.getString("email"),
                         findUsernameResult.getString("cpr"),
-                        findUsernameResult.getString("adress"),
+                        findUsernameResult.getString("address"),
                         myCitizens,
                         (UUID) findUsernameResult.getObject("care_center_id"));
             }
@@ -156,15 +156,15 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User updateUser(User user) {
-        try (PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ?, password = ? , email = ? , adress = ?  WHERE id = ?  RETURNING id , username, password, email, active, adress, role, cpr, care_center_id")) {
+        try (PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ?, password = ? , email = ? , address = ?  WHERE id = ?  RETURNING id , username, password, email, active, address, role, cpr, care_center_id")) {
             update.setString(1, user.getUsername());
             update.setString(2, user.getPassword());
             update.setString(3, user.getEmail());
-            update.setString(4, user.getAdress());
+            update.setString(4, user.getAddress());
             update.setObject(5, user.getId(), Types.OTHER);
             ResultSet updateResult = update.executeQuery();
             while (updateResult.next()) {
-                return new User((UUID) updateResult.getObject("id"), updateResult.getString("username"), updateResult.getString("password"), updateResult.getString("email"), updateResult.getBoolean("active"), updateResult.getString("adress"), updateResult.getString("role"), updateResult.getString("cpr"), null, (UUID)updateResult.getObject("care_center_id"));
+                return new User((UUID) updateResult.getObject("id"), updateResult.getString("username"), updateResult.getString("password"), updateResult.getString("email"), updateResult.getBoolean("active"), updateResult.getString("address"), updateResult.getString("role"), updateResult.getString("cpr"), null, (UUID)updateResult.getObject("care_center_id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();

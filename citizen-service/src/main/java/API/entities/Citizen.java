@@ -26,7 +26,7 @@ public class Citizen {
     
     private UUID id;
     private String name;
-    private String adress;
+    private String address;
     private String city;
     private int zip;
     private String cpr;
