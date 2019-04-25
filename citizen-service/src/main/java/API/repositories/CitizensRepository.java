@@ -204,6 +204,7 @@ public class CitizensRepository implements ICitizensRepository {
                 citizensListReturned = getCitizens(citizensChangedResult);
             }
             connection.commit();
+            connection.setAutoCommit(true);
             return citizensListReturned;
         } catch (SQLException ex) {
             Logger.getLogger(CitizensRepository.class.getName()).log(Level.SEVERE, null, ex);
@@ -244,6 +245,7 @@ public class CitizensRepository implements ICitizensRepository {
                 setDiagnoses.execute();
             }
             connection.commit();
+            connection.setAutoCommit(true);
             return citizenCreated;
         } catch (SQLException ex) {
             Logger.getLogger(Repository.class.getName()).log(Level.SEVERE, null, ex);

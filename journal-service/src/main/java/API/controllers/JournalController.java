@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.JwtUtils;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/")
 public class JournalController {
@@ -76,6 +75,7 @@ public class JournalController {
     public ResponseEntity createJournal(@RequestHeader HttpHeaders httpHeaders, @RequestBody JournalDTO journalDTO) {
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
+        journalDTO.setAuthorID(authorId);
         JournalDTO journal = journalService.createJournal(journalDTO);
 
         if (journal != null) {
@@ -87,8 +87,10 @@ public class JournalController {
 
     // Modify Journal
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity modifyJournal(@RequestBody JournalDTO journalDTO) {
-
+    public ResponseEntity modifyJournal(@RequestHeader HttpHeaders httpHeaders, @RequestBody JournalDTO journalDTO) {
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
+        journalDTO.setAuthorID(authorId);
         JournalDTO journal = journalService.modifyJournal(journalDTO);
 
         if (journal != null) {
@@ -100,10 +102,11 @@ public class JournalController {
 
     // Delete Journal on ID
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteJournal(@PathVariable("id") String stringID) {
-
+    public ResponseEntity deleteJournal(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") String stringID) {
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
         UUID id = UUID.fromString(stringID);
-        JournalDTO journal = journalService.deleteJournal(id, UUID.randomUUID());
+        JournalDTO journal = journalService.deleteJournal(id, authorId);
 
         if (journal != null) {
             return new ResponseEntity(journal, HttpStatus.OK);

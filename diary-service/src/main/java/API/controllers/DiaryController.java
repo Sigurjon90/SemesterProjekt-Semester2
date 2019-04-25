@@ -60,7 +60,10 @@ public class DiaryController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createDiary(@RequestBody DiaryDTO diaryDTO){
+    public ResponseEntity createDiary(@RequestHeader HttpHeaders httpHeaders, @RequestBody DiaryDTO diaryDTO){
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
+        diaryDTO.setAuthorID(authorId);
         Optional diary = diaryService.createDiary(diaryDTO);
         if(diary.isPresent()){
             return new ResponseEntity(diary.get(), HttpStatus.CREATED);
@@ -69,7 +72,10 @@ public class DiaryController {
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity updateDiary(@RequestBody DiaryDTO diaryDTO){
+    public ResponseEntity updateDiary(@RequestHeader HttpHeaders httpHeaders, @RequestBody DiaryDTO diaryDTO){
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
+        diaryDTO.setAuthorID(authorId);
         Optional diary = diaryService.updateDiary(diaryDTO);
         if(diary.isPresent()){
             return new ResponseEntity(diary.get(), HttpStatus.OK);
@@ -78,7 +84,10 @@ public class DiaryController {
     }
     
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity deleteDiary(@RequestBody DiaryDTO diaryDTO){
+    public ResponseEntity deleteDiary(@RequestHeader HttpHeaders httpHeaders, @RequestBody DiaryDTO diaryDTO){
+        String token = httpHeaders.getFirst("authorization");
+        UUID authorId = jwtUtils.getUserId(token);
+        diaryDTO.setAuthorID(authorId);
         boolean isDeleted = diaryService.deleteDiary(diaryDTO);
         if(isDeleted){
             return new ResponseEntity(HttpStatus.OK);

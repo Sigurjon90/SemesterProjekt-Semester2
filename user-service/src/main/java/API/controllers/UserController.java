@@ -33,14 +33,16 @@ public class UserController {
     private JwtUtils jwtUtils;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
+    public ResponseEntity getAllUsers(@RequestHeader HttpHeaders httpHeaders) {
+        String token = httpHeaders.getFirst("authorization");
+        UUID careCenterId = jwtUtils.getCareCenterId(token);
+        List<UserDTO> users = userService.getAllUsers(careCenterId);
         return new ResponseEntity(users, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createUser(@RequestHeader HttpHeaders httpHeaders, @RequestBody CreateUserDTO userDTO) {
-        String token = httpHeaders.getFirst("");
+        String token = httpHeaders.getFirst("authorization");
         UUID careCenterId = jwtUtils.getCareCenterId(token);
         UserDTO createUser = userService.createUser(userDTO, careCenterId);
         if (createUser != null) {

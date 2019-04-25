@@ -27,7 +27,7 @@ public interface IUserService {
 
     ValidatedUserDTO findUserByUsername(String username);
 
-    List<UserDTO> getAllUsers();
+    List<UserDTO> getAllUsers(UUID careCenterId);
 
     UserDTO updateUser(UserDTO userDTO);
 }

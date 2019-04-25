@@ -37,9 +37,10 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(UUID careCenterId) {
         List<User> users = new ArrayList();
-        try (PreparedStatement getUsers = this.connection.prepareStatement("SELECT *  FROM users WHERE active=true")) {
+        try (PreparedStatement getUsers = this.connection.prepareStatement("SELECT *  FROM users WHERE active=true AND care_center_id=?")) {
+            getUsers.setObject(1, careCenterId, Types.OTHER);
             ResultSet usersResult = getUsers.executeQuery();
 
             while (usersResult.next()) {
@@ -91,7 +92,7 @@ public class UserRepository implements IUserRepository {
             }
 
             connection.commit();
-            
+            connection.setAutoCommit(true);
             return userReturn;
         } catch (SQLException e) {
             e.printStackTrace();

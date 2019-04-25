@@ -25,7 +25,7 @@ public interface IUserRepository {
 
     User findUserByUsername(String username);
 
-    List<User> getAllUsers();
+    List<User> getAllUsers(UUID careCenterId);
 
     User updateUser(User user);
 

@@ -31,8 +31,8 @@ public class UserService implements IUserService {
     private IUserRepository userRepository;
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.getAllUsers();
+    public List<UserDTO> getAllUsers(UUID careCenterId) {
+        List<User> users = userRepository.getAllUsers(careCenterId);
         List<UserDTO> usersDTO = new ArrayList();
         for (User user : users) {
             UserDTO tempDTO = modelMapper.map(user, UserDTO.class);

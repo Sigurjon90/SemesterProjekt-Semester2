@@ -148,10 +148,10 @@ public class JournalRepository implements IJournalRepository {
 
             PreparedStatement deleteJournal = connection.prepareStatement("INSERT into journal_events(id, journal_ID, type, author_id) VALUES (?, ?, ?, ?)"
                     + "RETURNING id, journal_ID, type, author_id, date_modified, type"); // RETURN GENERATED KEYS
-            deleteJournal.setObject(1, UUID.randomUUID());
-            deleteJournal.setObject(2, id);
+            deleteJournal.setObject(1, UUID.randomUUID(), Types.OTHER);
+            deleteJournal.setObject(2, id, Types.OTHER);
             deleteJournal.setString(3, "deleted");
-            deleteJournal.setObject(4, authorID);
+            deleteJournal.setObject(4, authorID, Types.OTHER);
 
             ResultSet deletedResult = deleteJournal.executeQuery();
             Journal journal = null;
@@ -162,6 +162,7 @@ public class JournalRepository implements IJournalRepository {
                         (UUID) deletedResult.getObject("author_id"), deletedResult.getString("date_modified"));
             }
             connection.commit();
+            connection.setAutoCommit(true);
             return journal;
 
         } catch (SQLException ex) {
@@ -201,6 +202,7 @@ public class JournalRepository implements IJournalRepository {
                 createdJournal.setAuthorID((UUID) eventResultSet.getObject("author_id"));
             }
             connection.commit();
+            connection.setAutoCommit(true);
             return createdJournal;
 
         } catch (SQLException ex) {
@@ -244,7 +246,7 @@ public class JournalRepository implements IJournalRepository {
             modifyJournal.setString(2, "modified");
             modifyJournal.setString(3, journal.getContent());
             modifyJournal.setObject(4, journal.getAuthorID(), Types.OTHER);
-            modifyJournal.setObject(5, journal.getId());
+            modifyJournal.setObject(5, journal.getId(), Types.OTHER);
 
             ResultSet modifyResultSet = modifyJournal.executeQuery();
             while (modifyResultSet.next()) {
