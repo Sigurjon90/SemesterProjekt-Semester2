@@ -12,6 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+
 /**
  *
  * @author jacobwowkjorgensen
@@ -24,10 +27,12 @@ public class CreateUserDTO {
     
     private String username;
     @JsonDeserialize(using = BCryptPasswordDeserializer.class )
-    private String password; 
+    private String password;
+    @Pattern(regexp = "(?:^|\\W)admin|caseworker|caregiver(?:$|\\W)")
     private String role;
+    @Email
     private String email; 
-    private String Cpr; 
+    private String cpr;
     private String address;
 
 }

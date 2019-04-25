@@ -32,7 +32,6 @@ public class User {
         this.role = role;
         this.address = address;
         this.email = email;
-
     }
 
     public User(UUID id) {

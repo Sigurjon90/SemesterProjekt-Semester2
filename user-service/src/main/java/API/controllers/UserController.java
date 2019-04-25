@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import security.JwtUtils;
 
+import javax.validation.Valid;
+
 /**
  *
  * @author jacobwowkjorgensen
@@ -41,12 +43,11 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity createUser(@RequestHeader HttpHeaders httpHeaders, @RequestBody CreateUserDTO userDTO) {
+    public ResponseEntity createUser(@RequestHeader HttpHeaders httpHeaders, @Valid @RequestBody CreateUserDTO userDTO) {
         String token = httpHeaders.getFirst("authorization");
         UUID careCenterId = jwtUtils.getCareCenterId(token);
         UserDTO createUser = userService.createUser(userDTO, careCenterId);
         if (createUser != null) {
-
             return new ResponseEntity(createUser, HttpStatus.CREATED);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
