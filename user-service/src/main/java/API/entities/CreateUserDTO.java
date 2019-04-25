@@ -28,7 +28,7 @@ public class CreateUserDTO {
     private String username;
     @JsonDeserialize(using = BCryptPasswordDeserializer.class )
     private String password;
-    @Pattern(regexp = "(?:^|\\W)admin|caseworker|caregiver(?:$|\\W)")
+    @Pattern(regexp = "(?:^|\\W)admin|caseworker|caregiver(?:$|\\W)", message = "User must be an admin, caseworker or caregiver")
     private String role;
     @Email
     private String email; 
