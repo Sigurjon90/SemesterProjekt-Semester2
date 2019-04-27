@@ -90,7 +90,8 @@ export default class Journal extends Component {
           <Col span={8}>
           </Col>
           <Col span={16}>
-            <Button type="primary" onClick={this.handleClick}>Redigér</Button>
+            <Button type="primary" onClick={this.handleClick}> Redigér</Button>
+            <Button type="danger" onClick={this.handleClick} style={{ marginLeft: 15, marginTop: 5 }}>Arkivér journal</Button>
           </Col>
         </Row>
       </div>}

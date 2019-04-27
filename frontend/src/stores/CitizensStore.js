@@ -8,6 +8,23 @@ class CitizensStore {
   @observable isFetching = false;
   @observable citizens = [];
   @observable citizen = null;
+  @observable archived = false;
+
+
+  @action async archiveCitizen(id) {
+    this.isFetching = true;
+    this.error = null;
+    try {
+      const response = await axios.get(`http://localhost:1338/citizens/${id}`);
+      this.citizens = response.data;
+      this.isFetching = false;
+    } catch (error) {
+      this.error = error;
+      this.isFetching = false;
+    }
+  }
+
+
 
   @action async fetchCitizens() {
     this.isFetching = true;
