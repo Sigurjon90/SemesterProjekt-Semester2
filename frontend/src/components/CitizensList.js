@@ -12,7 +12,7 @@ const columns = [
   },
   {
     title: "Addresse",
-    dataIndex: "adress",
+    dataIndex: "address",
     key: "adress"
   },
   {
@@ -73,14 +73,15 @@ export default class CitizensList extends Component {
 
   render() {
     const { citizensStore } = this.props;
-    const { citizens } = citizensStore;
+    const { primaryCitizens } = citizensStore;
+    console.log(primaryCitizens);
     return (
       <div>
         <Table
-          {...citizens}
+          {...primaryCitizens}
           {...config}
           columns={columns}
-          dataSource={citizens}
+          dataSource={primaryCitizens}
         />
       </div>
     );

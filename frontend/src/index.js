@@ -10,6 +10,7 @@ import { createBrowserHistory } from 'history'
 
 import App from './components/App'
 import stores from './stores/'
+import("./utils/axiosConfig.js");
 
 const renderApp = Component => {
 	const browserHistory = createBrowserHistory()

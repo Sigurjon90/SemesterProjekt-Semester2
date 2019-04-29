@@ -15,7 +15,7 @@ class JournalStore {
       //Let lever i begrænset scope og kan assignes new value
       //Var har højere scope
       const response = await axios.get(
-        `http://localhost:1339/journals/citizen/${id}`
+        `http://localhost:8762/journals/citizen/${id}`
       );
       console.log(response.data);
       // Data bliver smidt  i array
@@ -32,7 +32,7 @@ class JournalStore {
     this.isFetching = true;
     this.error = null;
     try {
-      const response = await axios.put('http://localhost:1339/journals', updatedJournal);
+      const response = await axios.put('http://localhost:8762/journals', updatedJournal);
       this.journal = response.data;
       console.log("PutDATA")
       console.log(response.data)
@@ -48,7 +48,7 @@ class JournalStore {
     this.isFetching = true;
     this.error = null;
     try {
-      const response = await axios.post('http://localhost:1339/journals', createdJournal);
+      const response = await axios.post('http://localhost:8762/journals', createdJournal);
       this.journal = response.data;
       this.isFetching = false
     } catch (error) {

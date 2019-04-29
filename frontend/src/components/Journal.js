@@ -19,8 +19,6 @@ export default class Journal extends Component {
   componentWillMount() {
     const { citizenID } = this.props;
     const { journal } = this.getJournal(citizenID)
-    console.log("WILL MOUNT CITI ID")
-    console.log(citizenID)
     console.log(this.getJournal(citizenID))
   }
 
@@ -34,8 +32,6 @@ export default class Journal extends Component {
 
   createJournal = () => {
     const { citizenID } = this.props;
-    console.log("CREATEJOURNAL CITI ID")
-    console.log(citizenID)
     const createdJournal = {
       citizensID: citizenID,
       authorID: 'afda2cd5-6fd9-40ff-a0db-938af02a281c',
@@ -64,7 +60,7 @@ export default class Journal extends Component {
           </Col>
           <Col span={16}>
             <h3><Alert message="Der eksisterer endnu ingen journal på denne borger. Du kan oprette en nu." type="warning" /></h3>
-            <TextArea rows={10} onChange={this.onChangeHandler} />
+            <TextArea rows={5} onChange={this.onChangeHandler} />
             <Button type="primary" size="default" onClick={this.createJournal}>Opret journal på borger</Button>
           </Col>
         </Row>

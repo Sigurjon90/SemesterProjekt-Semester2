@@ -6,7 +6,7 @@ class CitizensStore {
   @observable error = null;
   @observable isFetching = false;
   @observable isFetching = false;
-  @observable citizens = [];
+  @observable primaryCitizens = [];
   @observable citizen = null;
   @observable archived = false;
 
@@ -15,8 +15,8 @@ class CitizensStore {
     this.isFetching = true;
     this.error = null;
     try {
-      const response = await axios.get(`http://localhost:1338/citizens/${id}`);
-      this.citizens = response.data;
+      const response = await axios.get(`http://localhost:8762/citizens/${id}`);
+      this.citizens = response.data
       this.isFetching = false;
     } catch (error) {
       this.error = error;
@@ -30,8 +30,8 @@ class CitizensStore {
     this.isFetching = true;
     this.error = null;
     try {
-      const response = await axios.get("http://localhost:1338/citizens");
-      this.citizens = response.data;
+      const response = await axios.get("http://localhost:8762/citizens");
+      this.primaryCitizens = response.data.primaryCitizens;
       this.isFetching = false;
     } catch (error) {
       this.error = error;
@@ -43,7 +43,7 @@ class CitizensStore {
     this.isFetching = true;
     this.error = null;
     try {
-      const response = await axios.get(`http://localhost:1338/citizens/${id}`);
+      const response = await axios.get(`http://localhost:8762/citizens/${id}`);
       this.citizen = response.data;
       console.log(this.citizen)
       this.isFetching = false;
