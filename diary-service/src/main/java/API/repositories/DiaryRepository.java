@@ -129,10 +129,10 @@ public class DiaryRepository implements IDiaryRepository {
     @Override
     public Optional<Diary> updateDiary(Diary diary) {
         try (PreparedStatement diaryUpdate = this.connection.prepareStatement(
-                    "UPDATE Diaries SET content = ?, author_ID = ? WHERE id = ?  returning id, content, author_ID, citizen_ID, date_created, date_modified, title")) {
+                    "UPDATE Diaries SET content = ?, author_ID = ? WHERE citizen_id = ?  returning id, content, author_ID, citizen_ID, date_created, date_modified, title")) {
             diaryUpdate.setString(1, diary.getContent());
             diaryUpdate.setObject(2, diary.getAuthorID(), Types.OTHER);
-            diaryUpdate.setObject(3, diary.getId(), Types.OTHER);
+            diaryUpdate.setObject(3, diary.getCitizenID(), Types.OTHER);
             ResultSet updateDiaryResult = diaryUpdate.executeQuery();
             while (updateDiaryResult.next()) {
                 return Optional.of(new Diary(
