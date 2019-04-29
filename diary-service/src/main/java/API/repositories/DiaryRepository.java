@@ -83,7 +83,7 @@ public class DiaryRepository implements IDiaryRepository {
     @Override
     public Optional<Diary> findByCitizenID(UUID citizenID) {
         try (PreparedStatement diaryLookup = this.connection.prepareStatement(
-                    "SELECT * FROM diaries WHERE citizen_id = ? AND archived = false returning id, citizen_id, author_id, content")) {
+                    "SELECT * FROM diaries WHERE citizen_id = ? AND archived = false")) { 
             diaryLookup.setObject(1, citizenID, Types.OTHER);
             ResultSet diaryResult = diaryLookup.executeQuery();
             while (diaryResult.next()) {
