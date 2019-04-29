@@ -27,7 +27,7 @@ public class SwaggerConfig {
             properties.getRoutes().values().stream()
                     .forEach(route -> resources
                             .add(createResource(route.getServiceId(), route.getPath().replace("**", "v2/api-docs"), "2.0")));
-            resources.removeIf(route -> route.getName() == "AUTH-SERVICE");
+            resources.removeIf(route -> route.getName().equals("AUTH-SERVICE"));
             return resources;
         };
     }
