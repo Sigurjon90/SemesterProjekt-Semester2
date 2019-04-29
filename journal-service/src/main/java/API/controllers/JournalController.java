@@ -7,12 +7,11 @@ package API.controllers;
 // Handles requests from URL
 import API.entities.JournalDTO;
 import API.services.IJournalService;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +30,9 @@ public class JournalController {
     private JwtUtils jwtUtils;
 
     // Find all journals ASSIGNED TO YOU by Citizens ID
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = JournalDTO.class, responseContainer = "List")
+    })
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getJournals(@RequestHeader HttpHeaders httpHeaders) {
         String token = httpHeaders.getFirst("authorization");
@@ -41,6 +43,9 @@ public class JournalController {
     }
 
     // Find JournalDTO on ID
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = JournalDTO.class)
+    })
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity findJournal(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
@@ -56,6 +61,9 @@ public class JournalController {
     }
 
     // Find Journal på Citizen ID
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = JournalDTO.class)
+    })
     @RequestMapping(path = "/citizen/{id}", method = RequestMethod.GET)
     public ResponseEntity findJournalByCitizen(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
@@ -71,6 +79,10 @@ public class JournalController {
     }
 
     // Create Journal
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message= "Non", response = void.class),
+        @ApiResponse(code = 201, message= "Successful", response = JournalDTO.class)
+    })
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createJournal(@RequestHeader HttpHeaders httpHeaders, @RequestBody JournalDTO journalDTO) {
         String token = httpHeaders.getFirst("authorization");
@@ -86,6 +98,9 @@ public class JournalController {
     }
 
     // Modify Journal
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = JournalDTO.class)
+    })
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity modifyJournal(@RequestHeader HttpHeaders httpHeaders, @RequestBody JournalDTO journalDTO) {
         String token = httpHeaders.getFirst("authorization");
@@ -101,6 +116,9 @@ public class JournalController {
     }
 
     // Delete Journal on ID
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = void.class)
+    })
     @RequestMapping(path = "/{citizenId}", method = RequestMethod.DELETE)
     public ResponseEntity deleteJournalByCitizenId(@RequestHeader HttpHeaders httpHeaders, @PathVariable("citizenId") String stringID) {
         String token = httpHeaders.getFirst("authorization");

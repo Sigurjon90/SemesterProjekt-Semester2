@@ -15,9 +15,10 @@ import java.util.UUID;
 
 import API.services.ICitizensService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -42,6 +43,9 @@ public class CitizensController {
 
 
     // Get assigned citizens
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = GetCitizensDTO.class)
+    })
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity getMyCitizens(@RequestHeader HttpHeaders httpHeaders) {
         String token = httpHeaders.getFirst("authorization");
@@ -53,6 +57,10 @@ public class CitizensController {
     }
 
     // Create Citizen from CreateDTO
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message= "Non", response = void.class),
+        @ApiResponse(code = 201, message= "Successful", response = CitizenDTO.class)
+    })
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody CreateDTO createDTO) {
         String token = httpHeaders.getFirst("authorization");
@@ -66,6 +74,9 @@ public class CitizensController {
     }
 
     // Find Citizen by ID
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = CitizenDTO.class)
+    })
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public ResponseEntity findCitizen(@PathVariable("id") String stringID) {
         UUID id = UUID.fromString(stringID);
@@ -78,13 +89,19 @@ public class CitizensController {
 
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
-
+    
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = CitizenDTO.class, responseContainer = "List")
+    })
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity updateCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody CitizenDTO citizenDTO) {
         return batchUpdateCitizen(httpHeaders, Arrays.asList(citizenDTO));
     }
 
     // Batch
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = CitizenDTO.class, responseContainer = "List")
+    })
     @RequestMapping(path = "/batch", method = RequestMethod.PUT)
     public ResponseEntity batchUpdateCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody List<CitizenDTO> citizenDTOList) {
         String token = httpHeaders.getFirst("authorization");
@@ -99,6 +116,9 @@ public class CitizensController {
 
     }
 
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = void.class)
+    })
     @HystrixCommand(fallbackMethod = "fallback", ignoreExceptions = {NotFoundException.class})
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteCitizen(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") String stringID) {
