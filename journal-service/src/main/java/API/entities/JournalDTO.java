@@ -24,6 +24,9 @@ public class JournalDTO {
 
     private UUID id;
     private UUID citizensID;
+    private String paragraph;
+    private String municipality;
+    private boolean consent;
     private UUID authorID;
     private String content;
     private String dateStart;

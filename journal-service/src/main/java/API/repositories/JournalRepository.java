@@ -60,7 +60,7 @@ public class JournalRepository implements IJournalRepository {
                 }
                 journalList.add(new Journal((UUID) journalsResult.getObject("journal_id"), 
                         journalsResult.getString("date_start"),
-                        (UUID) journalsResult.getObject("citizens_id"), 
+                        (UUID) journalsResult.getObject("citizens_id"),
                         journalsResult.getString("content"),
                         (UUID) journalsResult.getObject("author_id"), 
                         journalsResult.getString("date_modified")));
@@ -87,7 +87,7 @@ public class JournalRepository implements IJournalRepository {
                 }
                 return new Journal((UUID) journalResultSet.getObject("id"), 
                         journalResultSet.getString("date_start"), 
-                        (UUID) journalResultSet.getObject("citizens_id"), 
+                        (UUID) journalResultSet.getObject("citizens_id"),
                         journalResultSet.getString("content"), 
                         (UUID) journalResultSet.getObject("author_id"), 
                         journalResultSet.getString("date_modified"));
@@ -177,14 +177,16 @@ public class JournalRepository implements IJournalRepository {
     public Journal createJournal(Journal journal) {
         try {
             connection.setAutoCommit(false); // Transaction
-            PreparedStatement createJournal = connection.prepareStatement("INSERT INTO journals(id, citizens_id) VALUES (?, ?) RETURNING id, date_start, citizens_id");
+            PreparedStatement createJournal = connection.prepareStatement("INSERT INTO journals(id, citizens_id, paragraph, municipality, consent) VALUES (?, ?, ?, ?, ?) RETURNING id, date_start, citizens_id, paragraph, municipality, consent ");
             createJournal.setObject(1, UUID.randomUUID(), Types.OTHER);
             createJournal.setObject(2, journal.getCitizensID(), Types.OTHER);
-            
+            createJournal.setString(3, journal.getParagraph());
+            createJournal.setString(4, journal.getMunicipality());
+            createJournal.setBoolean(5, journal.isConsent());
             ResultSet journalResultSet = createJournal.executeQuery();
             Journal createdJournal = null;
             while (journalResultSet.next()) {
-                createdJournal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), null, null, null);
+                createdJournal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("paragraph"), journalResultSet.getString("municipality"), journalResultSet.getBoolean("consent"), null, null, null);
             }
 
             PreparedStatement createEvent = connection.prepareStatement("INSERT INTO journal_events(type, content, author_id, journal_id, id) VALUES (?, ?, ?, ?, ?) RETURNING content, author_id");
