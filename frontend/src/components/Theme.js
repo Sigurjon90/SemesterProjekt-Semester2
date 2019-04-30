@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Layout, Menu, Icon } from "antd";
+import { Layout, Menu, Breadcrumb, Button, Icon } from "antd";
 import { Link } from "react-router-dom";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
 /*
@@ -19,6 +19,16 @@ const menuItems = [
   {
     title: "HEJSA",
     link: "/link",
+    icon: "edit"
+  },
+  {
+    title: "asdasd",
+    link: "/linsk",
+    icon: "edit"
+  },
+  {
+    title: "ASDSAD",
+    link: "/asd",
     icon: "edit"
   }
 ];
@@ -37,23 +47,53 @@ export default class Theme extends Component {
     super(props);
   }
 
+  onLogout = e => {
+    localStorage.removeItem("authorization");
+    window.location.replace("/login");
+  }
+
+  onCollapse = (collapsed) => {
+    console.log(collapsed);
+  }
+
   render() {
     return (
-      <Layout style={{ minHeight: "100vh" }}>
-        <Sider>
-          <div className="logo" />
-          <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-            {menu}
-          </Menu>
-        </Sider>
-        <Layout>
-          <Header style={{ background: "#fff", padding: 0 }} />
-          <Content style={{ margin: "0 16px" }}>{this.props.children}</Content>
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2018 Created by Ant UED
-          </Footer>
-        </Layout>
+    <Layout style={{ minHeight: '100vh' }}>
+    <Header className="header">
+      <div className="logo" />
+      <Button className="login-button" onClick={e => this.onLogout()}>Log ud</Button>
+      <Menu
+        theme="dark"
+        mode="horizontal"
+        style={{ lineHeight: '64px' }}
+      >
+      </Menu>
+    </Header>
+    <Layout>
+      <Sider collapsible width={200} style={{ background: '#fff' }}>
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          style={{ height: '100%', borderRight: 0 }}
+        >
+        {menu}
+        </Menu>
+      </Sider>
+      <Layout style={{ padding: '0 24px 24px' }}>
+        <Breadcrumb style={{ margin: '16px 0' }}>
+          <Breadcrumb.Item>Hjem</Breadcrumb.Item>
+          <Breadcrumb.Item>Forside</Breadcrumb.Item>
+        </Breadcrumb>
+        <Content style={{
+          background: '#fff', padding: 24, margin: 0, minHeight: 280,
+        }}
+        >
+          {this.props.children}
+        </Content>
       </Layout>
+    </Layout>
+  </Layout>
     );
   }
 }
