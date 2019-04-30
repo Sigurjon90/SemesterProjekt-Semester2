@@ -12,6 +12,7 @@ package main.java.security;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,12 +22,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import security.JwtConfig;
 
 
 @EnableWebSecurity 	// Enable security config. This annotation denotes config for spring security.
 public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
+	@Qualifier("userDetailsServiceImpl")
 	private UserDetailsService userDetailsService;
 
 	@Autowired
@@ -48,7 +51,7 @@ public class SecurityCredentialsConfig extends WebSecurityConfigurerAdapter {
 		    // An object provided by WebSecurityConfigurerAdapter, used to authenticate the user passing user's credentials
 		    // The filter needs this auth manager to authenticate the user.
 		    .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), jwtConfig))	
-		.authorizeRequests()
+			.authorizeRequests()
 		    // allow all POST requests 
 		    .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
 		    // any other requests must be authenticated

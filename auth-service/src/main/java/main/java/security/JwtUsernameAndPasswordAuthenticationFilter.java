@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import security.JwtConfig;
 
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter   {
 	
@@ -50,12 +51,12 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		try {
 			
 			// 1. Get credentials from request
-			UserCredentials creds = new ObjectMapper().readValue(request.getInputStream(), UserCredentials.class);
+			AppUser creds = new ObjectMapper().readValue(request.getInputStream(), AppUser.class);
 			
 			// 2. Create auth object (contains credentials) which will be used by auth manager
 			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
 					creds.getUsername(), creds.getPassword(), Collections.emptyList());
-			
+			setDetails(request, authToken);
 			// 3. Authentication manager authenticate the user, and use UserDetialsServiceImpl::loadUserByUsername() method to load the user.
 			return authManager.authenticate(authToken);
 			
@@ -69,10 +70,13 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication auth) throws IOException, ServletException {
-		
+		AppUser user = (AppUser)auth.getPrincipal();
 		Long now = System.currentTimeMillis();
 		String token = Jwts.builder()
-			.setSubject(auth.getName())	
+			.setSubject(auth.getName())
+			.setId(user.getId().toString())
+			.setHeaderParam("citizens", user.getCitizensIDList())
+			.setHeaderParam("carecenter", user.getCareCenterId())
 			// Convert to list of strings. 
 			// This is important because it affects the way we get them back in the Gateway.
 			.claim("authorities", auth.getAuthorities().stream()
@@ -85,27 +89,5 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 		// Add token to header
 		response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
 	}
-	
-	// A (temporary) class just to represent the user credentials
-	private static class UserCredentials {
-	    private String username, password;
 
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-            
-            
-	}
 }
