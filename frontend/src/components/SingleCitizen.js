@@ -81,7 +81,7 @@ export default class SingleCitizen extends Component {
               <Col className="rowcolor" span={4}>
                 {citizen.name}
               </Col>
-              <Col span={4}>{citizen.adress}</Col>
+              <Col span={4}>{citizen.address}</Col>
               <Col span={4}>{citizen.city}</Col>
               <Col span={4}>{citizen.zip}</Col>
               <Col span={4}>{citizen.phoneNumber}</Col>

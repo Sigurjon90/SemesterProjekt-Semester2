@@ -50,8 +50,6 @@ export default class Journal extends Component {
     const { journal, isFetching, error } = journalStore;
     const isLoaded = !isFetching && error === null
     const { TextArea } = Input
-    console.log("LOGS")
-    console.log(journal)
     return (<div>
       {isFetching && <Spin />}
       {journal == null &&
@@ -87,7 +85,6 @@ export default class Journal extends Component {
           </Col>
           <Col span={16}>
             <Button type="primary" onClick={this.handleClick}> Redigér</Button>
-            <Button type="danger" onClick={this.handleClick} style={{ marginLeft: 15, marginTop: 5 }}>Arkivér journal</Button>
           </Col>
         </Row>
       </div>}

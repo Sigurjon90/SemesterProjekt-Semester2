@@ -20,6 +20,8 @@ class JournalStore {
       console.log(response.data);
       // Data bliver smidt  i array
       this.journal = response.data;
+      console.log("JournalResponse")
+      console.log(response.data)
       this.isFetching = false;
     } catch (error) {
       this.journal = null;
@@ -34,8 +36,6 @@ class JournalStore {
     try {
       const response = await axios.put('http://localhost:8762/journals', updatedJournal);
       this.journal = response.data;
-      console.log("PutDATA")
-      console.log(response.data)
       this.isFetching = false;
 
     } catch (error) {

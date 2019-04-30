@@ -72,7 +72,7 @@ export default class Diary extends Component {
                 </Row>
                 <Row>
                     <Col span={8}>
-                        <h3>Side tekst...</h3>
+                        <h3>{moment(diary.dateModified).format('DD-MM-YYYY HH:mm')}</h3>
                     </Col>
                     <Col span={16}>
                         <ReactMarkdown source={`${diary.content}`} />
@@ -83,7 +83,6 @@ export default class Diary extends Component {
                     </Col>
                     <Col span={16}>
                         <Button type="primary" onClick={this.handleDiarySwitch}>Redigér</Button>
-                        <Button type="danger" style={{ marginLeft: 15, marginTop: 5 }}>Arkivér dagbog?</Button>
                     </Col>
                 </Row>
             </div>}
