@@ -6,7 +6,6 @@
 package API.services;
 
 import API.entities.*;
-import API.repositories.CitizensRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
