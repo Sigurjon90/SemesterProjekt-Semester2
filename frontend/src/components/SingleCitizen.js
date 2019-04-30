@@ -91,7 +91,7 @@ export default class SingleCitizen extends Component {
                 ))}
               </Col>
             </Row>
-            <Divider><strong>Journal</strong></Divider>
+            <Divider><strong>Sag</strong></Divider>
             <Row>
               <Col span={24}>
 
