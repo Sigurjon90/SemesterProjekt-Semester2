@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import "antd/dist/antd.css";
-import axios from "axios";
-import { Row, Col, Form, Icon, Input, Button, Card } from "antd";
+import {Redirect} from "react-router-dom";
+import { Row, Col, Form, Icon, Input, Button, Card, message } from "antd";
 
 @inject("loginStore")
 @observer
@@ -18,13 +18,26 @@ class Login extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log("Received values of form: ", values);
+        const self = this;
+        this.props.loginStore.authUser().then(function(response){
+          if(response == true){
+            self.props.loginStore.login();
+          }else{
+            message.error("Dit brugernavn eller adgangskode er ikke korrekt.");
+          }
+        })
+        
       }
     });
-    this.props.loginStore.authUser();
   };
 
   render() {
     const { getFieldDecorator } = this.props.form;
+
+    if(this.props.loginStore.loggedIn === true){
+      return <Redirect to="/test" />
+    }
+
     return (
       <div
         className="login"
@@ -36,8 +49,8 @@ class Login extends Component {
           align="middle"
           style={{ height: "100%" }}
         >
-          <Col span={6} offset="9" style={{ height: "300" }}>
-            <Card title="Log ind" bordered={false} style={{ width: 350 }}>
+          <Col span={6} offset={9} style={{ height: "300" }}>
+            <Card title="Log ind" bordered={false} style={{ width: "100%" }}>
               <Form onSubmit={this.handleSubmit} className="login-form">
                 <Form.Item label="Brugernavn">
                   {getFieldDecorator("userName", {
