@@ -49,6 +49,11 @@ public class CitizensServiceTest {
     
     private CreateDTO createCitizen = new CreateDTO("Jørgen", "Middelfartsvej 72", "Bolbro", 1234, "234312-2341", 56942412, Arrays.asList("Mongol"));
     
+    private List<Citizen> citizens = Arrays.asList(
+        new Citizen(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), "Jørgen", "Middelfartsvej 72", "Bolbro", 1234, "234312-2341", 56942412, Arrays.asList("Mongol"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8")),
+        new Citizen(UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"), "Kris", "Middelfartsvej 82", "Bolbro", 1544, "234312-5643", 56942415, Arrays.asList("Mongol", "Deaf"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))
+    );
+    
     private List<CitizenDTO> DTOS = Arrays.asList(
         new CitizenDTO(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), "Jørgen", "Middelfartsvej 72", "Bolbro", 1234, 56942412, Arrays.asList("Mongol"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8")),
         new CitizenDTO(UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"), "Kris", "Middelfartsvej 82", "Bolbro", 1544, 56942415, Arrays.asList("Mongol", "Deaf"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))
@@ -149,7 +154,19 @@ public class CitizensServiceTest {
      */
     @Test
     public void testBatchUpdate() {
-        System.out.println("batchUpdate");
+        UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
+        when(repositoryMock.batchUpdate(citizens, authorId)).thenReturn(citizens);
+        when(modelMapper.map(DTOS.get(0), Citizen.class)).thenReturn(citizens.get(0));
+        when(modelMapper.map(DTOS.get(1), Citizen.class)).thenReturn(citizens.get(1));
+        when(modelMapper.map(citizens.get(0), CitizenDTO.class)).thenReturn(DTOS.get(0));
+        when(modelMapper.map(citizens.get(1), CitizenDTO.class)).thenReturn(DTOS.get(1));
+        
+        List<CitizenDTO> actual = service.batchUpdate(DTOS, authorId);
+        
+        verify(repositoryMock, times(1)).batchUpdate(citizens, authorId);
+        verifyNoMoreInteractions(repositoryMock);
+
+        assertThat(actual, is(DTOS));
     }
 
     /**
@@ -157,7 +174,16 @@ public class CitizensServiceTest {
      */
     @Test
     public void testDeleteCitizen() {
-        System.out.println("deleteCitizen");
+        UUID id = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc");
+        UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
+        when(repositoryMock.deleteCitizen(id, authorId)).thenReturn(true);
+        
+        boolean actual = service.deleteCitizen(id, authorId);
+        
+        verify(repositoryMock, times(1)).deleteCitizen(id, authorId);
+        verifyNoMoreInteractions(repositoryMock);
+        
+        assertTrue(actual);
     }
     
 }
