@@ -5,17 +5,24 @@
  */
 package API.services;
 
+import API.entities.Citizen;
 import API.entities.CitizenDTO;
 import API.entities.CreateDTO;
 import API.entities.GetCitizensDTO;
+import API.repositories.ICitizensRepository;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.is;
+import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 
 /**
  *
@@ -23,23 +30,33 @@ import static org.junit.Assert.*;
  */
 public class CitizensServiceTest {
     
-    public CitizensServiceTest() {
-    }
+    @InjectMocks
+    private CitizensService service;
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
+    @Mock
+    private ICitizensRepository repositoryMock;
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
+    @Mock
+    private ModelMapper modelMapper;
+    
+    private List<Citizen> myCitizens = Arrays.asList(
+        new Citizen(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), "Jørgen", "Middelfartsvej 72", "Bolbro", 1234, "234312-2341", 56942412, Arrays.asList("Mongol"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))
+    );
+    
+    private List<Citizen> careCenterCitizens = Arrays.asList(
+        new Citizen(UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"), "Kris", "Middelfartsvej 82", "Bolbro", 1544, "234312-5643", 56942415, Arrays.asList("Mongol", "Deaf"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))
+    );
+    
+    private CreateDTO createCitizen = new CreateDTO("Jørgen", "Middelfartsvej 72", "Bolbro", 1234, "234312-2341", 56942412, Arrays.asList("Mongol"));
+    
+    private List<CitizenDTO> DTOS = Arrays.asList(
+        new CitizenDTO(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), "Jørgen", "Middelfartsvej 72", "Bolbro", 1234, 56942412, Arrays.asList("Mongol"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8")),
+        new CitizenDTO(UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"), "Kris", "Middelfartsvej 82", "Bolbro", 1544, 56942415, Arrays.asList("Mongol", "Deaf"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))
+    );
     
     @Before
     public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
+        MockitoAnnotations.initMocks(this);
     }
 
     /**
@@ -47,15 +64,16 @@ public class CitizensServiceTest {
      */
     @Test
     public void testCreateCitizen() {
-        System.out.println("createCitizen");
-        CreateDTO createDTO = null;
-        UUID authorId = null;
-        CitizensService instance = new CitizensService();
-        CitizenDTO expResult = null;
-        CitizenDTO result = instance.createCitizen(createDTO, authorId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        when(repositoryMock.createCitizen(myCitizens.get(0), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))).thenReturn(myCitizens.get(0));
+        when(modelMapper.map(myCitizens.get(0), CitizenDTO.class)).thenReturn(DTOS.get(0));
+        when(modelMapper.map(createCitizen, Citizen.class)).thenReturn(myCitizens.get(0));
+        
+        CitizenDTO actual = service.createCitizen(createCitizen, UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"));
+        
+        verify(repositoryMock, times(1)).createCitizen(myCitizens.get(0), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"));
+        verifyNoMoreInteractions(repositoryMock);
+        
+        assertThat(actual, is(DTOS.get(0)));
     }
 
     /**
@@ -63,13 +81,17 @@ public class CitizensServiceTest {
      */
     @Test
     public void testGetCitizens() {
-        System.out.println("getCitizens");
-        CitizensService instance = new CitizensService();
-        List<CitizenDTO> expResult = null;
-        List<CitizenDTO> result = instance.getCitizens();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        when(repositoryMock.getCitizens()).thenReturn(myCitizens);
+        when(modelMapper.map(myCitizens.get(0), CitizenDTO.class)).thenReturn(DTOS.get(0));
+        
+        List<CitizenDTO> actual = service.getCitizens();
+        
+        verify(repositoryMock, times(1)).getCitizens();
+        verifyNoMoreInteractions(repositoryMock);
+        
+        modelMapper.validate();
+        
+        assertThat(actual, is(Arrays.asList(DTOS.get(0))));
     }
 
     /**
@@ -77,15 +99,19 @@ public class CitizensServiceTest {
      */
     @Test
     public void testGetMyCitizens() {
-        System.out.println("getMyCitizens");
-        List<UUID> listOfCitizensIds = null;
-        UUID careCenterId = null;
-        CitizensService instance = new CitizensService();
-        GetCitizensDTO expResult = null;
-        GetCitizensDTO result = instance.getMyCitizens(listOfCitizensIds, careCenterId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        List<UUID> citizensUUID = Arrays.asList(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"));
+        UUID careCenterID = UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8");
+        when(repositoryMock.getMyCitizens(citizensUUID)).thenReturn(myCitizens);
+        when(modelMapper.map(myCitizens.get(0), CitizenDTO.class)).thenReturn(DTOS.get(0));
+        when(repositoryMock.getCareCenterCitizens(careCenterID, citizensUUID)).thenReturn(careCenterCitizens);
+        when(modelMapper.map(careCenterCitizens.get(0), CitizenDTO.class)).thenReturn(DTOS.get(1));
+        
+        GetCitizensDTO citizensDTO = service.getMyCitizens(citizensUUID, careCenterID);
+        
+        verify(repositoryMock, times(1)).getMyCitizens(citizensUUID);
+        verify(repositoryMock, times(1)).getCareCenterCitizens(careCenterID, citizensUUID);
+        
+        assertNotSame(citizensDTO.getPrimaryCitizens(), citizensDTO.getOtherCitizens());
     }
 
     /**
@@ -93,14 +119,29 @@ public class CitizensServiceTest {
      */
     @Test
     public void testFindCitizen() {
-        System.out.println("findCitizen");
-        UUID id = null;
-        CitizensService instance = new CitizensService();
-        CitizenDTO expResult = null;
-        CitizenDTO result = instance.findCitizen(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        UUID id = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc");
+        when(repositoryMock.findCitizen(id)).thenReturn(myCitizens.get(0));
+        when(modelMapper.map(myCitizens.get(0), CitizenDTO.class)).thenReturn(DTOS.get(0));
+        
+        CitizenDTO citizenDTO = service.findCitizen(id);
+        
+        verify(repositoryMock, times(1)).findCitizen(id);
+        verifyNoMoreInteractions(repositoryMock);
+
+        assertThat(citizenDTO, is(DTOS.get(0)));
+    }
+    
+    @Test
+    public void testFindCitizen_ShouldReturnNull() {
+        UUID id = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dd");
+        when(repositoryMock.findCitizen(id)).thenReturn(null);
+        
+        CitizenDTO citizenDTO = service.findCitizen(id);
+        
+        verify(repositoryMock, times(1)).findCitizen(id);
+        verifyNoMoreInteractions(repositoryMock);
+
+        assertNull(citizenDTO);
     }
 
     /**
@@ -109,14 +150,6 @@ public class CitizensServiceTest {
     @Test
     public void testBatchUpdate() {
         System.out.println("batchUpdate");
-        List<CitizenDTO> citizenDTOList = null;
-        UUID authorId = null;
-        CitizensService instance = new CitizensService();
-        List<CitizenDTO> expResult = null;
-        List<CitizenDTO> result = instance.batchUpdate(citizenDTOList, authorId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -125,14 +158,6 @@ public class CitizensServiceTest {
     @Test
     public void testDeleteCitizen() {
         System.out.println("deleteCitizen");
-        UUID id = null;
-        UUID authorId = null;
-        CitizensService instance = new CitizensService();
-        boolean expResult = false;
-        boolean result = instance.deleteCitizen(id, authorId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
