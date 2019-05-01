@@ -65,10 +65,11 @@ public class CitizensController {
     public ResponseEntity createCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody CreateDTO createDTO) {
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
-        CitizenDTO citizenDTO = citizensService.createCitizen(createDTO, authorId);
+        UUID careCenterId = jwtUtils.getCareCenterId(token);
+        CitizenDTO citizenDTO = citizensService.createCitizen(createDTO, authorId, careCenterId);
 
         if (citizenDTO != null) {
-            return new ResponseEntity(citizenDTO, HttpStatus.OK);
+            return new ResponseEntity(citizenDTO, HttpStatus.CREATED);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

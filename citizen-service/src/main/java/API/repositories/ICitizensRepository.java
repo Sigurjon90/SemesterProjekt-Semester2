@@ -17,7 +17,7 @@ public interface ICitizensRepository {
 
     List<Citizen> batchUpdate(List<Citizen> citizenList, UUID authorId);
 
-    Citizen createCitizen(Citizen citizen, UUID authorId);
+    Citizen createCitizen(Citizen citizen, UUID authorId, UUID careCenterId);
 
     boolean deleteCitizen(UUID id, UUID authorId);
 

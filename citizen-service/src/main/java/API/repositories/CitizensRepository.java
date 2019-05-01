@@ -100,7 +100,8 @@ public class CitizensRepository implements ICitizensRepository {
                     listOfDiagnoses,
                     citizensResult.getBoolean("archived"),
                     citizensResult.getString("date_created"),
-                    (UUID) citizensResult.getObject("author_id")));
+                    (UUID) citizensResult.getObject("author_id"),
+                    (UUID) citizensResult.getObject("care_center_id")));
         }
         return citizenList;
     }
@@ -139,7 +140,8 @@ public class CitizensRepository implements ICitizensRepository {
                         listOfDiagnoses,
                         citizenResultSet.getBoolean("archived"),
                         citizenResultSet.getString("date_created"),
-                        (UUID) citizenResultSet.getObject("author_id"));
+                        (UUID) citizenResultSet.getObject("author_id"),
+                        (UUID) citizenResultSet.getObject("care_center_id"));
             }
         } catch (SQLException ex) {
             System.out.println("SQL Exception....");
@@ -213,10 +215,10 @@ public class CitizensRepository implements ICitizensRepository {
     }
 
     @Override
-    public Citizen createCitizen(Citizen citizen, UUID authorId) {
+    public Citizen createCitizen(Citizen citizen, UUID authorId, UUID careCenterId) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id;");
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, author_id, care_center_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?, ?) RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id, care_center_id;");
             createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
             createCitizen.setString(2, citizen.getName());
             createCitizen.setString(3, citizen.getAddress());
@@ -226,6 +228,7 @@ public class CitizensRepository implements ICitizensRepository {
             createCitizen.setInt(7, citizen.getPhoneNumber());
             createCitizen.setBoolean(8, false);
             createCitizen.setObject(9, authorId, Types.OTHER);
+            createCitizen.setObject(10, careCenterId, Types.OTHER);
 
             ResultSet createCitizenResult = createCitizen.executeQuery();
             Citizen citizenCreated = null;
@@ -234,7 +237,7 @@ public class CitizensRepository implements ICitizensRepository {
             while (createCitizenResult.next()) {
                 citizenCreated = new Citizen((UUID) createCitizenResult.getObject("id"), createCitizenResult.getString("name"), createCitizenResult.getString("address"),
                         createCitizenResult.getString("city"), createCitizenResult.getInt("zip"), createCitizenResult.getString("cpr"),
-                        createCitizenResult.getInt("phone"), citizen.getDiagnoses(), createCitizenResult.getBoolean("archived"), createCitizenResult.getString("date_created"), (UUID) createCitizenResult.getObject("author_id"));
+                        createCitizenResult.getInt("phone"), citizen.getDiagnoses(), createCitizenResult.getBoolean("archived"), createCitizenResult.getString("date_created"), (UUID) createCitizenResult.getObject("author_id"), (UUID) createCitizenResult.getObject("care_center_id"));
             }
 
             for (String diagnoseString : citizen.getDiagnoses()) {

@@ -33,6 +33,7 @@ public class CitizenDTO {
     private boolean archived;
     private String dateCreated;
     private UUID authorId;
+    private UUID careCenterId;
 
     @Override
     public String toString() {
