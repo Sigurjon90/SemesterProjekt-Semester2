@@ -216,7 +216,7 @@ public class CitizensRepository implements ICitizensRepository {
     public Citizen createCitizen(Citizen citizen, UUID authorId) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id;");
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, care_center_id, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id;");
             createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
             createCitizen.setString(2, citizen.getName());
             createCitizen.setString(3, citizen.getAddress());
@@ -225,7 +225,8 @@ public class CitizensRepository implements ICitizensRepository {
             createCitizen.setString(6, citizen.getCpr());
             createCitizen.setInt(7, citizen.getPhoneNumber());
             createCitizen.setBoolean(8, false);
-            createCitizen.setObject(9, authorId, Types.OTHER);
+            createCitizen.setObject(9, citizen.getCareCenterID(), Types.OTHER);
+            createCitizen.setObject(10, authorId, Types.OTHER);
 
             ResultSet createCitizenResult = createCitizen.executeQuery();
             Citizen citizenCreated = null;
