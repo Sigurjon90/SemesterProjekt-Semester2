@@ -7,6 +7,7 @@ class CitizensStore {
   @observable isFetching = false;
   @observable isFetching = false;
   @observable primaryCitizens = [];
+  @observable otherCitizens = [];
   @observable citizen = null;
   @observable archived = false;
 
@@ -32,6 +33,7 @@ class CitizensStore {
     try {
       const response = await axios.get("http://localhost:8762/citizens");
       this.primaryCitizens = response.data.primaryCitizens;
+      this.otherCitizens = response.data.otherCitizens;
       this.isFetching = false;
     } catch (error) {
       this.error = error;

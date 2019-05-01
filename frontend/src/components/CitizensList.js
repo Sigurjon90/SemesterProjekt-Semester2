@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { List, Skeleton, Avatar, Table, Divider, Tag } from "antd";
+import { List, Skeleton, Avatar, Table, Divider, Tag, PageHeader } from "antd";
 
 const columns = [
   {
@@ -52,7 +52,11 @@ const columns = [
   }
 ];
 
-const config = {
+const primaryCitizensConfig = {
+  pagination: false
+};
+
+const otherCitizensConfig = {
   pagination: {
     defaultPageSize: 5
   }
@@ -74,15 +78,30 @@ export default class CitizensList extends Component {
   render() {
     const { citizensStore } = this.props;
     const { primaryCitizens } = citizensStore;
-    console.log(primaryCitizens);
+    const { otherCitizens } = citizensStore;
     return (
       <div>
+        <PageHeader
+          title="Primære borgere"
+          subTitle="- Dine primære borgere"
+        />
         <Table
           {...primaryCitizens}
-          {...config}
+          {...primaryCitizensConfig}
           columns={columns}
           dataSource={primaryCitizens}
         />
+        <PageHeader
+          title="Andre borgere"
+          subTitle="- Alle borgerne på dit bosted"
+        />
+        <Table
+          {...otherCitizens}
+          {...otherCitizensConfig}
+          columns={columns}
+          dataSource={otherCitizens}
+        />
+
       </div>
     );
   }

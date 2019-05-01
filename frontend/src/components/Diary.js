@@ -57,7 +57,7 @@ export default class Diary extends Component {
                     <Col span={16}>
                         <h3><Alert message="Denne borger har ingen dagbog. Du kan oprette en nu." type="warning" /></h3>
                         <TextArea rows={5} onChange={this.onChangeHandler} />
-                        <Button type="primary" size="default" onClick={this.createDiary}>Opret dagbog for borger</Button>
+                        <Button type="primary" size="default" onClick={this.createDiary} style={{ marginTop: 5 }}>Opret dagbog for borger</Button>
                     </Col>
                 </Row>
             }
