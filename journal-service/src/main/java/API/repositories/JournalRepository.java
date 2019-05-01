@@ -189,7 +189,7 @@ public class JournalRepository implements IJournalRepository {
                 createdJournal = new Journal((UUID) journalResultSet.getObject("id"), journalResultSet.getString("date_start"), (UUID) journalResultSet.getObject("citizens_id"), journalResultSet.getString("paragraph"), journalResultSet.getString("municipality"), journalResultSet.getBoolean("consent"), null, null, null);
             }
 
-            PreparedStatement createEvent = connection.prepareStatement("INSERT INTO journal_events(type, content, author_id, journal_id, id) VALUES (?, ?, ?, ?, ?) RETURNING content, author_id");
+            PreparedStatement createEvent = connection.prepareStatement("INSERT INTO journal_events(type, content, author_id, journal_id, id) VALUES (?, ?, ?, ?, ?) RETURNING content, author_id, date_modified");
             createEvent.setString(1, "created");
             createEvent.setString(2, journal.getContent());
             createEvent.setObject(3, journal.getAuthorID(), Types.OTHER);
@@ -201,6 +201,7 @@ public class JournalRepository implements IJournalRepository {
             while (eventResultSet.next()) {
                 createdJournal.setContent(eventResultSet.getString("content"));
                 createdJournal.setAuthorID((UUID) eventResultSet.getObject("author_id"));
+                createdJournal.setDateModified(eventResultSet.getString("date_modified"));
             }
             connection.commit();
             connection.setAutoCommit(true);
