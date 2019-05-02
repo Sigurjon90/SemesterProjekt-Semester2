@@ -25,6 +25,13 @@ export default class App extends Component {
             <LazyRoute {...props} component={import("./SingleCitizen")} />
           )}
         />
+        <Route
+          exact
+          path="/admin/citizens"
+          render={props => (
+            <LazyRoute {...props} component={import("./AdminCitizens")} />
+          )}
+        />
 
         <DevTools />
       </div>
