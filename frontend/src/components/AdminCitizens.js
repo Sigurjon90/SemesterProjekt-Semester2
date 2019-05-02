@@ -3,6 +3,7 @@ import { inject, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { Menu, Icon } from "antd";
 import EditCitizen from "./EditCitizen"
+import CareCenterList from "./CareCenterList";
 
 
 const SubMenu = Menu.SubMenu;
@@ -54,10 +55,13 @@ export default class AdminCitizens extends Component {
           </Menu.Item>
         </Menu>
 
+
+
+
+        {current == "EditCitizen" && <CareCenterList />}
         {current == "CreateCitizen" && "Create Citizen"}
         {current == "DeleteCitizen" && "Delete Citizen"}
-        {current == "EditCitizen" && <EditCitizen />}
-        {current == "CitizensList" && "List Citizen"}
+
 
       </div>
     );
