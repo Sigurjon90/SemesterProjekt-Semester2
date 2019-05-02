@@ -6,160 +6,253 @@
 package API.repositories;
 
 import API.entities.Citizen;
-import java.sql.Array;
+import java.io.IOException;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres;
+import static ru.yandex.qatools.embed.postgresql.distribution.Version.Main.V9_6;
 
 /**
  *
  * @author madsfalken
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CitizensRepositoryTest {
 
     @InjectMocks
-    private CitizensRepository citizensRepository;
+    private static CitizensRepository citizensRepository;
 
-    @Mock
-    private Connection connection;
-
-    @Mock
-    private PreparedStatement stmt;
-
-    @Mock
-    private ResultSet rs;
+    final static EmbeddedPostgres postgres = new EmbeddedPostgres(V9_6);
+    
+    private static UUID identifier;
 
     private final List<Citizen> citizens = Arrays.asList(
-        new Citizen(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), "Jørgen", "Middelfartsvej 72", "Bolbro", 1234, "234312-2341", 56942412, null, false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8")),
-        new Citizen(UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"), "Kris", "Middelfartsvej 82", "Bolbro", 1544, "234312-5643", 56942415, null, false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))
+        new Citizen(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), "Jørgen", "Middelfartsvej 72", "Bolbro", 1234, "234312-2341", 56942412, Arrays.asList("Pyroman", "Alkoholiker"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8")),
+        new Citizen(UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"), "Kris", "Middelfartsvej 82", "Bolbro", 1544, "234312-5643", 56942415, Arrays.asList("KaffeDrikker"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))
     );
     
+    @BeforeClass
+    public static void setUpBeforeClass() throws IOException, SQLException {
+        final String url = postgres.start("localhost", 5431, "dbName", "username", "password");
+        try (Connection conn = DriverManager.getConnection(url)) {
+            conn.createStatement().execute("create table citizens(id uuid primary key, name text, address text not null, city text not null, zip integer not null, cpr text  not null, phone integer not null, archived boolean, care_center_id uuid, date_created timestamp default timezone('utc'::text, now()), author_id uuid);");
+            conn.createStatement().execute("create table diagnose(citizens_id uuid, diagnose text);");
+            conn.createStatement().execute("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, author_id, care_center_id) VALUES ('06d0166d-56b6-4bb5-8572-9299fc87c3dc', 'Jørgen', 'Middelfartsvej 72', 'Bolbro', 1234, '234312-2341', 56942412, false , '75d988af-13d8-4513-ad27-3aa7741cc823', '66dd7224-60bf-4c3a-a4c3-82bcf18453b8')");
+            conn.createStatement().execute("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, author_id, care_center_id) VALUES ('b6a4bdfe-3222-4956-b4a3-93ab21ba8454', 'Kris', 'Middelfartsvej 82', 'Bolbro', 1544, '234312-5643', 56942415, false , '75d988af-13d8-4513-ad27-3aa7741cc823', '66dd7224-60bf-4c3a-a4c3-82bcf18453b8')");
+            conn.createStatement().execute("INSERT INTO diagnose(citizens_id, diagnose) VALUES ('06d0166d-56b6-4bb5-8572-9299fc87c3dc', 'Pyroman')");
+            conn.createStatement().execute("INSERT INTO diagnose(citizens_id, diagnose) VALUES ('06d0166d-56b6-4bb5-8572-9299fc87c3dc', 'Alkoholiker')");
+            conn.createStatement().execute("INSERT INTO diagnose(citizens_id, diagnose) VALUES ('b6a4bdfe-3222-4956-b4a3-93ab21ba8454', 'KaffeDrikker')");
+        }
+        citizensRepository = new CitizensRepository(url, "username", "password");
+    }
+    
+    @AfterClass
+    public static void afterClass() {
+        postgres.stop();
+    }
+    
     @Before
-    public void setUp() throws SQLException {
+    public void setUp() throws SQLException, IOException {
+        // ReflectionTestUtils.setField(citizensRepository.getClass(), "connector", "username");
+        //final EmbeddedPostgres postgres = new EmbeddedPostgres(V11);
+        //final String url = postgres.start("localhost", 5432, "dbName", "userName", "password");
         MockitoAnnotations.initMocks(this);
-        when(connection.prepareStatement(any(String.class))).thenReturn(stmt);
-        when(stmt.executeQuery()).thenReturn(rs);
-        Array diagonsisOne = connection.createArrayOf("UUID", new String[]{ "Mongol" });
-        Array diagonsisTwo = connection.createArrayOf("UUID", new String[]{ "Mongol", "Deaf" });
-        when(rs.getArray("diagnoses")).thenReturn(null).thenReturn(null);
-        when(rs.getObject("id")).thenReturn(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc")).thenReturn(UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"));
-        when(rs.getString("name")).thenReturn("Jørgen").thenReturn("Kris");
-        when(rs.getString("address")).thenReturn("Middelfartsvej 72").thenReturn("Middelfartsvej 82");
-        when(rs.getString("city")).thenReturn("Bolbro").thenReturn("Bolbro");
-        when(rs.getInt("zip")).thenReturn(1234).thenReturn(1234);
-        when(rs.getString("cpr")).thenReturn("245412-4543").thenReturn("245412-4512");
-        when(rs.getInt("phone")).thenReturn(56942412).thenReturn(56942415);
-        when(rs.getBoolean("archived")).thenReturn(false).thenReturn(false);
-        when(rs.getString("date_created")).thenReturn(new Date(System.currentTimeMillis()).toString()).thenReturn(new Date(System.currentTimeMillis()).toString());
-        when(rs.getObject("author_id")).thenReturn(UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823")).thenReturn(UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"));
-        when(rs.getObject("care_center_id")).thenReturn(UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8")).thenReturn(UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"));
     }
 
-    /**
+    /**e
      * Test of getMyCitizens method, of class CitizensRepository.
      */
     @Test
-    public void testGetMyCitizens() throws SQLException {
-        List<UUID> listOfCitizensIds = Arrays.asList(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"));
-        when(rs.next()).thenReturn(true).thenReturn(true).thenReturn(false);
-        List<Citizen> actual = this.citizensRepository.getMyCitizens(listOfCitizensIds);
+    public void stage1_testGetMyCitizens() {
+        List<UUID> listOfCitizensIds = Arrays.asList(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"));
+        List<Citizen> actuals = citizensRepository.getMyCitizens(listOfCitizensIds);
         
-        assertThat(actual, is(citizens));
+        Citizen citizen = citizens.get(0);
+        Citizen actual = actuals.get(0);
+        assertThat(actual, hasProperty("id", equalTo(citizen.getId())));
+        assertThat(actual, hasProperty("name", equalTo(citizen.getName())));
+        assertThat(actual, hasProperty("address", equalTo(citizen.getAddress())));
+        assertThat(actual, hasProperty("city", equalTo(citizen.getCity())));
+        assertThat(actual, hasProperty("zip", equalTo(citizen.getZip())));
+        assertThat(actual, hasProperty("phoneNumber", equalTo(citizen.getPhoneNumber())));
+        assertThat(actual, hasProperty("diagnoses", equalTo(citizen.getDiagnoses())));
+        assertThat(actual, hasProperty("authorId", equalTo(citizen.getAuthorId())));
+        assertThat(actual, hasProperty("careCenterId", equalTo(citizen.getCareCenterId())));
     }
 
     /**
      * Test of getCareCenterCitizens method, of class CitizensRepository.
      */
     @Test
-    public void testGetCareCenterCitizens() throws SQLException {
-        List<UUID> listOfCitizensIds = Arrays.asList(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), UUID.fromString("b6a4bdfe-3222-4956-b4a3-93ab21ba8454"));
+    public void stage2_testGetCareCenterCitizens() {
+        List<UUID> listOfCitizensIds = Arrays.asList(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"));
         UUID careCenterId = UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8");
-        when(rs.next()).thenReturn(true).thenReturn(true).thenReturn(false);
-        List<Citizen> actual = this.citizensRepository.getCareCenterCitizens(careCenterId, listOfCitizensIds);
+        List<Citizen> actuals = citizensRepository.getCareCenterCitizens(careCenterId, listOfCitizensIds);
         
-        assertThat(actual, is(citizens));
+        Citizen citizen = citizens.get(1);
+        Citizen actual = actuals.get(0);
+        assertThat(actual, hasProperty("id", equalTo(citizen.getId())));
+        assertThat(actual, hasProperty("name", equalTo(citizen.getName())));
+        assertThat(actual, hasProperty("address", equalTo(citizen.getAddress())));
+        assertThat(actual, hasProperty("city", equalTo(citizen.getCity())));
+        assertThat(actual, hasProperty("zip", equalTo(citizen.getZip())));
+        assertThat(actual, hasProperty("phoneNumber", equalTo(citizen.getPhoneNumber())));
+        assertThat(actual, hasProperty("diagnoses", equalTo(citizen.getDiagnoses())));
+        assertThat(actual, hasProperty("authorId", equalTo(citizen.getAuthorId())));
+        assertThat(actual, hasProperty("careCenterId", equalTo(citizen.getCareCenterId())));
     }
 
     /**
      * Test of getCitizens method, of class CitizensRepository.
      */
     @Test
-    public void testGetCitizens() throws SQLException {
-        when(rs.next()).thenReturn(true).thenReturn(true).thenReturn(false);
-        List<Citizen> actual = this.citizensRepository.getCitizens();
+    public void stage3_testGetCitizens() {
+        List<Citizen> actuals = citizensRepository.getCitizens();
         
-        assertThat(actual, is(citizens));
+        for (int i = 0; i < actuals.size(); i++) {
+            Citizen citizen = citizens.get(i);
+            Citizen actual = actuals.get(i);
+            assertThat(actual, hasProperty("id", equalTo(citizen.getId())));
+            assertThat(actual, hasProperty("name", equalTo(citizen.getName())));
+            assertThat(actual, hasProperty("address", equalTo(citizen.getAddress())));
+            assertThat(actual, hasProperty("city", equalTo(citizen.getCity())));
+            assertThat(actual, hasProperty("zip", equalTo(citizen.getZip())));
+            assertThat(actual, hasProperty("phoneNumber", equalTo(citizen.getPhoneNumber())));
+            assertThat(actual, hasProperty("diagnoses", equalTo(citizen.getDiagnoses())));
+            assertThat(actual, hasProperty("authorId", equalTo(citizen.getAuthorId())));
+            assertThat(actual, hasProperty("careCenterId", equalTo(citizen.getCareCenterId())));
+        }
     }
 
     /**
      * Test of findCitizen method, of class CitizensRepository.
      */
     @Test
-    public void testFindCitizen() throws SQLException {
+    public void stage4_testFindCitizen() {
         UUID id = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc");
-        when(rs.next()).thenReturn(true).thenReturn(false);
-        Citizen actual = this.citizensRepository.findCitizen(id);
+        Citizen actual = citizensRepository.findCitizen(id);
         
-        assertThat(actual, is(citizens.get(0)));
-    }
-
-    /**
-     * Test of deleteCitizen method, of class CitizensRepository.
-     */
-    @Test
-    public void testDeleteCitizen() throws SQLException {
-        UUID id = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc");
-        UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
-        when(stmt.executeUpdate()).thenReturn(1);
-        
-        boolean actual = this.citizensRepository.deleteCitizen(id, authorId);
-        
-        assertTrue(actual);
-    }
-
-    /**
-     * Test of batchUpdate method, of class CitizensRepository.
-     */
-    @Test
-    public void testBatchUpdate() throws SQLException {
-        UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
-        when(rs.next()).thenReturn(true).thenReturn(true).thenReturn(false);
-        
-        List<Citizen> actual = this.citizensRepository.batchUpdate(citizens, authorId);
-        
-        assertThat(actual, is(citizens));
+        assertThat(actual, hasProperty("id", equalTo(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"))));
+        assertThat(actual, hasProperty("name", equalTo("Jørgen")));
+        assertThat(actual, hasProperty("address", equalTo("Middelfartsvej 72")));
+        assertThat(actual, hasProperty("city", equalTo("Bolbro")));
+        assertThat(actual, hasProperty("zip", equalTo(1234)));
+        assertThat(actual, hasProperty("phoneNumber", equalTo(56942412)));
+        assertThat(actual, hasProperty("diagnoses", equalTo(Arrays.asList("Pyroman", "Alkoholiker"))));
+        assertThat(actual, hasProperty("archived", equalTo(false)));
+        assertThat(actual, hasProperty("authorId", equalTo(UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"))));
+        assertThat(actual, hasProperty("careCenterId", equalTo(UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))));
     }
 
     /**
      * Test of createCitizen method, of class CitizensRepository.
      */
     @Test
-    public void testCreateCitizen() throws SQLException {
+    public void stage5_testCreateCitizen() {
         UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
         UUID careCenterId = UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8");
-        when(rs.next()).thenReturn(true).thenReturn(false);
         
-        Citizen actual = this.citizensRepository.createCitizen(citizens.get(0), authorId, careCenterId);
+        Citizen create = new Citizen(
+                null,
+                "John",
+                "Vejviservej 51",
+                "Vollsmose",
+                5000,
+                "245467-5690",
+                24564367,
+                Arrays.asList("Corder", "Adderall addict"),
+                false,
+                null,
+                null,
+                null
+        );
         
-        assertThat(actual, is(citizens.get(0)));
+        Citizen actual = citizensRepository.createCitizen(create, authorId, careCenterId);
+        
+        identifier = actual.getId(); // wacky hack - for next stages
+        
+        assertNotNull(actual.getId());
+        assertThat(actual, hasProperty("name", equalTo("John")));
+        assertThat(actual, hasProperty("address", equalTo("Vejviservej 51")));
+        assertThat(actual, hasProperty("city", equalTo("Vollsmose")));
+        assertThat(actual, hasProperty("zip", equalTo(5000)));
+        assertThat(actual, hasProperty("phoneNumber", equalTo(24564367)));
+        assertThat(actual, hasProperty("diagnoses", equalTo(Arrays.asList("Corder", "Adderall addict"))));
+        assertThat(actual, hasProperty("archived", equalTo(false)));
+        assertThat(actual, hasProperty("authorId", equalTo(UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"))));
+        assertThat(actual, hasProperty("careCenterId", equalTo(UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))));
     }
 
+    /**
+     * Test of batchUpdate method, of class CitizensRepository.
+     */
+    @Test
+    public void stage6_testBatchUpdate() {
+        UUID authorId = UUID.fromString("bce54bdd-fb06-48c8-b1d0-a3ed9f3e0121");
+        
+        Citizen update = new Citizen(
+                identifier,
+                "John Doe",
+                "Vejviservej 51",
+                "Vollsmose",
+                5000,
+                "245467-5690",
+                24564367,
+                Arrays.asList("Coder", "Adderall addict", "Aggressive"),
+                false,
+                null,
+                UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"),
+                UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8")
+        );
+        
+        List<Citizen> actuals = citizensRepository.batchUpdate(Arrays.asList(update), authorId);
+        
+        Citizen actual = actuals.get(0);
+        assertThat(actual, hasProperty("id", equalTo(identifier)));
+        assertThat(actual, hasProperty("name", equalTo("John Doe")));
+        assertThat(actual, hasProperty("address", equalTo("Vejviservej 51")));
+        assertThat(actual, hasProperty("city", equalTo("Vollsmose")));
+        assertThat(actual, hasProperty("zip", equalTo(5000)));
+        assertThat(actual, hasProperty("phoneNumber", equalTo(24564367)));
+        assertThat(actual, hasProperty("diagnoses", equalTo(Arrays.asList("Coder", "Adderall addict", "Aggressive"))));
+        assertThat(actual, hasProperty("archived", equalTo(false)));
+        assertThat(actual, hasProperty("authorId", equalTo(UUID.fromString("bce54bdd-fb06-48c8-b1d0-a3ed9f3e0121"))));
+        assertThat(actual, hasProperty("careCenterId", equalTo(UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"))));
+    }
+
+    /**
+     * Test of deleteCitizen method, of class CitizensRepository.
+     */
+    @Test
+    public void stage7_testDeleteCitizen() {
+        UUID id = identifier;
+        UUID authorId = UUID.fromString("bce54bdd-fb06-48c8-b1d0-a3ed9f3e0121");
+        
+        boolean returned = citizensRepository.deleteCitizen(id, authorId);
+        
+        assertTrue(returned);
+        
+        Citizen actual = citizensRepository.findCitizen(id);
+        assertNull(actual);
+    }
 }

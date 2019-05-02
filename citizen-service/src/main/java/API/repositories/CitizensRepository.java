@@ -154,7 +154,7 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public boolean deleteCitizen(UUID id, UUID authorId) {
-        try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = false, author_id = ? WHERE id = ?")) {
+        try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = true, author_id = ? WHERE id = ?")) {
             deleteCitizen.setObject(1, authorId);
             deleteCitizen.setObject(2, id);
 
@@ -192,15 +192,17 @@ public class CitizensRepository implements ICitizensRepository {
                 }
 
                 PreparedStatement updateCitizen = this.connection.prepareStatement("UPDATE citizens SET name = ?,"
-                        + "address = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ? RETURNING id, name, address, city, zip, cpr, phone, archibed, date_created, author_id, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses");
+                        + "address = ?, city = ?, zip = ?, phone = ?, author_id = ?, care_center_id = ? WHERE id = ? RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id, care_center_id, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses");
 
                 updateCitizen.setString(1, citizen.getName());
                 updateCitizen.setString(2, citizen.getAddress());
                 updateCitizen.setString(3, citizen.getCity());
                 updateCitizen.setInt(4, citizen.getZip());
                 updateCitizen.setInt(5, citizen.getPhoneNumber());
-                updateCitizen.setObject(6, citizen.getAuthorId());
-                updateCitizen.setObject(7, citizen.getId());
+                updateCitizen.setObject(6, authorId);
+                updateCitizen.setObject(7, citizen.getCareCenterId());
+                updateCitizen.setObject(8, citizen.getId());
+                updateCitizen.setObject(9, citizen.getId());
 
                 ResultSet citizensChangedResult = updateCitizen.executeQuery();
 
