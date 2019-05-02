@@ -72,10 +72,7 @@ public class CitizensRepositoryTest {
     }
     
     @Before
-    public void setUp() throws SQLException, IOException {
-        // ReflectionTestUtils.setField(citizensRepository.getClass(), "connector", "username");
-        //final EmbeddedPostgres postgres = new EmbeddedPostgres(V11);
-        //final String url = postgres.start("localhost", 5432, "dbName", "userName", "password");
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
