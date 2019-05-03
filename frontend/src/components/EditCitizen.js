@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react"
-import { PageHeader, Input, Row, Col, Button, Alert } from "antd";
+import { PageHeader, Input, Row, Col, Button, Alert, Table, InputNumber, Popconfirm, Form } from "antd";
 import moment from "moment";
 import "moment/locale/da";
+
 
 @inject("citizensStore")
 @observer
@@ -11,7 +12,6 @@ export default class EditCitizen extends Component {
         super(props);
         this.getCitizen = (id) => this.props.citizensStore.fetchCitizen(id);
     }
-
 
     state = {
         name: "",
@@ -22,9 +22,7 @@ export default class EditCitizen extends Component {
         diagnoses: [],
         saved: false,
         deleted: false
-
     };
-
 
     onChangeHandler = (param) => (e) => {
         this.setState({ [param]: e.target.value })
@@ -45,7 +43,7 @@ export default class EditCitizen extends Component {
         const { citizen } = this.props.citizensStore;
         const updatedCitizen = {
             id: citizen.id,
-            name: this.state.name,
+            name: (this.state.name != "") ? this.state.name : citizen.name, // FIXs
             address: this.state.address,
             city: this.state.city,
             zip: this.state.zip,
@@ -73,6 +71,8 @@ export default class EditCitizen extends Component {
         } = this.props;
         this.getCitizen(params.id)
     }
+
+    componentW
 
     render() {
         const { citizensStore } = this.props

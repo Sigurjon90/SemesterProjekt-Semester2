@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { Menu, Icon } from "antd";
 import EditCitizen from "./EditCitizen"
 import CareCenterList from "./CareCenterList";
-
+import EditableTable from "./EditableTable"
+import EditableCell from "./EditableCell"
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -60,7 +61,7 @@ export default class AdminCitizens extends Component {
 
         {current == "EditCitizen" && <CareCenterList />}
         {current == "CreateCitizen" && "Create Citizen"}
-        {current == "DeleteCitizen" && "Delete Citizen"}
+        {current == "DeleteCitizen" && <EditableTable />}
 
 
       </div>
