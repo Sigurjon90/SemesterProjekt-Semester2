@@ -1,25 +1,45 @@
 import axios from "axios";
 
-import { action, computed, observable } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
 
 class CitizensStore {
   @observable error = null;
   @observable isFetching = false;
-  @observable isFetching = false;
   @observable primaryCitizens = [];
   @observable otherCitizens = [];
   @observable citizen = null;
-  @observable archived = false;
 
+  // TODO: make prettier
+  pushCitizen = citizen => {
+    const pindex = this.primaryCitizens.findIndex(item => citizen.id === item.id)
+    const oindex = this.otherCitizens.findIndex(item => citizen.id === item.id)
+    if (pindex > -1) {
+      const item = this.primaryCitizens[pindex]
+      this.primaryCitizens.splice(pindex, 1, {
+          ...item,
+          ...citizen,
+        })
+    } else {
+      const item = this.otherCitizens[oindex]
+      this.otherCitizens.splice(oindex, 1, {
+        ...item,
+          ...citizen,
+      })
+    }
+  }
 
-  @action async archiveCitizen(id) {
+  replaceAt = (array, index, value) => {
+    const item = array[index]
+    return array.splice(index, 1, { ...item, ...value })
+  } 
+
+  @action async deleteCitizen(id) {
     this.isFetching = true;
     this.error = null;
     try {
-      const response = await axios.delete(`http://localhost:8762/citizens/${id}`);
-      this.citizens = response.data
-      console.log(response.data)
-      console.log("HHHHHHHHHHHHHHEJ")
+      await axios.delete(`http://localhost:8762/citizens/${id}`);
+      this.primaryCitizens.filter(item => item.id !== id)
+      this.otherCitizens.filter(item => item.id !== id)
       this.isFetching = false;
     } catch (error) {
       this.error = error;
@@ -41,14 +61,13 @@ class CitizensStore {
     }
   }
 
-  @action async putCitizenChanges(updatedCitizen) {
+  @action async updateCitizen(updatedCitizen) {
     this.isFetching = true;
     this.error = null;
     try {
       const response = await axios.put('http://localhost:8762/citizens', updatedCitizen);
-      this.citizen = response.data;
+      this.pushCitizen(response.data[0])
       this.isFetching = false;
-
     } catch (error) {
       this.error = error
       this.isFetching = false;
@@ -61,7 +80,6 @@ class CitizensStore {
     try {
       const response = await axios.get(`http://localhost:8762/citizens/${id}`);
       this.citizen = response.data;
-      console.log(this.citizen)
       this.isFetching = false;
     } catch (error) {
       this.error = error;
@@ -75,7 +93,6 @@ class CitizensStore {
     try {
       const response = await axios.post('http://localhost:8762/citizens/', createdCitizen);
       this.citizen = response.data;
-      console.log(this.citizen)
       this.isFetching = false;
     } catch (error) {
       this.error = error;

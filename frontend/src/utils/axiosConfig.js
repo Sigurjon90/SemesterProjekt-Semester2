@@ -4,16 +4,14 @@ import { BrowserRouter } from "react-router";
 // Add a request interceptor
 axios.interceptors.request.use(
   function (config) {
-    const token = "eyJjaXRpemVucyI6WyI2ZTU5NzFiMy05OWEwLTQ5MGItYmViZS02ODlhMTFhZTk5MTciLCJiMzEwZjYzNC04N2ZhLTRhYzQtOTljMi02Njk1YjViM2QzZWUiLCI5ZDZiZTQwZS1hOWRkLTRhOTYtOWQwNy1kZDlmYTBkY2FhODciLCIzMjM3MjkxMS1kN2ZiLTRlMjctYTAzZC1jNmMwMmU2MWUxZDgiLCJhNzM0NTA3Zi1kNGMzLTQ3ZTktODhhZi0zZDI4MGJhZjMzNTMiXSwiY2FyZWNlbnRlciI6ImJmOWZjOTc1LTE0YjktNDFmMy04YmY0LWE1ZmYwNGZlMGU2NCIsImFsZyI6IkhTNTEyIn0.eyJzdWIiOiJkdXBlciIsImp0aSI6ImFhY2Q0Mjc5LTc2ZTUtNDE3Yy04NjExLTNhNDgwOGJhYmNkZSIsImF1dGhvcml0aWVzIjpbIlJPTEVfYWRtaW4iXSwiaWF0IjoxNTU2OTU5OTM0LCJleHAiOjE1NTcwNDYzMzR9.cipI2Rs6AIyCmSBoF96GKKjdnq-mxm__ozuuPIhL2Yo7l292Af-r_uQPQMB5HMDnh-yJ5OYHTa_nJ2z-ig89Xw"
-
+    const token = "eyJjaXRpemVucyI6WyIyNTU2ZTU2Yi1mNWVlLTQ1ZGItYWRlYS01MjE5MTRmN2YxYjciXSwiY2FyZWNlbnRlciI6ImJmOWZjOTc1LTE0YjktNDFmMy04YmY0LWE1ZmYwNGZlMGU2NCIsImFsZyI6IkhTNTEyIn0.eyJzdWIiOiJkdXBlciIsImp0aSI6ImFhY2Q0Mjc5LTc2ZTUtNDE3Yy04NjExLTNhNDgwOGJhYmNkZSIsImF1dGhvcml0aWVzIjpbIlJPTEVfYWRtaW4iXSwiaWF0IjoxNTU2OTY4Nzc1LCJleHAiOjE1NTcwNTUxNzV9.TgMkupMBOxBIaD1zYPhhjrevgcnnJlBXc98SFEp6RXQJZzMHrXw1EZs9km7kxEUCaheWlXy6e9tBQureQdYnyA"
+    
     if (token != null) {
       config.headers.Authorization = `Bearer ${token}`;
     } else if (window.location.pathname != "/") {
       window.location.replace("/");
     }
 
-    console.log("Config:");
-    console.log(config);
     return config;
   },
   function (error) {
@@ -26,8 +24,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     // Do something with response data
-    console.log("Response: ");
-    console.log(response);
     return response;
   },
   function (error) {

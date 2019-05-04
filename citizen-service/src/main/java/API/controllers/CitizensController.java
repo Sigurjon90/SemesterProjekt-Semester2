@@ -21,6 +21,8 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import security.JwtUtils;
 
@@ -148,8 +150,9 @@ public class CitizensController {
         try {
             response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
         }
-        catch (Exception ex) {
-            return 500;
+        catch (RestClientResponseException ex) {
+            if (ex.getRawStatusCode() == 404) return 200;
+            return ex.getRawStatusCode();
         }
 
         return response.getStatusCodeValue();
