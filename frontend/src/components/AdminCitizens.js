@@ -5,7 +5,7 @@ import { Menu, Icon } from "antd";
 import EditCitizen from "./EditCitizen"
 import CareCenterList from "./CareCenterList";
 import EditableTable from "./EditableTable"
-import EditableCell from "./EditableCell"
+import CreateCitizen from "./CreateCitizen"
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
@@ -48,19 +48,13 @@ export default class AdminCitizens extends Component {
         </Menu.Item>
 
           <Menu.Item key="EditCitizen">
-            <Icon type="setting" theme="twoTone" />Redigér borger
+            <Icon type="setting" theme="twoTone" />Se & redigér borgere
         </Menu.Item>
 
-          <Menu.Item key="CitizensList">
-            <Icon type="book" theme="twoTone" />Se borgere
-          </Menu.Item>
         </Menu>
 
-
-
-
         {current == "EditCitizen" && <CareCenterList />}
-        {current == "CreateCitizen" && "Create Citizen"}
+        {current == "CreateCitizen" && <CreateCitizen />}
         {current == "DeleteCitizen" && <EditableTable />}
 
 

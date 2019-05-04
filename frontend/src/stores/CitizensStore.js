@@ -69,6 +69,20 @@ class CitizensStore {
     }
   }
 
+  @action async createCitizen(createdCitizen) {
+    this.isFetching = true;
+    this.error = null;
+    try {
+      const response = await axios.post('http://localhost:8762/citizens/', createdCitizen);
+      this.citizen = response.data;
+      console.log(this.citizen)
+      this.isFetching = false;
+    } catch (error) {
+      this.error = error;
+      this.isFetching = false;
+    }
+  }
+
 }
 
 const citizensStore = new CitizensStore();

@@ -16,7 +16,7 @@ for (let i = 0; i < 100; i++) {
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
-export default class EditableCell extends React.Component {
+class EditableCell extends React.Component {
     getInput = () => {
         if (this.props.inputType === 'number') {
             return <InputNumber />;

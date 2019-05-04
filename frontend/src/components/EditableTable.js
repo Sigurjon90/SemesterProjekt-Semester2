@@ -17,7 +17,7 @@ for (let i = 0; i < 100; i++) {
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
-export default class EditableTable extends React.Component {
+class EditableTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = { data, editingKey: '' };
@@ -150,3 +150,4 @@ export default class EditableTable extends React.Component {
 }
 
 const EditableFormTable = Form.create()(EditableTable);
+export default EditableFormTable

@@ -43,13 +43,12 @@ export default class EditCitizen extends Component {
         const { citizen } = this.props.citizensStore;
         const updatedCitizen = {
             id: citizen.id,
-            name: (this.state.name != "") ? this.state.name : citizen.name, // FIXs
-            address: this.state.address,
-            city: this.state.city,
-            zip: this.state.zip,
-            phoneNumber: this.state.phoneNumber,
-            diagnoses: this.state.diagnoses,
-            authorID: 'afda2cd5-6fd9-40ff-a0db-938af02a281c'
+            name: (this.state.name != "") ? this.state.name : citizen.name,
+            address: (this.state.address != "") ? this.state.address : citizen.address,
+            city: (this.state.city != "") ? this.state.city : citizen.city,
+            zip: (this.state.zip != "") ? this.state.zip : citizen.zip,
+            phoneNumber: (this.state.phoneNumber != "") ? this.state.phoneNumber : citizen.phoneNumber,
+            diagnoses: (this.state.diagnoses != "") ? this.state.diagnoses : citizen.diagnoses,
         }
         this.props.citizensStore.putCitizenChanges(updatedCitizen)
         this.setState({ saved: true })
@@ -71,8 +70,6 @@ export default class EditCitizen extends Component {
         } = this.props;
         this.getCitizen(params.id)
     }
-
-    componentW
 
     render() {
         const { citizensStore } = this.props
