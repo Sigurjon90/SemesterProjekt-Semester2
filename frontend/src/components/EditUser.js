@@ -39,14 +39,9 @@ export default class EditUser extends Component {
     }
 
     handleDelete = () => {
-        console.log(this.username)
-        console.log(this.role)
-        console.log(this.email)
-        console.log(this.address)
-
-        // const { user } = this.props.usersStore;
-        // this.props.usersStore.archiveUser(user.id)
-        // this.setState({ deleted: true })
+        const { user } = this.props.usersStore;
+        this.props.usersStore.archiveUser(user.id)
+        this.deleted = true
     }
 
     handleSubmit = () => {
@@ -61,7 +56,7 @@ export default class EditUser extends Component {
             active: (this.active != "") ? this.active : user.active,
         }
         this.props.usersStore.putUserChanges(updatedUser)
-        this.setState({ saved: true })
+        this.saved = true
     }
 
     componentWillMount() {
@@ -74,10 +69,8 @@ export default class EditUser extends Component {
     render() {
         const { usersStore } = this.props
         const { user, isFetching } = usersStore
-        const { saved } = this.saved
-        const { deleted } = this.deleted
         return (<div>
-            {saved &&
+            {this.saved &&
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
@@ -86,7 +79,7 @@ export default class EditUser extends Component {
                     <Alert message="Ændringerne er nu blevet gemt!" type="success" />
                 </div>
             }
-            {deleted &&
+            {this.deleted &&
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
@@ -95,7 +88,7 @@ export default class EditUser extends Component {
                     <Alert message="Borgeren er nu arkiveret" type="error" />
                 </div>
             }
-            {!isFetching && !saved && !deleted &&
+            {!isFetching && !this.saved && !this.deleted &&
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
