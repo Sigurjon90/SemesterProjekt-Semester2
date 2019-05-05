@@ -56,7 +56,7 @@ export default class CreateCitizen extends Component {
     }
 
     handleName = (e) => {
-        if ((/^[a-z_ ]{5,25}$/i.test(`${e.target.value}`))) {
+        if ((/^[a-z_ ÆØÅæøå]{5,25}$/i.test(`${e.target.value}`))) {
             this.nameChecker = "success"
             this.name = e.target.value
         } else {
@@ -66,7 +66,7 @@ export default class CreateCitizen extends Component {
     }
 
     handleAddress = (e) => {
-        if ((/^[a-z0-9_ ]{5,25}$/i.test(`${e.target.value}`))) {
+        if ((/^[a-z0-9_ ÆØÅæøå]{5,25}$/i.test(`${e.target.value}`))) {
             this.addressChecker = "success"
             this.address = e.target.value
         } else {
@@ -76,7 +76,7 @@ export default class CreateCitizen extends Component {
     }
 
     handleCity = (e) => {
-        if ((/^[a-z_ ]{3,25}$/i.test(`${e.target.value}`))) {
+        if ((/^[a-z_ ÆØÅæøå]{3,25}$/i.test(`${e.target.value}`))) {
             this.cityChecker = "success"
             this.city = e.target.value
         } else {

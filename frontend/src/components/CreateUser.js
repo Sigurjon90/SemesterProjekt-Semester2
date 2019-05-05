@@ -96,7 +96,7 @@ export default class CreateUser extends Component {
     }
 
     handleAddress = (e) => {
-        if ((/^[a-z0-9_ ]{5,25}$/i.test(`${e.target.value}`))) {
+        if ((/^[a-z0-9_ ÆØÅæøå]{5,25}$/i.test(`${e.target.value}`))) {
             this.addressChecker = "success"
             this.address = e.target.value
         } else {
