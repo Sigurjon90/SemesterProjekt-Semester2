@@ -3,78 +3,79 @@ import { inject, observer } from "mobx-react"
 import { PageHeader, Input, Row, Col, Button, Alert, Table, InputNumber, Popconfirm, Form } from "antd";
 import moment from "moment";
 import "moment/locale/da";
+import { observable } from "mobx";
 
 
-@inject("citizensStore")
+@inject("usersStore")
 @observer
-export default class EditCitizen extends Component {
+export default class EditUser extends Component {
     constructor(props) {
         super(props);
-        this.getCitizen = (id) => this.props.citizensStore.fetchCitizen(id);
+        this.getUser = (id) => this.props.usersStore.fetchUser(id);
     }
 
-    state = {
-        name: "",
-        address: "",
-        city: "",
-        zip: "",
-        phoneNumber: "",
-        diagnoses: [],
-        saved: false,
-        deleted: false
-    };
+    @observable username = ""
+    @observable role = ""
+    @observable email = ""
+    @observable address = ""
+    @observable active = ""
+    @observable saved = false
+    @observable deleted = false
 
-    onChangeHandler = (param) => (e) => {
-        this.setState({ [param]: e.target.value })
+    handleUsername = (e) => {
+        this.username = e.target.value
     }
 
-    handleDiagnoses = (param) => (e) => {
-        const diagnoseArray = (e.target.value).replace(/\s/g, '').split(',')
-        this.setState({ [param]: diagnoseArray })
+    handleRole = (e) => {
+        this.role = e.target.value
+    }
+
+    handleEmail = (e) => {
+        this.email = e.target.value
+    }
+
+    handleAddress = (e) => {
+        this.address = e.target.value
     }
 
     handleDelete = () => {
-        const { citizen } = this.props.citizensStore;
-        this.props.citizensStore.archiveCitizen(citizen.id)
-        this.setState({ deleted: true })
+        console.log(this.username)
+        console.log(this.role)
+        console.log(this.email)
+        console.log(this.address)
+
+        // const { user } = this.props.usersStore;
+        // this.props.usersStore.archiveUser(user.id)
+        // this.setState({ deleted: true })
     }
 
     handleSubmit = () => {
-        const { citizen } = this.props.citizensStore;
-        const updatedCitizen = {
-            id: citizen.id,
-            name: (this.state.name != "") ? this.state.name : citizen.name,
-            address: (this.state.address != "") ? this.state.address : citizen.address,
-            city: (this.state.city != "") ? this.state.city : citizen.city,
-            zip: (this.state.zip != "") ? this.state.zip : citizen.zip,
-            phoneNumber: (this.state.phoneNumber != "") ? this.state.phoneNumber : citizen.phoneNumber,
-            diagnoses: (this.state.diagnoses != "") ? this.state.diagnoses : citizen.diagnoses,
+        const { user } = this.props.usersStore;
+        const updatedUser = {
+            id: user.id,
+            username: (this.username != "") ? this.username : user.username,
+            role: (this.role != "") ? this.role : user.role,
+            email: (this.email != "") ? this.email : user.email,
+            cpr: (this.cpr != "") ? this.cpr : user.cpr,
+            address: (this.address != "") ? this.address : user.address,
+            active: (this.active != "") ? this.active : user.active,
         }
-        this.props.citizensStore.putCitizenChanges(updatedCitizen)
+        this.props.usersStore.putUserChanges(updatedUser)
         this.setState({ saved: true })
-    }
-
-    // Just to check state from button
-    checkState = () => {
-        console.log(this.state.name)
-        console.log(this.state.address)
-        console.log(this.state.city)
-        console.log(this.state.zip)
-        console.log(this.state.phoneNumber)
-        console.log(this.state.diagnoses)
     }
 
     componentWillMount() {
         const {
-            match: { params }, citizensStore
+            match: { params }, usersStore
         } = this.props;
-        this.getCitizen(params.id)
+        this.getUser(params.id)
     }
 
     render() {
-        const { citizensStore } = this.props
-        const { citizen, isFetching } = citizensStore
-        const { saved, deleted } = this.state
+        const { usersStore } = this.props
+        const { user, isFetching } = usersStore
+        const { saved } = this.saved
+        const { deleted } = this.deleted
         return (<div>
             {saved &&
                 <div>
@@ -102,14 +103,12 @@ export default class EditCitizen extends Component {
                         subTitle="- Udfyld ændringer og gem" />
 
                     <Row gutter={16}>
-                        <Col span={8}><Input defaultValue={citizen.name} onChange={this.onChangeHandler('name')} /></Col>
-                        <Col span={8}><Input key="address" defaultValue={citizen.address} onChange={this.onChangeHandler('address')} /></Col>
-                        <Col span={8}><Input key="city" defaultValue={citizen.city} onChange={this.onChangeHandler('city')} /></Col>
+                        <Col span={8}><Input key="username " defaultValue={user.username} onChange={this.handleUsername} /></Col>
+                        <Col span={8}><Input key="role" defaultValue={user.role} onChange={this.handleRole} /></Col>
+                        <Col span={8}><Input key="email" defaultValue={user.email} onChange={this.handleEmail} /></Col>
                     </Row>
                     <Row gutter={16}>
-                        <Col span={8}><Input key="zip" defaultValue={citizen.zip} onChange={this.onChangeHandler('zip')} /></Col>
-                        <Col span={8}><Input key="phoneNumber" defaultValue={citizen.phoneNumber} onChange={this.onChangeHandler('phoneNumber')} /></Col>
-                        <Col span={8}><Input key="diagnoses" defaultValue={citizen.diagnoses} onChange={this.handleDiagnoses('diagnoses')} /></Col>
+                        <Col span={8}><Input key="address" defaultValue={user.address} onChange={this.handleAddress} /></Col>
                     </Row>
                     <Button type="primary" onClick={this.handleSubmit}>Gem ændringer</Button>
                     <Button type="danger" onClick={this.handleDelete}>Arkivér borger</Button>

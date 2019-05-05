@@ -22,12 +22,25 @@ class UsersStore {
         }
     }
 
-    @action async putCitizenChanges(updatedCitizen) {
+    @action async archiveUser(id) {
         this.isFetching = true;
         this.error = null;
         try {
-            const response = await axios.put('http://localhost:8762/citizens', updatedCitizen);
-            this.citizen = response.data;
+            const response = await axios.delete(`http://localhost:8762/users/${id}`);
+            this.user = response.data
+            this.isFetching = false;
+        } catch (error) {
+            this.error = error;
+            this.isFetching = false;
+        }
+    }
+
+    @action async putUserChanges(updatedUser) {
+        this.isFetching = true;
+        this.error = null;
+        try {
+            const response = await axios.put('http://localhost:8762/users', updatedUser);
+            this.user = response.data;
             this.isFetching = false;
 
         } catch (error) {
@@ -36,13 +49,12 @@ class UsersStore {
         }
     }
 
-    @action async fetchCitizen(id) {
+    @action async fetchUser(id) {
         this.isFetching = true;
         this.error = null;
         try {
-            const response = await axios.get(`http://localhost:8762/citizens/${id}`);
-            this.citizen = response.data;
-            console.log(this.citizen)
+            const response = await axios.get(`http://localhost:8762/users/${id}`);
+            this.user = response.data;
             this.isFetching = false;
         } catch (error) {
             this.error = error;

@@ -42,10 +42,10 @@ export default class AdminUsers extends Component {
 
                     <Menu.Item key="CreateCitizen">
                         <Icon type="smile" theme="twoTone" twoToneColor="#52c41a" />Opret bruger
-        </Menu.Item>
+                    </Menu.Item>
                     <Menu.Item key="EditCitizen">
                         <Icon type="setting" theme="twoTone" />Se & redigér brugere
-        </Menu.Item>
+                    </Menu.Item>
 
                 </Menu>
 
