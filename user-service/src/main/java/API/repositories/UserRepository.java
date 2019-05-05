@@ -156,12 +156,11 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User updateUser(User user) {
-        try (PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ?, password = ? , email = ? , address = ?  WHERE id = ?  RETURNING id , username, password, email, active, address, role, cpr, care_center_id")) {
+        try (PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ? , email = ? , address = ?  WHERE id = ?  RETURNING id , username, password, email, active, address, role, cpr, care_center_id")) {
             update.setString(1, user.getUsername());
-            update.setString(2, user.getPassword());
-            update.setString(3, user.getEmail());
-            update.setString(4, user.getAddress());
-            update.setObject(5, user.getId(), Types.OTHER);
+            update.setString(2, user.getEmail());
+            update.setString(3, user.getAddress());
+            update.setObject(4, user.getId(), Types.OTHER);
             ResultSet updateResult = update.executeQuery();
             while (updateResult.next()) {
                 return new User((UUID) updateResult.getObject("id"), updateResult.getString("username"), updateResult.getString("password"), updateResult.getString("email"), updateResult.getBoolean("active"), updateResult.getString("address"), updateResult.getString("role"), updateResult.getString("cpr"), null, (UUID)updateResult.getObject("care_center_id"));
