@@ -155,9 +155,11 @@ public class CitizensControllerTest {
     @Test
     public void testUpdateCitizen_ShouldUpdateAndReturnEntry() throws Exception {
         UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
+        UUID careCenterId = UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8");
         CitizenDTO citizenDTO = new CitizenDTO(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), "Jørgen", "Middelfartsvej 72", "Bolbro", 1234, 56942412, java.util.Arrays.asList("Mongol"), false, new Date(System.currentTimeMillis()).toString(), UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823"), UUID.fromString("66dd7224-60bf-4c3a-a4c3-82bcf18453b8"));
         
         when(jwtUtils.getUserId(any(String.class))).thenReturn(authorId);
+        when(jwtUtils.getCareCenterId(any(String.class))).thenReturn(careCenterId);
         when(citizensService.batchUpdate(any(List.class), eq(authorId))).thenReturn(Arrays.asList(citizenDTO));
         
         this.mockMvc.perform(put("/")

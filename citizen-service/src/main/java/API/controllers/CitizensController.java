@@ -109,6 +109,8 @@ public class CitizensController {
     public ResponseEntity batchUpdateCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody List<CitizenDTO> citizenDTOList) {
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
+        UUID careCenterId = jwtUtils.getCareCenterId(token);
+        citizenDTOList.stream().forEach(citizen -> citizen.setCareCenterId(careCenterId));
         List<CitizenDTO> citizenDTOListReturned = citizensService.batchUpdate(citizenDTOList, authorId);
 
         if (citizenDTOListReturned != null) {
