@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react"
-import { PageHeader, Input, Row, Col, Button, Alert, Table, InputNumber, Popconfirm, Form } from "antd";
-import moment from "moment";
-import "moment/locale/da";
+import { PageHeader, Input, Row, Col, Button, Alert } from "antd";
 import { observable } from "mobx";
 
 
@@ -19,8 +17,8 @@ export default class EditUser extends Component {
     @observable email = ""
     @observable address = ""
     @observable active = ""
-    @observable saved = false
-    @observable deleted = false
+    @observable isUserSaved = false
+    @observable isUserDeleted = false
 
     onChangeHandler = (param) => (e) => {
         this[param] = e.target.value
@@ -29,7 +27,7 @@ export default class EditUser extends Component {
     handleDelete = () => {
         const { user } = this.props.usersStore;
         this.props.usersStore.archiveUser(user.id)
-        this.deleted = true
+        this.isUserDeleted = true
     }
 
     handleSubmit = () => {
@@ -44,7 +42,7 @@ export default class EditUser extends Component {
             active: (this.active != "") ? this.active : user.active,
         }
         this.props.usersStore.putUserChanges(updatedUser)
-        this.saved = true
+        this.isUserSaved = true
     }
 
     componentWillMount() {
@@ -58,7 +56,7 @@ export default class EditUser extends Component {
         const { usersStore } = this.props
         const { user, isFetching } = usersStore
         return (<div>
-            {this.saved &&
+            {this.isUserSaved &&
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
@@ -67,7 +65,7 @@ export default class EditUser extends Component {
                     <Alert message="Ændringerne er nu blevet gemt!" type="success" />
                 </div>
             }
-            {this.deleted &&
+            {this.isUserDeleted &&
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
@@ -76,7 +74,7 @@ export default class EditUser extends Component {
                     <Alert message="Borgeren er nu arkiveret" type="error" />
                 </div>
             }
-            {!isFetching && !this.saved && !this.deleted &&
+            {!isFetching && !this.isUserSaved && !this.isUserDeleted &&
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
@@ -92,7 +90,7 @@ export default class EditUser extends Component {
                         <Col span={8}><Input key="address" defaultValue={user.address} onChange={this.onChangeHandler('address')} /></Col>
                     </Row>
                     <Button type="primary" onClick={this.handleSubmit}>Gem ændringer</Button>
-                    <Button type="danger" onClick={this.handleDelete}>Arkivér borger</Button>
+                    <Button type="danger" onClick={this.handleDelete} style={{ marginLeft: 10, marginTop: 10 }}>Arkivér bruger</Button>
                 </div>
             }
         </div>)

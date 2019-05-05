@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react"
-import { Form, Input, Button, Divider, Select, Alert, Row, Col, FormComponentProps } from "antd";
-import moment from "moment";
-import "moment/locale/da";
+import { Form, Input, Button, Divider, Select, Alert, Row, Col } from "antd";
 import { observable } from "mobx";
 
 const { Option } = Select;

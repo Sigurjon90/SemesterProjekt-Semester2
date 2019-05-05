@@ -39,7 +39,7 @@ export default class CreateUser extends Component {
     @observable cpr = ""
     @observable addressChecker = "error"
     @observable address = ""
-    @observable created = false
+    @observable isUserCreated = false
 
     handleCreate = () => {
         const createdUser = {
@@ -51,9 +51,7 @@ export default class CreateUser extends Component {
             address: this.address
         }
         this.props.usersStore.createUser(createdUser)
-        this.created = true
-        console.log("Handle create:")
-        console.log(this.created)
+        this.isUserCreated = true
     }
 
     handleUsername = (e) => {
@@ -114,12 +112,12 @@ export default class CreateUser extends Component {
 
     render() {
         return (<div>
-            {this.created &&
+            {this.isUserCreated &&
                 <div>
                     <Alert message="Ændringerne er nu blevet gemt!" type="success" />
                 </div>
             }
-            {!this.created &&
+            {!this.isUserCreated &&
                 <div>
                     <Row>
                         <Col span={12}>
