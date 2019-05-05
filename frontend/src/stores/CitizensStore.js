@@ -19,7 +19,6 @@ class CitizensStore {
       const response = await axios.delete(`http://localhost:8762/citizens/${id}`);
       this.citizens = response.data
       console.log(response.data)
-      console.log("HHHHHHHHHHHHHHEJ")
       this.isFetching = false;
     } catch (error) {
       this.error = error;
