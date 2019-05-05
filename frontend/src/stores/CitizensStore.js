@@ -38,8 +38,8 @@ class CitizensStore {
     this.error = null;
     try {
       await axios.delete(`http://localhost:8762/citizens/${id}`);
-      this.primaryCitizens.filter(item => item.id !== id)
-      this.otherCitizens.filter(item => item.id !== id)
+      this.primaryCitizens.replace(this.primaryCitizens.filter(item => item.id !== id))
+      this.otherCitizens.replace(this.otherCitizens.filter(item => item.id !== id))
       this.isFetching = false;
     } catch (error) {
       this.error = error;

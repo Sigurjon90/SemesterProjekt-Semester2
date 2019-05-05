@@ -122,7 +122,7 @@ public class CitizensController {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message= "Successful", response = void.class)
     })
-    @HystrixCommand(fallbackMethod = "fallback", ignoreExceptions = {NotFoundException.class})
+    //@HystrixCommand(fallbackMethod = "fallback", ignoreExceptions = {NotFoundException.class})
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteCitizen(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") String stringID) {
         String token = httpHeaders.getFirst("authorization");
@@ -151,6 +151,7 @@ public class CitizensController {
             response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
         }
         catch (RestClientResponseException ex) {
+            ex.printStackTrace();
             if (ex.getRawStatusCode() == 404) return 200;
             return ex.getRawStatusCode();
         }
