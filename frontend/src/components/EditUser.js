@@ -22,20 +22,8 @@ export default class EditUser extends Component {
     @observable saved = false
     @observable deleted = false
 
-    handleUsername = (e) => {
-        this.username = e.target.value
-    }
-
-    handleRole = (e) => {
-        this.role = e.target.value
-    }
-
-    handleEmail = (e) => {
-        this.email = e.target.value
-    }
-
-    handleAddress = (e) => {
-        this.address = e.target.value
+    onChangeHandler = (param) => (e) => {
+        this[param] = e.target.value
     }
 
     handleDelete = () => {
@@ -96,12 +84,12 @@ export default class EditUser extends Component {
                         subTitle="- Udfyld ændringer og gem" />
 
                     <Row gutter={16}>
-                        <Col span={8}><Input key="username " defaultValue={user.username} onChange={this.handleUsername} /></Col>
-                        <Col span={8}><Input key="role" defaultValue={user.role} onChange={this.handleRole} /></Col>
-                        <Col span={8}><Input key="email" defaultValue={user.email} onChange={this.handleEmail} /></Col>
+                        <Col span={8}><Input key="username " defaultValue={user.username} onChange={this.onChangeHandler('username')} /></Col>
+                        <Col span={8}><Input key="role" defaultValue={user.role} onChange={this.onChangeHandler('role')} /></Col>
+                        <Col span={8}><Input key="email" defaultValue={user.email} onChange={this.onChangeHandler('email')} /></Col>
                     </Row>
                     <Row gutter={16}>
-                        <Col span={8}><Input key="address" defaultValue={user.address} onChange={this.handleAddress} /></Col>
+                        <Col span={8}><Input key="address" defaultValue={user.address} onChange={this.onChangeHandler('address')} /></Col>
                     </Row>
                     <Button type="primary" onClick={this.handleSubmit}>Gem ændringer</Button>
                     <Button type="danger" onClick={this.handleDelete}>Arkivér borger</Button>
