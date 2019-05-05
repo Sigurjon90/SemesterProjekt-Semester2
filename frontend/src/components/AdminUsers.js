@@ -1,15 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import { Link } from "react-router-dom";
 import { Menu, Icon } from "antd";
-import EditableTable from "./EditableTable"
-import CreateCitizen from "./CreateCitizen"
 import UsersList from "./UsersList";
 import CreateUser from "./CreateUser";
-
-
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
 
 @observer
 export default class AdminUsers extends Component {
@@ -19,9 +12,6 @@ export default class AdminUsers extends Component {
 
     state = {
         current: '',
-    }
-
-    componentWillMount() {
     }
 
     handleClick = (e) => {
@@ -40,17 +30,17 @@ export default class AdminUsers extends Component {
                     selectedKeys={[this.state.current]}
                     mode="horizontal">
 
-                    <Menu.Item key="CreateCitizen">
+                    <Menu.Item key="CreateUser">
                         <Icon type="smile" theme="twoTone" twoToneColor="#52c41a" />Opret bruger
                     </Menu.Item>
-                    <Menu.Item key="EditCitizen">
+                    <Menu.Item key="EditUser">
                         <Icon type="setting" theme="twoTone" />Se & redigér brugere
                     </Menu.Item>
 
                 </Menu>
 
-                {current == "EditCitizen" && <UsersList />}
-                {current == "CreateCitizen" && <CreateUser />}
+                {current == "EditUser" && <UsersList />}
+                {current == "CreateUser" && <CreateUser />}
 
             </div>
         );

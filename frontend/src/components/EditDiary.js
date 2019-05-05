@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react"
-import { Row, Col, Tag, Divider, Button, Input } from "antd";
-import moment from "moment";
-import "moment/locale/da";
+import { Row, Col, Button, Input } from "antd";
 
 
 @inject("diaryStore")
@@ -10,7 +8,6 @@ import "moment/locale/da";
 export default class EditDiary extends Component {
     constructor(props) {
         super(props);
-        // Maps a method over in another metod -> getCitizens is now the same as fetchCitizens
         this.getDiary = (id) => this.props.diaryStore.fetchDiary(id);
     }
 

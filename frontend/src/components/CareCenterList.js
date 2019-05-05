@@ -52,10 +52,6 @@ const columns = [
     }
 ];
 
-const primaryCitizensConfig = {
-    pagination: false
-};
-
 const otherCitizensConfig = {
     pagination: {
         defaultPageSize: 5
@@ -67,7 +63,6 @@ const otherCitizensConfig = {
 export default class CareCenterList extends Component {
     constructor(props) {
         super(props);
-        // Maps a method over in another metod -> getCitizens is now the same as fetchCitizens
         this.getCitizens = () => this.props.citizensStore.fetchCitizens();
     }
 

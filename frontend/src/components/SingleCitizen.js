@@ -11,7 +11,6 @@ import EditDiary from "./EditDiary";
 export default class SingleCitizen extends Component {
   constructor(props) {
     super(props);
-    // Maps a method over in another metod -> getCitizens is now the same as fetchCitizens
     this.getCitizen = (id) => this.props.citizensStore.fetchCitizen(id);
   }
   state = {
@@ -22,7 +21,6 @@ export default class SingleCitizen extends Component {
     diarySwitch: false
   };
 
-  // Get from store
   componentWillMount() {
     const {
       match: { params }, citizensStore

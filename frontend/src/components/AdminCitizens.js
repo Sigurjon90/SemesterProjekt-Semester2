@@ -1,14 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import { Link } from "react-router-dom";
 import { Menu, Icon } from "antd";
-import EditCitizen from "./EditCitizen"
 import CareCenterList from "./CareCenterList";
-import EditableTable from "./EditableTable"
 import CreateCitizen from "./CreateCitizen"
-
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
 
 @observer
 export default class AdminCitizens extends Component {
@@ -18,9 +12,6 @@ export default class AdminCitizens extends Component {
 
   state = {
     current: '',
-  }
-
-  componentWillMount() {
   }
 
   handleClick = (e) => {
@@ -43,10 +34,6 @@ export default class AdminCitizens extends Component {
             <Icon type="smile" theme="twoTone" twoToneColor="#52c41a" />Opret borger
         </Menu.Item>
 
-          <Menu.Item key="DeleteCitizen">
-            <Icon type="meh" theme="twoTone" twoToneColor="#eb2f96" />Slet borger
-        </Menu.Item>
-
           <Menu.Item key="EditCitizen">
             <Icon type="setting" theme="twoTone" />Se & redigér borgere
         </Menu.Item>
@@ -55,8 +42,6 @@ export default class AdminCitizens extends Component {
 
         {current == "EditCitizen" && <CareCenterList />}
         {current == "CreateCitizen" && <CreateCitizen />}
-        {current == "DeleteCitizen" && <EditableTable />}
-
 
       </div>
     );
