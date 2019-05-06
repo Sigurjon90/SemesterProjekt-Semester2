@@ -1,7 +1,12 @@
-import todoStore from './TodosStore'
-import postsStore from './PostsStore'
+
+import citizensStore from "./CitizensStore";
+import journalStore from "./JournalStore";
+import diaryStore from "./DiaryStore";
+import usersStore from "./UsersStore";
 
 export default {
-  todoStore,
-  postsStore
-} 
+  citizensStore,
+  journalStore,
+  diaryStore,
+  usersStore
+};

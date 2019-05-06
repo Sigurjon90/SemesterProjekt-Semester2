@@ -11,15 +11,16 @@ import { createBrowserHistory } from 'history'
 
 import App from './components/App'
 import stores from './stores/'
+import("./utils/axiosConfig.js");
 
 const renderApp = Component => {
-  const browserHistory = createBrowserHistory()
-  const routeStore = new RouterStore()
-  const history = syncHistoryWithStore(browserHistory, routeStore)
+	const browserHistory = createBrowserHistory()
+	const routeStore = new RouterStore()
+	const history = syncHistoryWithStore(browserHistory, routeStore)
 
-  render(
+	render(
 		<AppContainer>
-			<Router history={history}>
+			<Router key={Math.random()} history={history}>
 				<Provider {...stores} routing={routeStore} >
 					<App />
 				</Provider>
