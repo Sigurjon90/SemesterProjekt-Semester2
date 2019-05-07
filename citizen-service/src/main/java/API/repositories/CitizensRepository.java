@@ -227,7 +227,7 @@ public class CitizensRepository implements ICitizensRepository {
             createCitizen.setString(6, citizen.getCpr());
             createCitizen.setInt(7, citizen.getPhoneNumber());
             createCitizen.setBoolean(8, false);
-            createCitizen.setObject(9, citizen.getCareCenterID(), Types.OTHER);
+            createCitizen.setObject(9, null, Types.OTHER);
             createCitizen.setObject(10, authorId, Types.OTHER);
 
             ResultSet createCitizenResult = createCitizen.executeQuery();
