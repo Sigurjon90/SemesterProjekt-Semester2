@@ -257,7 +257,6 @@ class EditableTable extends React.Component {
                     </EditableContext.Provider>
                 }
             </div>
-
         )
     }
 }

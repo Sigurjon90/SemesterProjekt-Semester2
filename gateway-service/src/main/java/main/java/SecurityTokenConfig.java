@@ -6,9 +6,9 @@
 package main.java;
 
 /**
- *
  * @author frederikhelth
  */
+
 import java.util.Arrays;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,54 +21,60 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import main.java.JwtConfig;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import security.JwtConfig;
 
-@EnableWebSecurity 	// Enable security config. This annotation denotes config for spring security.
+@EnableWebSecurity    // Enable security config. This annotation denotes config for spring security.
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	private JwtConfig jwtConfig;
- 
-	@Override
-  	protected void configure(HttpSecurity http) throws Exception {
-    	   http.cors().and()
-		.csrf().disable()
-		    // make sure we use stateless session; session won't be used to store user's state.
-	 	    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) 	
-		.and()
-		    // handle an authorized attempts 
-		    .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED)) 	
-		.and()
-		   // Add a filter to validate the tokens with every request
-		   .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
-		// authorization requests config
-		.authorizeRequests()
-		   // allow all who are accessing "auth" service
-		   .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()  
-		   // must be an admin if trying to access admin area (authentication is also required here)
-		   .antMatchers("/gallery" + "/admin/**").hasRole("ADMIN")
-		   // Any other request must be authenticated
-		   .anyRequest().authenticated(); 
-	}
-        
-        @Bean
-        CorsConfigurationSource corsConfigurationSource()
-        {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList("http://localhost:1337"));
-            configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-            configuration.addAllowedHeader("*");
-            configuration.addExposedHeader("Authorization");
-            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-            source.registerCorsConfiguration("/**", configuration);
-            return source;
-        }
-        
-	
-	@Bean
-  	public JwtConfig jwtConfig() {
-    	   return new JwtConfig();
-  	}
+
+    @Autowired
+    private JwtConfig jwtConfig;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and()
+                .csrf().disable()
+                // make sure we use stateless session; session won't be used to store user's state.
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                // handle an authorized attempts
+                .exceptionHandling().authenticationEntryPoint((req, rsp, e) -> rsp.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .and()
+                // Add a filter to validate the tokens with every request
+                .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
+                // authorization requests config
+                .authorizeRequests()
+                .antMatchers("/**").permitAll()
+                // allow all who are accessing "auth" service
+                .antMatchers(HttpMethod.POST, jwtConfig.getUri()).permitAll()
+                // must be an admin to access users services/api
+                .antMatchers("/users/**").hasRole("admin")
+                // must be a/an 'caseworker' or 'admin' to access journals api
+                .antMatchers("/journals/**").hasAnyRole("admin", "caseworker")
+                // must be a/an 'admin' 'caseworker' or 'caregiver' to access diaries/citizens
+                .antMatchers("/citizens/**").hasAnyRole("admin", "caseworker", "caregiver")
+                .antMatchers("/diaries/**").hasAnyRole("admin", "caseworker", "caregiver")
+                // Any other request must be authenticated
+                .anyRequest().authenticated();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:1337"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("Authorization");
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+
+    @Bean
+    public JwtConfig jwtConfig() {
+        return new JwtConfig();
+    }
 }

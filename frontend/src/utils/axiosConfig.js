@@ -12,8 +12,6 @@ axios.interceptors.request.use(
       window.location.replace("/");
     }
 
-    console.log("Config:");
-    console.log(config);
     return config;
   },
   function (error) {
@@ -26,8 +24,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   function (response) {
     // Do something with response data
-    console.log("Response: ");
-    console.log(response);
     return response;
   },
   function (error) {

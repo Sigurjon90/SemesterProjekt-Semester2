@@ -5,6 +5,7 @@ import CareCenterList from "./CareCenterList";
 import CreateCitizen from "./CreateCitizen"
 import EditableTable from "./EditableTable"
 
+
 @observer
 export default class AdminCitizens extends Component {
   constructor(props) {
@@ -37,6 +38,7 @@ export default class AdminCitizens extends Component {
 
           <Menu.Item key="Editable">
             <Icon type="setting" theme="twoTone" />Test
+
         </Menu.Item>
 
           <Menu.Item key="EditCitizen">
