@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { toJS } from 'mobx'
 
-import concat from '../utils/concat'
+import concat from '../../utils/concat'
 
 const Option = Select.Option
 
