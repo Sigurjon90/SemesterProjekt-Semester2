@@ -35,5 +35,7 @@ public class Citizen {
     private boolean archived;
     private String dateCreated;
     private UUID authorId;
-    
+
 }
+
+

@@ -27,7 +27,7 @@ public class Diary {
     private UUID authorID;
     private UUID citizenID;
     private Date dateCreated;
-    private Date dateModified;
+    private String dateModified;
     private String title;
 
 

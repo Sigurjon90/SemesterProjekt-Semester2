@@ -20,6 +20,6 @@ public class DiaryDTO {
     private UUID citizenID;
     private String title;
     private Date dateCreated;
-    private Date dateModified;
+    private String dateModified;
 
 }

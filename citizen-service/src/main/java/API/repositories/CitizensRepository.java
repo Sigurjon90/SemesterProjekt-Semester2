@@ -152,9 +152,10 @@ public class CitizensRepository implements ICitizensRepository {
 
     @Override
     public boolean deleteCitizen(UUID id, UUID authorId) {
-        try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = false, author_id = ? WHERE id = ?")) {
+        try (PreparedStatement deleteCitizen = connection.prepareStatement("UPDATE citizens SET archived = true, author_id = ? WHERE id = ?")) {
             deleteCitizen.setObject(1, authorId);
             deleteCitizen.setObject(2, id);
+           
 
             int affectedRows = deleteCitizen.executeUpdate();
 
@@ -188,15 +189,16 @@ public class CitizensRepository implements ICitizensRepository {
                 }
 
                 PreparedStatement updateCitizen = this.connection.prepareStatement("UPDATE citizens SET name = ?,"
-                        + "address = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ? RETURNING id, name, address, city, zip, cpr, phone, archibed, date_created, author_id, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses");
+                        + "address = ?, city = ?, zip = ?, phone = ?, author_id = ? WHERE id = ? RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id, (SELECT array(SELECT diagnose FROM diagnose WHERE diagnose.citizens_id = ?)) AS diagnoses");
 
                 updateCitizen.setString(1, citizen.getName());
                 updateCitizen.setString(2, citizen.getAddress());
                 updateCitizen.setString(3, citizen.getCity());
                 updateCitizen.setInt(4, citizen.getZip());
                 updateCitizen.setInt(5, citizen.getPhoneNumber());
-                updateCitizen.setObject(6, citizen.getAuthorId());
+                updateCitizen.setObject(6, authorId);
                 updateCitizen.setObject(7, citizen.getId());
+                updateCitizen.setObject(8, citizen.getId());
 
                 ResultSet citizensChangedResult = updateCitizen.executeQuery();
 
@@ -216,7 +218,7 @@ public class CitizensRepository implements ICitizensRepository {
     public Citizen createCitizen(Citizen citizen, UUID authorId) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id;");
+            PreparedStatement createCitizen = connection.prepareStatement("INSERT INTO citizens(id, name, address, city, zip, cpr, phone, archived, care_center_id, author_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? ,?) RETURNING id, name, address, city, zip, cpr, phone, archived, date_created, author_id;");
             createCitizen.setObject(1, UUID.randomUUID(), Types.OTHER);
             createCitizen.setString(2, citizen.getName());
             createCitizen.setString(3, citizen.getAddress());
@@ -225,7 +227,8 @@ public class CitizensRepository implements ICitizensRepository {
             createCitizen.setString(6, citizen.getCpr());
             createCitizen.setInt(7, citizen.getPhoneNumber());
             createCitizen.setBoolean(8, false);
-            createCitizen.setObject(9, authorId, Types.OTHER);
+            createCitizen.setObject(9, null, Types.OTHER);
+            createCitizen.setObject(10, authorId, Types.OTHER);
 
             ResultSet createCitizenResult = createCitizen.executeQuery();
             Citizen citizenCreated = null;
