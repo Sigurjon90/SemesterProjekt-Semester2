@@ -35,7 +35,7 @@ export default class EditCitizen extends Component {
 
     handleDelete = () => {
         const { citizen } = this.props.citizensStore;
-        this.props.citizensStore.archiveCitizen(citizen.id)
+        this.props.citizensStore.deleteCitizen(citizen.id)
         this.setState({ deleted: true })
     }
 
@@ -50,7 +50,7 @@ export default class EditCitizen extends Component {
             phoneNumber: (this.state.phoneNumber != "") ? this.state.phoneNumber : citizen.phoneNumber,
             diagnoses: (this.state.diagnoses != "") ? this.state.diagnoses : citizen.diagnoses,
         }
-        this.props.citizensStore.putCitizenChanges(updatedCitizen)
+        this.props.citizensStore.updateCitizen(updatedCitizen)
         this.setState({ saved: true })
     }
 
