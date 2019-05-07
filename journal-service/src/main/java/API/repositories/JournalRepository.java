@@ -115,6 +115,9 @@ public class JournalRepository implements IJournalRepository {
                 return new Journal((UUID) journalResultSet.getObject("id"), 
                         journalResultSet.getString("date_start"), 
                         (UUID) journalResultSet.getObject("citizens_id"), 
+                        journalResultSet.getString("paragraph"),
+                        journalResultSet.getString("municipality"),
+                        journalResultSet.getBoolean("consent"),
                         journalResultSet.getString("content"), 
                         (UUID) journalResultSet.getObject("author_id"), 
                         journalResultSet.getString("date_modified"));
@@ -258,6 +261,9 @@ public class JournalRepository implements IJournalRepository {
                 return new Journal((UUID) modifyResultSet.getObject("journal_id"), 
                         null, 
                         null, 
+                        journal.getParagraph(),
+                        journal.getMunicipality(),
+                        journal.isConsent(),
                         modifyResultSet.getString("content"), 
                         (UUID) modifyResultSet.getObject("author_id"), 
                         modifyResultSet.getString("date_modified"));
