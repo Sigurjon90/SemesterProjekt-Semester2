@@ -105,7 +105,7 @@ export default class Journal extends Component {
             <h3><strong>Senest redigeret:</strong></h3>
           </Col>
           <Col span={16}>
-            <h3><strong>Journal:</strong></h3>
+            <h3><strong>Sag:</strong></h3>
           </Col>
         </Row>
         <Row>
@@ -113,6 +113,9 @@ export default class Journal extends Component {
             <h3>{moment(journal.dateModified).format('DD-MM-YYYY HH:mm')}</h3>
           </Col>
           <Col span={16}>
+            <Select defaultValue={`Paragraf §${journal.paragraph}`} style={{ width: 130 }} disabled />
+            <Select defaultValue={`Handlekommune ${journal.municipality}`} style={{ marginLeft: 10, marginRight: 10, marginBottom: 10 }} disabled />
+            <Select defaultValue={`Samtykke givet: ${journal.consent ? "Ja" : "Nej"}`} disabled />
             <ReactMarkdown source={`${journal.content}`} />
           </Col>
         </Row>
