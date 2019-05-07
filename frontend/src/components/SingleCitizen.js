@@ -49,7 +49,6 @@ export default class SingleCitizen extends Component {
     const { citizen, isFetching } = citizensStore
     const theId = citizen && citizen.id
     const { TextArea } = Input;
-    console.log(isFetching)
     return (
       <div>
         {!isFetching &&

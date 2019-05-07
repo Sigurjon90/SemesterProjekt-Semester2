@@ -192,15 +192,12 @@ class EditableTable extends React.Component {
             }
             const newData = [...concat(primaryCitizens, otherCitizens)]
             const index = newData.findIndex(item => key === item.id)
-            console.log("INDEX", index)
             if (index > -1) {
                 const item = toJS(newData[index])
                 const updatedCitizen = {
                     ...item,
                     ...row
                 }
-                console.log("TEST")
-                console.log(updatedCitizen)
                 this.updateCitizen(updatedCitizen)
                 this.setState({ editingKey: '' })
             } else {
@@ -215,7 +212,6 @@ class EditableTable extends React.Component {
     }
 
     render() {
-        console.log("WHY U HERE")
         const { citizensStore } = this.props
         const { primaryCitizens, otherCitizens, isFetching } = citizensStore
 

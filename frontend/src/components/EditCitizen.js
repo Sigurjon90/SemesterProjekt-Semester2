@@ -54,16 +54,6 @@ export default class EditCitizen extends Component {
         this.setState({ saved: true })
     }
 
-    // Just to check state from button
-    checkState = () => {
-        console.log(this.state.name)
-        console.log(this.state.address)
-        console.log(this.state.city)
-        console.log(this.state.zip)
-        console.log(this.state.phoneNumber)
-        console.log(this.state.diagnoses)
-    }
-
     componentWillMount() {
         const {
             match: { params }, citizensStore

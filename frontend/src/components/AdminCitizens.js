@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Menu, Icon } from "antd";
-import CareCenterList from "./CareCenterList";
 import CreateCitizen from "./CreateCitizen"
 import EditableTable from "./EditableTable"
 
@@ -17,7 +16,6 @@ export default class AdminCitizens extends Component {
   }
 
   handleClick = (e) => {
-    console.log('click ', e);
     this.setState({
       current: e.key,
     });
