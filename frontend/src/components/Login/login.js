@@ -3,6 +3,7 @@ import { inject, observer } from "mobx-react";
 import "antd/dist/antd.css";
 import { Redirect } from "react-router-dom";
 import { Row, Col, Form, Icon, Input, Button, Card, message } from "antd";
+import hasRole, { authorization } from "../../utils/auth";
 
 @inject("loginStore")
 @observer
@@ -10,6 +11,10 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.test = () => this.props.loginStore.authUser();
+  }
+
+  componentWillMount() {
+    console.log(hasRole("ROLE_ADMIsadN"));
   }
 
   handleSubmit = e => {

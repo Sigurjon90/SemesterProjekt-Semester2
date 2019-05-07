@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 import LazyRoute from "lazy-route";
 import jwt_decode from "jwt-decode";
+import hasRole from "../../utils/auth";
 
 const userData = () => {
   const token = localStorage.getItem("authorization");
-  console.log(token);
   if (token == null) {
     return null;
   }
@@ -13,34 +13,61 @@ const userData = () => {
 };
 
 const getRole = () => {
-  return userData().authorities;
+  if (userData()) {
+    return userData().authorities;
+  }
+  return null;
 };
 
 const Auth = role => {
-  if (role != userData().authorities) return false;
+  if (userData()) {
+    if (role != userData().authorities) return false;
+  }
+  return null;
 };
 
-export class Admin extends Component {
+export class NotLoggedInRoute extends Component {
   constructor(props) {
     super(props);
     this.path = this.props.path;
     this.component = this.props.component;
     this.role = getRole();
-
-    console.log(userData());
   }
   render() {
     const self = this;
-    console.log(this.props.component);
-    console.log(this.props.path);
-    if (this.role != "ROLE_ADMIN") {
-      return <Redirect to="lol" />;
-    }
+
     return (
       <Route
         exact
         path={self.path}
-        render={props => <LazyRoute {...props} component={self.component} />}
+        render={props => (
+          <LazyRoute restrict {...props} component={self.component} />
+        )}
+      />
+    );
+  }
+}
+
+export class AdminRoute extends Component {
+  constructor(props) {
+    super(props);
+    this.path = this.props.path;
+    this.component = this.props.component;
+    this.role = getRole();
+  }
+  render() {
+    const self = this;
+    console.log(hasRole("admin"));
+    return (
+      <Route
+        exact
+        path={self.path}
+        render={props => {
+          if (self.role != "admin") {
+            return <h1>HER DU HAR DU IKKE ADNGAG</h1>;
+          }
+          <LazyRoute {...props} component={self.component} />;
+        }}
       />
     );
   }

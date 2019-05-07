@@ -3,7 +3,23 @@ import { Route, Link } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import LazyRoute from "lazy-route";
 import DevTools from "mobx-react-devtools";
-import { Admin } from "./login/auth";
+import { AdminRoute, NotLoggedInRoute } from "./login/auth";
+/*
+const Authorization = (WrappedComponent, allowedRoles, props) => {
+  const role = "admin";
+  if (allowedRoles.includes(role)) {
+    return <LazyRoute {...props} component={Login} />;
+  } else {
+    return <h1>No page for you!</h1>;
+  }
+};
+
+
+const User = Authorization(["user", "manager", "admin"]);
+const Manager = Authorization(["manager", "admin"]);
+const Admin = Authorization(["admin"]);
+*/
+const Login = () => import("./Login/Login");
 
 @inject("routing")
 @observer
@@ -11,15 +27,20 @@ export default class App extends Component {
   render() {
     return (
       <div className="wrapper">
-        <Admin path="/" component={import("./Login/Login")} />
+        <Route
+          exact
+          path="/"
+          render={props => (
+            <LazyRoute {...props} component={import("./Login/Login")} />
+          )}
+        />
         <Route
           exact
           path="/citizens"
           render={props => (
-            <LazyRoute {...props} component={import("./CitizensList")} />
+            <LazyRoute {...props} component={import("./Login/Login")} />
           )}
         />
-
         <DevTools />
       </div>
     );
