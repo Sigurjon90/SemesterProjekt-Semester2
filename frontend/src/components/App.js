@@ -41,6 +41,41 @@ export default class App extends Component {
             <LazyRoute {...props} component={import("./Login/Login")} />
           )}
         />
+        <Route
+          exact
+          path="/citizens/:id"
+          render={props => (
+            <LazyRoute {...props} component={import("./SingleCitizen")} />
+          )}
+        />
+        <Route
+          exact
+          path="/admin/citizens"
+          render={props => (
+            <LazyRoute {...props} component={import("./AdminCitizens")} />
+          )}
+        />
+        <Route
+          exact
+          path="/admin/users"
+          render={props => (
+            <LazyRoute {...props} component={import("./AdminUsers")} />
+          )}
+        />
+        <Route
+          exact
+          path="/admin/citizens/edit/:id"
+          render={props => (
+            <LazyRoute {...props} component={import("./EditCitizen")} />
+          )}
+        />
+        <Route
+          exact
+          path="/admin/users/edit/:id"
+          render={props => (
+            <LazyRoute {...props} component={import("./EditUser")} />
+          )}
+        />
         <DevTools />
       </div>
     );
