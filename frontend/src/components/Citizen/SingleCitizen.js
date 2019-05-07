@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Row, Col, Tag, Divider, Input, Button, Spin } from "antd";
-import Journal from "./Journal";
-import EditJournal from "./EditJournal";
-import Diary from "./Diary";
-import EditDiary from "./EditDiary";
+import Journal from "../Journal/Journal";
+import EditJournal from "../Journal/EditJournal";
+import Diary from "../Diary/Diary";
+import EditDiary from "../Diary/EditDiary";
 
 @inject("citizensStore")
 @observer

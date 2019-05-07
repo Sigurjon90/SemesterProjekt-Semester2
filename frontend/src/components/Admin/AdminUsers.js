@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Menu, Icon } from "antd";
-import UsersList from "./UsersList";
-import CreateUser from "./CreateUser";
+import UsersList from "../User/UsersList";
+import CreateUser from "../User/CreateUser";
 
 @observer
 export default class AdminUsers extends Component {

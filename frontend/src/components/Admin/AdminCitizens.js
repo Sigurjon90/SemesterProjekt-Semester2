@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Menu, Icon } from "antd";
-import CreateCitizen from "./CreateCitizen"
-import EditableTable from "./EditableTable"
+import CreateCitizen from "../Citizen/CreateCitizen"
+import EditableTable from "../EditableTable"
 
 
 @observer
