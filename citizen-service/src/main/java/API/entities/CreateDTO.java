@@ -35,5 +35,4 @@ public class CreateDTO {
     private String cpr;
     private int phoneNumber;
     private List<String> diagnoses;
-    
 }

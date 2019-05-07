@@ -48,7 +48,7 @@ public class DiaryRepository implements IDiaryRepository {
                         (UUID) diaryResult.getObject("author_id"),
                         (UUID) diaryResult.getObject("citizen_id"),
                         diaryResult.getDate("date_created"),
-                        diaryResult.getDate("date_modified"),
+                        diaryResult.getString("date_modified"),
                         diaryResult.getString("title")));
             }
         } catch (SQLException e) {
@@ -71,7 +71,7 @@ public class DiaryRepository implements IDiaryRepository {
                         (UUID) diaryResult.getObject("author_id"),
                         (UUID) diaryResult.getObject("citizen_id"),
                         diaryResult.getDate("date_created"),
-                        diaryResult.getDate("date_modified"),
+                        diaryResult.getString("date_modified"),
                         diaryResult.getString("title")));
             }
         } catch (SQLException e) {
@@ -83,7 +83,7 @@ public class DiaryRepository implements IDiaryRepository {
     @Override
     public Optional<Diary> findByCitizenID(UUID citizenID) {
         try (PreparedStatement diaryLookup = this.connection.prepareStatement(
-                    "SELECT * FROM diaries WHERE citizen_id = ? AND archived = false returning id, citizen_id, author_id, content")) {
+                    "SELECT * FROM diaries WHERE citizen_id = ? AND archived = false")) { 
             diaryLookup.setObject(1, citizenID, Types.OTHER);
             ResultSet diaryResult = diaryLookup.executeQuery();
             while (diaryResult.next()) {
@@ -93,7 +93,7 @@ public class DiaryRepository implements IDiaryRepository {
                         (UUID) diaryResult.getObject("author_id"),
                         (UUID) diaryResult.getObject("citizen_id"),
                         diaryResult.getDate("date_created"),
-                        diaryResult.getDate("date_modified"),
+                        diaryResult.getString("date_modified"),
                         diaryResult.getString("title")));
             }
         } catch (SQLException e) {
@@ -116,7 +116,7 @@ public class DiaryRepository implements IDiaryRepository {
                         (UUID) dairiesResult.getObject("author_ID"),
                         (UUID) dairiesResult.getObject("citizen_ID"),
                         dairiesResult.getDate("date_created"),
-                        dairiesResult.getDate("date_modified"),
+                        dairiesResult.getString("date_modified"),
                         dairiesResult.getString("title")));
             }
         } catch (SQLException e) {
@@ -129,10 +129,11 @@ public class DiaryRepository implements IDiaryRepository {
     @Override
     public Optional<Diary> updateDiary(Diary diary) {
         try (PreparedStatement diaryUpdate = this.connection.prepareStatement(
-                    "UPDATE Diaries SET content = ?, author_ID = ? WHERE id = ?  returning id, content, author_ID, citizen_ID, date_created, date_modified, title")) {
+                    "UPDATE Diaries SET content = ?, author_ID = ?, date_modified = ? WHERE citizen_id = ? returning id, content, author_ID, citizen_ID, date_created, date_modified, title")) {
             diaryUpdate.setString(1, diary.getContent());
             diaryUpdate.setObject(2, diary.getAuthorID(), Types.OTHER);
-            diaryUpdate.setObject(3, diary.getId(), Types.OTHER);
+            diaryUpdate.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            diaryUpdate.setObject(4, diary.getCitizenID(), Types.OTHER);
             ResultSet updateDiaryResult = diaryUpdate.executeQuery();
             while (updateDiaryResult.next()) {
                 return Optional.of(new Diary(
@@ -141,7 +142,7 @@ public class DiaryRepository implements IDiaryRepository {
                         (UUID) updateDiaryResult.getObject("author_id"),
                         (UUID) updateDiaryResult.getObject("citizen_id"),
                         updateDiaryResult.getDate("date_created"),
-                        updateDiaryResult.getDate("date_modified"),
+                        updateDiaryResult.getString("date_modified"),
                         updateDiaryResult.getString("title")));
             }
         } catch (SQLException e) {

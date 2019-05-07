@@ -6,7 +6,6 @@
 package API.entities;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,3 +38,5 @@ public class Citizen {
     private UUID careCenterId;
 
 }
+
+

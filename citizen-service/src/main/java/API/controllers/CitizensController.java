@@ -21,7 +21,6 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import security.JwtUtils;
@@ -124,7 +123,7 @@ public class CitizensController {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message= "Successful", response = void.class)
     })
-    //@HystrixCommand(fallbackMethod = "fallback", ignoreExceptions = {NotFoundException.class})
+    @HystrixCommand(fallbackMethod = "fallback", ignoreExceptions = {NotFoundException.class})
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteCitizen(@RequestHeader HttpHeaders httpHeaders, @PathVariable("id") String stringID) {
         String token = httpHeaders.getFirst("authorization");
