@@ -35,6 +35,5 @@ public class CreateDTO {
     private int zip;
     private String cpr;
     private int phoneNumber;
-    private UUID careCenterID;
     private List<String> diagnoses;
 }

@@ -33,25 +33,9 @@ public class Citizen {
     private int phoneNumber;
     private List<String> diagnoses;
     private boolean archived;
-    private UUID careCenterID;
     private String dateCreated;
     private UUID authorId;
 
-    public Citizen(UUID id, String name, String address, String city, int zip, String cpr, int phoneNumber, List<String> diagnoses, boolean archived, String dateCreated, UUID authorId) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-        this.city = city;
-        this.zip = zip;
-        this.cpr = cpr;
-        this.phoneNumber = phoneNumber;
-        this.diagnoses = diagnoses;
-        this.archived = archived;
-        this.dateCreated = dateCreated;
-        this.authorId = authorId;
-    }
-    
-    
 }
 
 
