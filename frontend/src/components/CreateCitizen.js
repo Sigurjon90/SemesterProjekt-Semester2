@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react"
-import { Form, Input, Button, Divider, Select, Cascader, Row, Col, FormComponentProps } from "antd";
-import moment from "moment";
-import "moment/locale/da";
+import { Form, Input, Button, Divider, Select, Alert, Row, Col } from "antd";
 import { observable } from "mobx";
 
 const { Option } = Select;
@@ -40,6 +38,7 @@ export default class CreateCitizen extends Component {
     @observable phone = ""
     @observable careCenter = ""
     @observable diagnoses = []
+    @observable isCitizenCreated = false
 
     handleCreate = () => {
         const createdCitizen = {
@@ -53,10 +52,11 @@ export default class CreateCitizen extends Component {
             diagnoses: this.diagnoses
         }
         this.props.citizensStore.createCitizen(createdCitizen)
+        this.isCitizenCreated = true
     }
 
     handleName = (e) => {
-        if ((/^[a-z_ ]{5,25}$/i.test(`${e.target.value}`))) {
+        if ((/^[a-z_ ÆØÅæøå]{5,25}$/i.test(`${e.target.value}`))) {
             this.nameChecker = "success"
             this.name = e.target.value
         } else {
@@ -66,7 +66,7 @@ export default class CreateCitizen extends Component {
     }
 
     handleAddress = (e) => {
-        if ((/^[a-z0-9_ ]{5,25}$/i.test(`${e.target.value}`))) {
+        if ((/^[a-z0-9_ ÆØÅæøå]{5,25}$/i.test(`${e.target.value}`))) {
             this.addressChecker = "success"
             this.address = e.target.value
         } else {
@@ -76,7 +76,7 @@ export default class CreateCitizen extends Component {
     }
 
     handleCity = (e) => {
-        if ((/^[a-z_ ]{3,25}$/i.test(`${e.target.value}`))) {
+        if ((/^[a-z_ ÆØÅæøå]{3,25}$/i.test(`${e.target.value}`))) {
             this.cityChecker = "success"
             this.city = e.target.value
         } else {
@@ -127,76 +127,84 @@ export default class CreateCitizen extends Component {
 
     render() {
         return (<div>
-            <Row>
-                <Col span={12}>
-                    <Divider>Udfyld information om borgeren</Divider>
-                    <Form {...formItemLayout}>
-                        <Form.Item
-                            label="Navn: "
-                            validateStatus={this.nameChecker}
-                            help={this.nameChecker != "success" && "Navn må kun indeholde bogstaver"}
-                        >
-                            <Input onChange={this.handleName} />
-                        </Form.Item>
-                        <Form.Item
-                            label="Adresse: "
-                            validateStatus={this.addressChecker}
-                            help={this.addressChecker != "success" && "Udfyld adressen"}
-                        >
-                            <Input onChange={this.handleAddress} />
-                        </Form.Item>
-                        <Form.Item
-                            label="By: "
-                            validateStatus={this.cityChecker}
-                            help={this.cityChecker != "success" && "Indtast en by"}
-                        >
-                            <Input onChange={this.handleCity} />
-                        </Form.Item>
-                        <Form.Item
-                            label="Postnummer: "
-                            validateStatus={this.zipChecker}
-                            help={this.zipChecker != "success" && "Indtast postnummer"}
-                        >
-                            <Input onChange={this.handleZip} />
-                        </Form.Item>
-                        <Form.Item
-                            label="CPR: "
-                            validateStatus={this.cprChecker}
-                            help={this.cprChecker != "success" && "Indtast CPR-nummer"}
-                        >
-                            <Input onChange={this.handleCPR} />
-                        </Form.Item>
-                        <Form.Item
-                            label="Telefon: "
-                            validateStatus={this.phoneChecker}
-                            help={this.phoneChecker != "success" && "Indtast telefonnummer"}
-                        >
-                            <Input onChange={this.handlePhone} />
-                        </Form.Item>
-                    </Form>
-                    <Divider>Vælg bosted</Divider>
-                    <Select defaultValue="Vælg bosted" style={{ width: 180, marginLeft: 150, marginTop: 10 }} onChange={this.handleCareCenter}>
-                        <Option value="bf9fc975-14b9-41f3-8bf4-a5ff04fe0e64">Bofællesskabet Å-huset</Option>
-                        <Option value="Botilbud Placeholder">Botilbuddet Rydsåvej</Option>
-                    </Select>
-                    <Divider>Vælg diagnoser</Divider>
-                    <Select
-                        mode="multiple"
-                        style={{ width: 220, marginLeft: 150, marginTop: 10 }}
-                        placeholder="Vælg diagnoser"
-                        onChange={this.handleDiagnoses}
+            {this.isCitizenCreated &&
+                <div>
+                    <Alert message="Brugeren er nu oprettet" type="success" />
+                </div>
+            }
+            {!this.isCitizenCreated &&
+                <div>
+                    <Row>
+                        <Col span={12}>
+                            <Divider>Udfyld information om borgeren</Divider>
+                            <Form {...formItemLayout}>
+                                <Form.Item
+                                    label="Navn: "
+                                    validateStatus={this.nameChecker}
+                                    help={this.nameChecker != "success" && "Navn må kun indeholde bogstaver"}
+                                >
+                                    <Input onChange={this.handleName} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="Adresse: "
+                                    validateStatus={this.addressChecker}
+                                    help={this.addressChecker != "success" && "Udfyld adressen"}
+                                >
+                                    <Input onChange={this.handleAddress} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="By: "
+                                    validateStatus={this.cityChecker}
+                                    help={this.cityChecker != "success" && "Indtast en by"}
+                                >
+                                    <Input onChange={this.handleCity} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="Postnummer: "
+                                    validateStatus={this.zipChecker}
+                                    help={this.zipChecker != "success" && "Indtast postnummer"}
+                                >
+                                    <Input onChange={this.handleZip} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="CPR: "
+                                    validateStatus={this.cprChecker}
+                                    help={this.cprChecker != "success" && "Indtast CPR-nummer"}
+                                >
+                                    <Input onChange={this.handleCPR} />
+                                </Form.Item>
+                                <Form.Item
+                                    label="Telefon: "
+                                    validateStatus={this.phoneChecker}
+                                    help={this.phoneChecker != "success" && "Indtast telefonnummer"}
+                                >
+                                    <Input onChange={this.handlePhone} />
+                                </Form.Item>
+                            </Form>
+                            <Divider>Vælg bosted</Divider>
+                            <Select defaultValue="Vælg bosted" style={{ width: 180, marginLeft: 150, marginTop: 10 }} onChange={this.handleCareCenter}>
+                                <Option value="bf9fc975-14b9-41f3-8bf4-a5ff04fe0e64">Bofællesskabet Å-huset</Option>
+                                <Option value="Botilbud Placeholder">Botilbuddet Rydsåvej</Option>
+                            </Select>
+                            <Divider>Vælg diagnoser</Divider>
+                            <Select
+                                mode="multiple"
+                                style={{ width: 220, marginLeft: 150, marginTop: 10 }}
+                                placeholder="Vælg diagnoser"
+                                onChange={this.handleDiagnoses}
 
-                    >
-                        <Option value="alkoholmisbrug">Alkoholmisbrug</Option>
-                        <Option value="stofmisbrug">Stofmisbrug</Option>
-                        <Option value="handicappet">Handicappet</Option>
-                        <Option value="angst">Angst</Option>
-                    </Select>
-                    <Button type="primary" style={{ marginLeft: 10 }} onClick={this.handleCreate}>Opret borger</Button>
+                            >
+                                <Option value="alkoholmisbrug">Alkoholmisbrug</Option>
+                                <Option value="stofmisbrug">Stofmisbrug</Option>
+                                <Option value="handicappet">Handicappet</Option>
+                                <Option value="angst">Angst</Option>
+                            </Select>
+                            <Button type="primary" style={{ marginLeft: 10 }} onClick={this.handleCreate}>Opret borger</Button>
 
-                </Col>
-                <Col span={12}></Col>
-            </Row>
+                        </Col>
+                        <Col span={12}></Col>
+                    </Row>
+                </div>}
         </div >)
     }
 }

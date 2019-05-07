@@ -13,7 +13,7 @@ class EditableCell extends React.Component {
             return <InputNumber />
         }
         if (this.props.inputType === 'option') {
-            return( <Select
+            return (<Select
                 mode='multiple'
                 style={{ width: '100%' }}
             >
@@ -74,7 +74,7 @@ class EditableTable extends React.Component {
         this.deleteCitizen = (id) => this.props.citizensStore.deleteCitizen(id)
         this.updateCitizen = (citizen) => this.props.citizensStore.updateCitizen(citizen)
         this.state = { editingKey: '' }
-        
+
         this.columns = [
             {
                 title: 'Navn',
@@ -158,10 +158,10 @@ class EditableTable extends React.Component {
                             ) : (
                                     <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>Edit</a>
                                 )}
-                                <Divider type='vertical' />
-                                {!editable ? (<Popconfirm title='Sure to delete?' onConfirm={() => this.handleDelete(record.id)}>
+                            <Divider type='vertical' />
+                            {!editable ? (<Popconfirm title='Sure to delete?' onConfirm={() => this.handleDelete(record.id)}>
                                 <a href='javascript:'>Delete</a>
-                                </Popconfirm>
+                            </Popconfirm>
                             ) : null}
                         </div>
                     )
@@ -190,15 +190,16 @@ class EditableTable extends React.Component {
             if (error) {
                 return
             }
-            const newData = [...concat(primaryCitizens,otherCitizens)]
+            const newData = [...concat(primaryCitizens, otherCitizens)]
             const index = newData.findIndex(item => key === item.id)
+            console.log("INDEX", index)
             if (index > -1) {
                 const item = toJS(newData[index])
                 const updatedCitizen = {
                     ...item,
                     ...row
                 }
-                console.log(item)
+                console.log("TEST")
                 console.log(updatedCitizen)
                 this.updateCitizen(updatedCitizen)
                 this.setState({ editingKey: '' })
@@ -214,6 +215,7 @@ class EditableTable extends React.Component {
     }
 
     render() {
+        console.log("WHY U HERE")
         const { citizensStore } = this.props
         const { primaryCitizens, otherCitizens, isFetching } = citizensStore
 
@@ -241,13 +243,13 @@ class EditableTable extends React.Component {
 
         return (
             <div>
-                {isFetching && <Spin size='large' /> }
+                {isFetching && <Spin size='large' />}
                 {!isFetching &&
                     <EditableContext.Provider value={this.props.form}>
                         <Table
                             components={components}
                             bordered
-                            dataSource={concat(primaryCitizens,otherCitizens)}
+                            dataSource={concat(primaryCitizens, otherCitizens)}
                             columns={columns}
                             rowClassName='editable-row'
                             pagination={{
@@ -257,7 +259,6 @@ class EditableTable extends React.Component {
                     </EditableContext.Provider>
                 }
             </div>
-            
         )
     }
 }

@@ -31,7 +31,7 @@ class CitizensStore {
   replaceAt = (array, index, value) => {
     const item = array[index]
     return array.splice(index, 1, { ...item, ...value })
-  } 
+  }
 
   @action async deleteCitizen(id) {
     this.isFetching = true;

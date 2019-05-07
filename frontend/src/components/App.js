@@ -34,9 +34,23 @@ export default class App extends Component {
         />
         <Route
           exact
+          path="/admin/users"
+          render={props => (
+            <LazyRoute {...props} component={import("./AdminUsers")} />
+          )}
+        />
+        <Route
+          exact
           path="/admin/citizens/edit/:id"
           render={props => (
             <LazyRoute {...props} component={import("./EditCitizen")} />
+          )}
+        />
+        <Route
+          exact
+          path="/admin/users/edit/:id"
+          render={props => (
+            <LazyRoute {...props} component={import("./EditUser")} />
           )}
         />
 
