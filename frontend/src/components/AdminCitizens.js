@@ -36,21 +36,14 @@ export default class AdminCitizens extends Component {
             <Icon type="smile" theme="twoTone" twoToneColor="#52c41a" />Opret borger
         </Menu.Item>
 
-          <Menu.Item key="Editable">
-            <Icon type="setting" theme="twoTone" />Test
-
-        </Menu.Item>
-
           <Menu.Item key="EditCitizen">
             <Icon type="setting" theme="twoTone" />Se & redigér borgere
         </Menu.Item>
 
         </Menu>
 
-        {current == "EditCitizen" && <CareCenterList />}
+        {current == "EditCitizen" && <EditableTable />}
         {current == "CreateCitizen" && <CreateCitizen />}
-        {current == "Editable" && <EditableTable />}
-
 
       </div>
     );
