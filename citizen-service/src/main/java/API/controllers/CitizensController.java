@@ -21,6 +21,7 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import security.JwtUtils;
 
@@ -65,10 +66,11 @@ public class CitizensController {
     public ResponseEntity createCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody CreateDTO createDTO) {
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
-        CitizenDTO citizenDTO = citizensService.createCitizen(createDTO, authorId);
+        UUID careCenterId = jwtUtils.getCareCenterId(token);
+        CitizenDTO citizenDTO = citizensService.createCitizen(createDTO, authorId, careCenterId);
 
         if (citizenDTO != null) {
-            return new ResponseEntity(citizenDTO, HttpStatus.OK);
+            return new ResponseEntity(citizenDTO, HttpStatus.CREATED);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
@@ -106,6 +108,8 @@ public class CitizensController {
     public ResponseEntity batchUpdateCitizen(@RequestHeader HttpHeaders httpHeaders, @RequestBody List<CitizenDTO> citizenDTOList) {
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
+        UUID careCenterId = jwtUtils.getCareCenterId(token);
+        citizenDTOList.stream().forEach(citizen -> citizen.setCareCenterId(careCenterId));
         List<CitizenDTO> citizenDTOListReturned = citizensService.batchUpdate(citizenDTOList, authorId);
 
         if (citizenDTOListReturned != null) {
@@ -147,8 +151,10 @@ public class CitizensController {
         try {
             response = restTemplate.exchange(url, HttpMethod.DELETE, entity, String.class);
         }
-        catch (Exception ex) {
-            return 500;
+        catch (RestClientResponseException ex) {
+            ex.printStackTrace();
+            if (ex.getRawStatusCode() == 404) return 200;
+            return ex.getRawStatusCode();
         }
 
         return response.getStatusCodeValue();

@@ -6,7 +6,6 @@
 package API.services;
 
 import API.entities.*;
-import API.repositories.CitizensRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,12 +29,10 @@ public class CitizensService implements ICitizensService {
     private ModelMapper modelMapper;
 
     // Create Citizen from CreateDTO
-    @Override
-    public CitizenDTO createCitizen(CreateDTO createDTO, UUID authorId) {
+    public CitizenDTO createCitizen(CreateDTO createDTO, UUID authorId, UUID careCenterId) {
         // Map to citizen
         Citizen citizen = modelMapper.map(createDTO, Citizen.class);
-        
-        Citizen citizenCreated = citizensRepository.createCitizen(citizen, authorId);
+        Citizen citizenCreated = citizensRepository.createCitizen(citizen, authorId, careCenterId);
 
         if (citizen != null) {
             return modelMapper.map(citizenCreated, CitizenDTO.class);

@@ -21,7 +21,7 @@ public interface ICitizensService {
     List<CitizenDTO> batchUpdate(List<CitizenDTO> citizenDTOList, UUID authorId);
 
     // Create Citizen from CreateDTO
-    CitizenDTO createCitizen(CreateDTO createDTO, UUID authorId);
+    CitizenDTO createCitizen(CreateDTO createDTO, UUID authorId, UUID careCenterId);
 
     boolean deleteCitizen(UUID id, UUID authorId);
 
