@@ -16,14 +16,14 @@ class CitizensStore {
     if (pindex > -1) {
       const item = this.primaryCitizens[pindex]
       this.primaryCitizens.splice(pindex, 1, {
-          ...item,
-          ...citizen,
-        })
+        ...item,
+        ...citizen,
+      })
     } else {
       const item = this.otherCitizens[oindex]
       this.otherCitizens.splice(oindex, 1, {
         ...item,
-          ...citizen,
+        ...citizen,
       })
     }
   }
