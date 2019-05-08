@@ -120,11 +120,11 @@ class EditableTableUsers extends React.Component {
                                     </Popconfirm>
                                 </span>
                             ) : (
-                                    <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>Edit</a>
+                                    <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>Redigér</a>
                                 )}
                             <Divider type='vertical' />
                             {!editable ? (<Popconfirm title='Sure to delete?' onConfirm={() => this.handleDelete(record.id)}>
-                                <a href='javascript:'>Delete</a>
+                                <a href='javascript:'>Slet</a>
                             </Popconfirm>
                             ) : null}
                         </div>

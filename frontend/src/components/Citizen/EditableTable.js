@@ -79,23 +79,23 @@ class EditableTable extends React.Component {
             {
                 title: 'Navn',
                 dataIndex: 'name',
-                width: '25%',
+                width: '20%',
                 editable: true,
             },
             {
                 title: 'Adresse',
                 dataIndex: 'address',
-                width: '30%',
+                width: '15%',
                 editable: true,
             },
             {
                 title: 'By',
                 dataIndex: 'city',
-                width: '20%',
+                width: '10%',
                 editable: true,
             },
             {
-                title: 'Post nummer',
+                title: 'Postnummer',
                 dataIndex: 'zip',
                 width: '10%',
                 editable: true,
@@ -103,7 +103,7 @@ class EditableTable extends React.Component {
             {
                 title: 'Telefon',
                 dataIndex: 'phoneNumber',
-                width: '25%',
+                width: '15%',
                 editable: true,
             },
             {
@@ -128,7 +128,7 @@ class EditableTable extends React.Component {
                 )
             },
             {
-                title: 'operation',
+                title: 'Handling',
                 dataIndex: 'operation',
                 render: (text, record) => {
                     const { editingKey } = this.state
@@ -142,7 +142,7 @@ class EditableTable extends React.Component {
                                             <a
                                                 href='javascript:'
                                                 onClick={() => this.save(form, record.id)}
-                                                style={{ marginRight: 8 }}
+                                                style={{ marginRight: 15 }}
                                             >
                                                 Save
                                             </a>
@@ -156,11 +156,11 @@ class EditableTable extends React.Component {
                                     </Popconfirm>
                                 </span>
                             ) : (
-                                    <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>Edit</a>
+                                    <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>Redigér</a>
                                 )}
                             <Divider type='vertical' />
                             {!editable ? (<Popconfirm title='Sure to delete?' onConfirm={() => this.handleDelete(record.id)}>
-                                <a href='javascript:'>Delete</a>
+                                <a href='javascript:'>Slet</a>
                             </Popconfirm>
                             ) : null}
                         </div>
