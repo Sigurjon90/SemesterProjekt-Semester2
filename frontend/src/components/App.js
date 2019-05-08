@@ -42,7 +42,7 @@ export default class App extends Component {
           exact
           path="/citizens"
           render={props => (
-            <LazyRoute {...props} component={import("./Login/Login")} />
+            <LazyRoute {...props} component={import("./CitizensList")} />
           )}
         />
         <Route
