@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Menu, Icon } from "antd";
 import CreateCitizen from "../Citizen/CreateCitizen"
-import EditableTable from "../EditableTable"
+import EditableTable from "../Citizen/EditableTable"
 
 
 @observer

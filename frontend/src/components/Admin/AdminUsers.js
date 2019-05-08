@@ -3,6 +3,7 @@ import { inject, observer } from "mobx-react";
 import { Menu, Icon } from "antd";
 import UsersList from "../User/UsersList";
 import CreateUser from "../User/CreateUser";
+import EditableTableUsers from "../User/EditableTableUsers";
 
 @observer
 export default class AdminUsers extends Component {
@@ -32,14 +33,15 @@ export default class AdminUsers extends Component {
                     <Menu.Item key="CreateUser">
                         <Icon type="smile" theme="twoTone" twoToneColor="#52c41a" />Opret bruger
                     </Menu.Item>
-                    <Menu.Item key="EditUser">
-                        <Icon type="setting" theme="twoTone" />Se & redigér brugere
+
+                    <Menu.Item key="EditableUser">
+                        <Icon type="setting" theme="twoTone" />Se og redigér brugere
                     </Menu.Item>
 
                 </Menu>
 
-                {current == "EditUser" && <UsersList />}
                 {current == "CreateUser" && <CreateUser />}
+                {current == "EditableUser" && <EditableTableUsers />}
 
             </div>
         );
