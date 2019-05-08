@@ -80,7 +80,7 @@ class EditableTableUsers extends React.Component {
                 editable: true,
             },
             {
-                title: 'Status',
+                title: 'Stilling',
                 dataIndex: 'role',
                 width: '25%',
                 editable: true,
@@ -92,7 +92,7 @@ class EditableTableUsers extends React.Component {
                 editable: true,
             },
             {
-                title: 'operation',
+                title: 'Handling',
                 dataIndex: 'operation',
                 render: (text, record) => {
                     const { editingKey } = this.state
