@@ -1,6 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const postcssCustomProperties = require('postcss-custom-properties');
 
 module.exports = {
   entry: [
@@ -49,7 +50,12 @@ module.exports = {
         use: [
           'style-loader',
           'css-loader',
-          'postcss-loader',
+          { loader: 'postcss-loader', options: {
+            ident: 'postcss',
+            plugins: () => [
+              postcssCustomProperties({preserve: false})
+            ]
+          } },
           'resolve-url-loader',
           'sass-loader?sourceMap'
         ]
