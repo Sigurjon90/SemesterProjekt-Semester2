@@ -144,7 +144,7 @@ class EditableTable extends React.Component {
                                                 onClick={() => this.save(form, record.id)}
                                                 style={{ marginRight: 15 }}
                                             >
-                                                Save
+                                                Gem
                                             </a>
                                         )}
                                     </EditableContext.Consumer>
@@ -152,7 +152,7 @@ class EditableTable extends React.Component {
                                         title='Sure to cancel?'
                                         onConfirm={() => this.cancel(record.id)}
                                     >
-                                        <a>Cancel</a>
+                                        <a>Annullér</a>
                                     </Popconfirm>
                                 </span>
                             ) : (
