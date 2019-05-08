@@ -1,7 +1,6 @@
 import jwt_decode from "jwt-decode";
-import React, { Component } from "react";
 
-const hasRole = role => {
+export const hasRole = role => {
   const token = localStorage.getItem("authorization");
   if (token == null) {
     return false;
