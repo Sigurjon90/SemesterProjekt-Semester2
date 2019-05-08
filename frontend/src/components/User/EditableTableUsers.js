@@ -13,15 +13,12 @@ class EditableCell extends React.Component {
             return <InputNumber />
         }
         if (this.props.inputType === 'option') {
-            return (<Select
-                mode='multiple'
+            return (<Select disabled
                 style={{ width: '100%' }}
             >
-                <Option key='Alkoholiker'>Alkoholiker</Option>
-                <Option key='Pyroman'>Pyroman</Option>
-                <Option key='KaffeDrikker'>Kaffedrikker</Option>
-                <Option key='Koder'>Koder</Option>
-                <Option key='Handi'>Handi</Option>
+                <Option key='admin'>Administrator</Option>
+                <Option key='caseworker'>Sagsbehandler</Option>
+                <Option key='caregiver'>Pædagog</Option>
             </Select>)
         }
         return <Input />
@@ -196,7 +193,7 @@ class EditableTableUsers extends React.Component {
                 ...col,
                 onCell: record => ({
                     record,
-                    inputType: col.dataIndex === 'diagnoses' ? 'option' : 'text',
+                    inputType: col.dataIndex === 'role' ? 'option' : 'text',
                     dataIndex: col.dataIndex,
                     title: col.title,
                     editing: this.isEditing(record),
