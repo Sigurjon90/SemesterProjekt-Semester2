@@ -19,7 +19,6 @@ export const hasAnyRole = roles => {
     return false;
   }
   const userData = jwt_decode(token);
-  //if (userData.authorities.some(role => roles.indexOf(role) >= 0)) {
   if (roles.some(role => userData.authorities.indexOf(`ROLE_${role}`) >= 0)) {
   return true;
   }
