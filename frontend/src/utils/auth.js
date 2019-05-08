@@ -8,19 +8,23 @@ const hasRole = role => {
   }
   const userData = jwt_decode(token);
   console.log(userData);
-  if (userData.authorities == role) {
+  if (userData.authorities == `ROLE_${role}`) {
     return true;
   }
   return false;
 };
 
-export const authorization = (WrappedComponent, allowedRoles) => {
-  const role = "admin";
-  if (role == "admin") {
-    return <WrappedComponent />;
-  } else {
-    return <h1>No page for you!</h1>;
+export const hasAnyRole = roles => {
+  const token = localStorage.getItem("authorization");
+  if (token == null) {
+    return false;
   }
-};
+  const userData = jwt_decode(token);
+  //if (userData.authorities.some(role => roles.indexOf(role) >= 0)) {
+  if (roles.some(role => userData.authorities.indexOf(`ROLE_${role}`) >= 0)) {
+  return true;
+  }
+  return false;
+}
 
-export default hasRole;
+export default hasAnyRole;

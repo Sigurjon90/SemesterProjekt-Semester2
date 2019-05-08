@@ -1,33 +1,35 @@
-import axios from "axios";
+import { post } from "axios";
+import jwt_decode from "jwt-decode"
+import { action, computed, observable } from "mobx"
 
-import { action, computed, observable } from "mobx";
-
-// HVORFOR IKKE OBSERVER HER? ####
 class LoginStore {
-  @observable loggedIn = false;
+  @observable user = null;
   @observable error = false;
 
-  @action authUser(username, lastname) {
-    let promise = axios
-      .post("http://localhost:8762/auth", {
-        username: username,
-        password: lastname
+  @action async authUser(username, password) {
+    try {
+      const response = await post("http://localhost:8762/auth", {
+        username,
+        password
       })
-      .then(function(response) {
-        console.log(response.headers.authorization);
-        localStorage.setItem("authorization", response.headers.authorization);
-        return true;
-      })
-      .catch(error => {
-        console.log(error);
-        return false;
-      });
-
-      return promise;
+      this.user = jwt_decode(response.headers.authorization)
+      localStorage.setItem("authorization", response.headers.authorization)
+      console.log(localStorage.getItem('authorization'))
+      return true
+    } catch (err) {
+      this.error = err
+      return false;
+    }
   }
 
-  @action login() {
-    this.loggedIn = true;
+  @computed get isLoggedIn() {
+    return !!localStorage.getItem('authorization')
+  }
+
+  @action
+  logout() {
+    localStorage.removeItem("authorization")
+    this.user = null
   }
 }
 

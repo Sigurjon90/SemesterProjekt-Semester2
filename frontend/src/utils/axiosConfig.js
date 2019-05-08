@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BrowserRouter } from "react-router";
+import LoginStore from "../stores/LoginStore"
 
 // Add a request interceptor
 axios.interceptors.request.use(
@@ -15,7 +16,6 @@ axios.interceptors.request.use(
     return config;
   },
   function (error) {
-    alert(1);
     return Promise.reject(error);
   }
 );
@@ -29,6 +29,7 @@ axios.interceptors.response.use(
   function (error) {
     // Do something with response error
     if (error.response.status === 401 && window.location.pathname != "/") {
+      LoginStore.logout()
       window.location.replace("/");
     }
     return Promise.reject(error);

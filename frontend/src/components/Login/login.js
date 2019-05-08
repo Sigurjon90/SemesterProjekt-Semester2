@@ -3,18 +3,13 @@ import { inject, observer } from "mobx-react";
 import "antd/dist/antd.css";
 import { Redirect } from "react-router-dom";
 import { Row, Col, Form, Icon, Input, Button, Card, message } from "antd";
-import hasRole, { authorization } from "../../utils/auth";
 
 @inject("loginStore")
 @observer
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.test = () => this.props.loginStore.authUser();
-  }
-
-  componentWillMount() {
-    console.log(hasRole("ROLE_ADMIsadN"));
+    this.authUser = (username, password) => this.props.loginStore.authUser(username, password);
   }
 
   handleSubmit = e => {
@@ -23,28 +18,25 @@ class Login extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         console.log("Received values of form: ", values);
-        const self = this;
-        this.props.loginStore
-          .authUser("admin", "12345")
-          .then(function(response) {
-            if (response == true) {
-              alert(1);
-              self.props.loginStore.login();
-            } else {
-              message.error(
-                "Dit brugernavn eller adgangskode er ikke korrekt."
-              );
-            }
-          });
+        const success = this.authUser(values.userName, values.password)
+        if (success) {
+          <Redirect to="/test" />
+        }
       }
-    });
-  };
+    })
+  }
 
   render() {
+    const { loginStore } = this.props
+    const { isLoggedIn, error } = loginStore
     const { getFieldDecorator } = this.props.form;
 
-    if (this.props.loginStore.loggedIn === true) {
-      return <Redirect to="/test" />;
+    if (isLoggedIn) {
+      return <Redirect to="/test" />
+    }
+
+    if (error) {
+      message.error("Dit brugernavn eller adgangskode er ikke korrekt.")
     }
 
     return (

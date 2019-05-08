@@ -1,25 +1,29 @@
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
+import { Route, Link, Redirect } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import LazyRoute from "lazy-route";
 import DevTools from "mobx-react-devtools";
-import { AdminRoute, NotLoggedInRoute } from "./login/auth";
+import LoginStore from "../stores/LoginStore";
+import hasAnyRole from "../utils/auth";
+
 /*
-const Authorization = (WrappedComponent, allowedRoles, props) => {
-  const role = "admin";
-  if (allowedRoles.includes(role)) {
-    return <LazyRoute {...props} component={Login} />;
-  } else {
-    return <h1>No page for you!</h1>;
-  }
-};
-
-
 const User = Authorization(["user", "manager", "admin"]);
 const Manager = Authorization(["manager", "admin"]);
 const Admin = Authorization(["admin"]);
 */
-const Login = () => import("./Login/Login");
+
+const Authorization = (allowedRoles) =>
+  (component) => {
+    return LoginStore.isLoggedIn && hasAnyRole(allowedRoles) ? (
+      component
+    ) : (
+      <Redirect to='/' />
+    )
+}
+
+const User = Authorization(["user", "manager", "admin"])
+const Manager = Authorization(["manager", "test"])
+const Admin = Authorization(["admin"])
 
 @inject("routing")
 @observer
@@ -52,7 +56,7 @@ export default class App extends Component {
           exact
           path="/admin/citizens"
           render={props => (
-            <LazyRoute {...props} component={import("./AdminCitizens")} />
+            Admin(<LazyRoute {...props} component={import("./AdminCitizens")} />)
           )}
         />
         <Route
@@ -78,6 +82,6 @@ export default class App extends Component {
         />
         <DevTools />
       </div>
-    );
+    )
   }
 }
