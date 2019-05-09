@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Theme from "./Theme";
-import { Route, Link, Redirect } from "react-router-dom";
+import { Route, Link, Redirect, withRouter } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import LazyRoute from "lazy-route";
 import DevTools from "mobx-react-devtools";
@@ -13,26 +13,28 @@ const Manager = Authorization(["manager", "admin"]);
 const Admin = Authorization(["admin"]);
 */
 
-const Authorization = (allowedRoles) =>
+const Authorization = (allowedRoles, isLoggedIn) =>
   (component) => {
-    return LoginStore.isLoggedIn && hasAnyRole(allowedRoles) ? (
+    return isLoggedIn && hasAnyRole(allowedRoles) ? (
       component
     ) : (
       <Redirect to='/' />
     )
 }
 
-const CareGiver = Authorization(["admin", "caseworker", "caregiver"])
-const CaseWorker = Authorization(["admin", "caseworker"])
-const Admin = Authorization(["admin"])
-
-@inject("routing")
+@inject("routing", "loginStore")
 @observer
-export default class App extends Component {
+class App extends Component {
   render() {
+    const { loginStore } = this.props
+    const { isLoggedIn } = loginStore
+
+    const CareGiver = Authorization(["admin", "caseworker", "caregiver"], isLoggedIn)
+    const CaseWorker = Authorization(["admin", "caseworker"], isLoggedIn)
+    const Admin = Authorization(["admin"], isLoggedIn)
     return (
-      <Theme>
-      <Route
+        <Theme>
+        <Route
           exact
           path="/"
           render={props => (
@@ -80,10 +82,17 @@ export default class App extends Component {
           render={props => (
             Admin(<LazyRoute {...props} component={import("./User/EditUser")} />)
           )}
-        />
-        <DevTools />
+        /><Route
+        exact
+        path="/admin"
+        render={props => (
+          Admin(<LazyRoute {...props} component={import("./Admin/AdminCitizens")} />)
+        )}
+      />
         <DevTools />
       </Theme>
     )
   }
 }
+
+export default withRouter(observer(App))

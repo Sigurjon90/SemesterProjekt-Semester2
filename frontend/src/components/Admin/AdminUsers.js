@@ -12,7 +12,7 @@ export default class AdminUsers extends Component {
     }
 
     state = {
-        current: '',
+        current: 'EditableUser',
     }
 
     handleClick = (e) => {
@@ -42,7 +42,6 @@ export default class AdminUsers extends Component {
 
                 {current == "CreateUser" && <CreateUser />}
                 {current == "EditableUser" && <EditableTableUsers />}
-
             </div>
         );
     }

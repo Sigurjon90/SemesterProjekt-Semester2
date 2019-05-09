@@ -14,16 +14,13 @@ class LoginStore {
       })
       this.user = jwt_decode(response.headers.authorization)
       localStorage.setItem("authorization", response.headers.authorization)
-      console.log(localStorage.getItem('authorization'))
-      return true
     } catch (err) {
       this.error = err
-      return false;
     }
   }
 
   @computed get isLoggedIn() {
-    return !!localStorage.getItem('authorization')
+    return !!this.user
   }
 
   @action

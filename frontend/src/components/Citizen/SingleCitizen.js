@@ -5,6 +5,7 @@ import Journal from "../Journal/Journal";
 import EditJournal from "../Journal/EditJournal";
 import Diary from "../Diary/Diary";
 import EditDiary from "../Diary/EditDiary";
+import hasAnyRole from "../../utils/auth"
 
 @inject("citizensStore")
 @observer
@@ -13,6 +14,7 @@ export default class SingleCitizen extends Component {
     super(props);
     this.getCitizen = (id) => this.props.citizensStore.fetchCitizen(id);
   }
+
   state = {
     citizen: {
       diagnoses: []
@@ -23,7 +25,7 @@ export default class SingleCitizen extends Component {
 
   componentWillMount() {
     const {
-      match: { params }, citizensStore
+      match: { params }
     } = this.props;
     this.getCitizen(params.id)
   }
@@ -48,7 +50,6 @@ export default class SingleCitizen extends Component {
     const { isClicked, diarySwitch } = this.state;
     const { citizen, isFetching } = citizensStore
     const theId = citizen && citizen.id
-    const { TextArea } = Input;
     return (
       <div>
         {!isFetching &&
@@ -88,21 +89,25 @@ export default class SingleCitizen extends Component {
                 ))}
               </Col>
             </Row>
-            <Divider><strong>Sag</strong></Divider>
-            <Row>
-              <Col span={24}>
+            {hasAnyRole(["admin", "caseworker"]) &&
+            <div>
+              <Divider><strong>Sag</strong></Divider>
+              <Row>
+                <Col span={24}>
 
-                {!isClicked && (typeof theId !== 'undefined') && <Journal citizenID={theId} handleClick={this.handleClick} />}
-                {isClicked && <EditJournal handleClick={this.handleClick} />}
+                  {!isClicked && (typeof theId !== 'undefined') && <Journal citizenID={theId} handleClick={this.handleClick} />}
+                  {isClicked && <EditJournal handleClick={this.handleClick} />}
 
-                <Row>
-                  <Col span={8}>
-                  </Col>
-                  <Col span={16}>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
+                  <Row>
+                    <Col span={8}>
+                    </Col>
+                    <Col span={16}>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </div>
+            }
             <Divider><strong>Dagbog</strong></Divider>
             <Row>
               <Col span={24}>

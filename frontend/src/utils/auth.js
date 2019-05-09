@@ -6,8 +6,7 @@ export const hasRole = role => {
     return false;
   }
   const userData = jwt_decode(token);
-  console.log(userData);
-  if (userData.authorities == `ROLE_${role}`) {
+  if (userData.authorities.indexOf(`ROLE_${role}`) >= 0) {
     return true;
   }
   return false;

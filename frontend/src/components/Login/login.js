@@ -17,11 +17,7 @@ class Login extends Component {
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
-        const success = this.authUser(values.userName, values.password)
-        if (success) {
-          <Redirect to="/test" />
-        }
+        this.authUser(values.userName, values.password)
       }
     })
   }
@@ -32,7 +28,7 @@ class Login extends Component {
     const { getFieldDecorator } = this.props.form;
 
     if (isLoggedIn) {
-      return <Redirect to="/test" />
+      return <Redirect to="/citizens" />
     }
 
     if (error) {
