@@ -1,9 +1,30 @@
 import React, { Component } from "react";
-import { Route, Link } from "react-router-dom";
+import Theme from "./Theme";
+import { Route, Link, Redirect } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import LazyRoute from "lazy-route";
 import DevTools from "mobx-react-devtools";
-import Theme from "./Theme";
+import LoginStore from "../stores/LoginStore";
+import hasAnyRole from "../utils/auth";
+
+/*
+const User = Authorization(["user", "manager", "admin"]);
+const Manager = Authorization(["manager", "admin"]);
+const Admin = Authorization(["admin"]);
+*/
+
+const Authorization = (allowedRoles) =>
+  (component) => {
+    return LoginStore.isLoggedIn && hasAnyRole(allowedRoles) ? (
+      component
+    ) : (
+      <Redirect to='/' />
+    )
+}
+
+const User = Authorization(["user", "manager", "admin"])
+const Manager = Authorization(["manager", "test"])
+const Admin = Authorization(["admin"])
 
 @inject("routing")
 @observer
@@ -11,30 +32,58 @@ export default class App extends Component {
   render() {
     return (
       <Theme>
-        <Route
+      <Route
           exact
           path="/"
           render={props => (
-            <LazyRoute {...props} component={import("./TodoList")} />
+            <LazyRoute {...props} component={import("./Login/Login")} />
           )}
         />
         <Route
           exact
-          path="/posts"
+          path="/citizens"
           render={props => (
-            <LazyRoute {...props} component={import("./PostsList")} />
+            <LazyRoute {...props} component={import("./Citizen/CitizensList")} />
           )}
         />
         <Route
           exact
-          path="/posts/:id"
+          path="/citizens/:id"
           render={props => (
-            <LazyRoute {...props} component={import("./Post")} />
+            <LazyRoute {...props} component={import("./Citizen/SingleCitizen")} />
           )}
         />
-
+        <Route
+          exact
+          path="/admin/citizens"
+          render={props => (
+            Admin(<LazyRoute {...props} component={import("./Admin/AdminCitizens")} />)
+          )}
+        />
+        <Route
+          exact
+          path="/admin/users"
+          render={props => (
+            <LazyRoute {...props} component={import("./Admin/AdminUsers")} />
+          )}
+        />
+        <Route
+          exact
+          path="/admin/citizens/edit/:id"
+          render={props => (
+            <LazyRoute {...props} component={import("./Citizen/EditCitizen")} />
+          )}
+        />
+        <Route
+          exact
+          path="/admin/users/edit/:id"
+          render={props => (
+            <LazyRoute {...props} component={import("../components/User/EditUser")} />
+          )}
+        />
+        <DevTools />
         <DevTools />
       </Theme>
-    );
+    )
   }
 }
