@@ -1,4 +1,5 @@
 import('./styles/main.scss')
+import("./utils/axiosConfig.js")
 import React from 'react'
 import { render } from 'react-dom'
 import { Router } from 'react-router-dom'
@@ -10,7 +11,7 @@ import { createBrowserHistory } from 'history'
 
 import App from './components/App'
 import stores from './stores/'
-import("./utils/axiosConfig.js");
+
 
 const renderApp = Component => {
 	const browserHistory = createBrowserHistory()

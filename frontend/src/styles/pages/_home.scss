@@ -6,3 +6,8 @@ body {
     max-width: remy(960px);
   }
 }
+
+#root,
+.wrapper {
+  height: 100%;
+}
