@@ -10,6 +10,7 @@ import API.services.IDiaryService;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -152,7 +153,7 @@ public class DiaryControllerTest {
         //  DiaryDTO DiaTwo = new DiaryDTO(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3df"), "lmao", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3da"), "titel1", new Date(System.currentTimeMillis()), null);
 
         when(jwtUtils.getUserId(any(String.class))).thenReturn(authorId);
-        when(diaryService.updateDiary(any(DiaryDTO.class))).thenReturn(diaryDTOO);
+        when(diaryService.updateDiary(any(DiaryDTO.class))).thenReturn(Optional.of(diaryDTOO));
         this.mockMvc.perform(put("/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJsonBytes(diaryDTOO))
@@ -160,10 +161,10 @@ public class DiaryControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(jsonPath("$[0].id", is("06d0166d-46b6-4bb5-8572-9299fc87c3dc")))
-                .andExpect(jsonPath("$[0].content", is("abba")));
+                .andExpect(jsonPath("$.id", is("06d0166d-46b6-4bb5-8572-9299fc87c3dc")))
+                .andExpect(jsonPath("$.content", is("abba")));
 
-        verify(diaryService, times(1)).updateDiary(any(List.class));
+        verify(diaryService, times(1)).updateDiary(any(DiaryDTO.class));
         verifyNoMoreInteractions(diaryService);
     }
 

@@ -46,13 +46,7 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testCreateDiary() {
-        System.out.println("createDiary");
-        Diary diary = null;
-        DiaryRepository instance = null;
-        Optional<Diary> expResult = null;
-        Optional<Diary> result = instance.createDiary(diary);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+       
         fail("The test case is a prototype.");
     }
 
@@ -61,13 +55,7 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testFindById() {
-        System.out.println("findById");
-        UUID id = null;
-        DiaryRepository instance = null;
-        Optional<Diary> expResult = null;
-        Optional<Diary> result = instance.findById(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+       
         fail("The test case is a prototype.");
     }
 
@@ -76,13 +64,7 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testFindByCitizenID() {
-        System.out.println("findByCitizenID");
-        UUID citizenID = null;
-        DiaryRepository instance = null;
-        Optional<Diary> expResult = null;
-        Optional<Diary> result = instance.findByCitizenID(citizenID);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+       
         fail("The test case is a prototype.");
     }
 
@@ -91,13 +73,7 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testGetDiaries() {
-        System.out.println("getDiaries");
-        List<UUID> listOfCitizensIds = null;
-        DiaryRepository instance = null;
-        List<Diary> expResult = null;
-        List<Diary> result = instance.getDiaries(listOfCitizensIds);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+      
         fail("The test case is a prototype.");
     }
 
@@ -106,13 +82,7 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testUpdateDiary() {
-        System.out.println("updateDiary");
-        Diary diary = null;
-        DiaryRepository instance = null;
-        Optional<Diary> expResult = null;
-        Optional<Diary> result = instance.updateDiary(diary);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        
         fail("The test case is a prototype.");
     }
 
@@ -121,14 +91,7 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testDeleteDiary() {
-        System.out.println("deleteDiary");
-        UUID id = null;
-        UUID authorId = null;
-        DiaryRepository instance = null;
-        boolean expResult = false;
-        boolean result = instance.deleteDiary(id, authorId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+       
         fail("The test case is a prototype.");
     }
 
@@ -137,14 +100,7 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testDeleteDiaryByCitizenId() {
-        System.out.println("deleteDiaryByCitizenId");
-        UUID id = null;
-        UUID authorId = null;
-        DiaryRepository instance = null;
-        boolean expResult = false;
-        boolean result = instance.deleteDiaryByCitizenId(id, authorId);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        
         fail("The test case is a prototype.");
     }
     
