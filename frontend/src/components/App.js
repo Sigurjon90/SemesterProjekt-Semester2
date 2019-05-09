@@ -22,8 +22,8 @@ const Authorization = (allowedRoles) =>
     )
 }
 
-const User = Authorization(["user", "manager", "admin"])
-const Manager = Authorization(["manager", "test"])
+const CareGiver = Authorization(["admin", "caseworker", "caregiver"])
+const CaseWorker = Authorization(["admin", "caseworker"])
 const Admin = Authorization(["admin"])
 
 @inject("routing")
@@ -43,14 +43,14 @@ export default class App extends Component {
           exact
           path="/citizens"
           render={props => (
-            <LazyRoute {...props} component={import("./Citizen/CitizensList")} />
+            CareGiver(<LazyRoute {...props} component={import("./Citizen/CitizensList")} />)
           )}
         />
         <Route
           exact
           path="/citizens/:id"
           render={props => (
-            <LazyRoute {...props} component={import("./Citizen/SingleCitizen")} />
+            CareGiver(<LazyRoute {...props} component={import("./Citizen/SingleCitizen")} />)
           )}
         />
         <Route
@@ -64,21 +64,21 @@ export default class App extends Component {
           exact
           path="/admin/users"
           render={props => (
-            <LazyRoute {...props} component={import("./Admin/AdminUsers")} />
+            Admin(<LazyRoute {...props} component={import("./Admin/AdminUsers")} />)
           )}
         />
         <Route
           exact
           path="/admin/citizens/edit/:id"
           render={props => (
-            <LazyRoute {...props} component={import("./Citizen/EditCitizen")} />
+            Admin(<LazyRoute {...props} component={import("./Citizen/EditCitizen")} />)
           )}
         />
         <Route
           exact
           path="/admin/users/edit/:id"
           render={props => (
-            <LazyRoute {...props} component={import("../components/User/EditUser")} />
+            Admin(<LazyRoute {...props} component={import("./User/EditUser")} />)
           )}
         />
         <DevTools />
