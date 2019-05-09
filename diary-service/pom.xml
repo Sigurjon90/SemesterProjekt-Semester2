@@ -82,21 +82,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>API.Application</mainClass>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.5.0</version>
-                <configuration>
-                    <mainClass>API.Application</mainClass>
-                </configuration>
+                
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>src/resources</directory>
-            </resource>
-        </resources>
     </build>
     <name>diary-service</name>
 </project>
