@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Menu, Icon } from "antd";
-import CareCenterList from "./CareCenterList";
-import CreateCitizen from "./CreateCitizen"
-import EditableTable from "./EditableTable"
+import CreateCitizen from "../Citizen/CreateCitizen"
+import EditableTable from "../Citizen/EditableTable"
 
 
 @observer
@@ -17,7 +16,6 @@ export default class AdminCitizens extends Component {
   }
 
   handleClick = (e) => {
-    console.log('click ', e);
     this.setState({
       current: e.key,
     });
@@ -36,21 +34,14 @@ export default class AdminCitizens extends Component {
             <Icon type="smile" theme="twoTone" twoToneColor="#52c41a" />Opret borger
         </Menu.Item>
 
-          <Menu.Item key="Editable">
-            <Icon type="setting" theme="twoTone" />Test
-
-        </Menu.Item>
-
           <Menu.Item key="EditCitizen">
             <Icon type="setting" theme="twoTone" />Se & redigér borgere
         </Menu.Item>
 
         </Menu>
 
-        {current == "EditCitizen" && <CareCenterList />}
+        {current == "EditCitizen" && <EditableTable />}
         {current == "CreateCitizen" && <CreateCitizen />}
-        {current == "Editable" && <EditableTable />}
-
 
       </div>
     );

@@ -26,8 +26,6 @@ export default class Diary extends Component {
 
     createDiary = () => {
         const { citizenID } = this.props;
-        console.log("citizen id")
-        console.log(citizenID)
         const createdDiary = {
             citizenID: citizenID,
             authorID: 'afda2cd5-6fd9-40ff-a0db-938af02a281c',
