@@ -22,7 +22,6 @@ export default class Journal extends Component {
   componentWillMount() {
     const { citizenID } = this.props;
     const { journal } = this.getJournal(citizenID)
-    console.log(this.getJournal(citizenID))
   }
 
   onChangeHandler = (evt) => {
@@ -35,7 +34,6 @@ export default class Journal extends Component {
 
   handleParagraph = (value) => {
     this.setState({ paragraph: `${value}` })
-    console.log(this.state.paragraph)
   }
 
   handleMunicipality = (value) => {
@@ -56,8 +54,6 @@ export default class Journal extends Component {
       authorID: 'afda2cd5-6fd9-40ff-a0db-938af02a281c',
       content: this.state.createContent
     }
-
-    console.log(createdJournal)
     this.props.journalStore.createJournal(createdJournal)
   }
 

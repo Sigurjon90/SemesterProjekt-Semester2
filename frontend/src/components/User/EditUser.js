@@ -60,7 +60,7 @@ export default class EditUser extends Component {
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
-                        title="Redigér borger"
+                        title="Redigér bruger"
                         subTitle="- Udfyld ændringer og gem" />
                     <Alert message="Ændringerne er nu blevet gemt!" type="success" />
                 </div>
@@ -69,16 +69,16 @@ export default class EditUser extends Component {
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
-                        title="Redigér borger"
+                        title="Redigér bruger"
                         subTitle="- Udfyld ændringer og gem" />
-                    <Alert message="Borgeren er nu arkiveret" type="error" />
+                    <Alert message="Brugeren er nu arkiveret" type="error" />
                 </div>
             }
             {!isFetching && !this.isUserSaved && !this.isUserDeleted &&
                 <div>
                     <PageHeader
                         onBack={() => history.back()}
-                        title="Redigér borger"
+                        title="Redigér Bruger"
                         subTitle="- Udfyld ændringer og gem" />
 
                     <Row gutter={16}>

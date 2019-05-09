@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react'
 import { toJS } from 'mobx'
 
-import concat from '../utils/concat'
+import concat from '../../utils/concat'
 
 const Option = Select.Option
 
@@ -13,15 +13,12 @@ class EditableCell extends React.Component {
             return <InputNumber />
         }
         if (this.props.inputType === 'option') {
-            return (<Select
-                mode='multiple'
+            return (<Select disabled
                 style={{ width: '100%' }}
             >
-                <Option key='Alkoholiker'>Alkoholiker</Option>
-                <Option key='Pyroman'>Pyroman</Option>
-                <Option key='KaffeDrikker'>Kaffedrikker</Option>
-                <Option key='Koder'>Koder</Option>
-                <Option key='Handi'>Handi</Option>
+                <Option key='admin'>Administrator</Option>
+                <Option key='caseworker'>Sagsbehandler</Option>
+                <Option key='caregiver'>Pædagog</Option>
             </Select>)
         }
         return <Input />
@@ -65,70 +62,37 @@ class EditableCell extends React.Component {
 const FormItem = Form.Item
 const EditableContext = React.createContext()
 
-@inject('citizensStore')
+@inject('usersStore')
 @observer
-class EditableTable extends React.Component {
+class EditableTableUsers extends React.Component {
     constructor(props) {
         super(props)
-        this.getCitizens = () => this.props.citizensStore.fetchCitizens()
-        this.deleteCitizen = (id) => this.props.citizensStore.deleteCitizen(id)
-        this.updateCitizen = (citizen) => this.props.citizensStore.updateCitizen(citizen)
+        this.getUsers = () => this.props.usersStore.fetchUsers()
+        this.deleteUser = (id) => this.props.usersStore.archiveUser(id)
+        this.updateUser = (updatedUser) => this.props.usersStore.putUserChanges(updatedUser)
         this.state = { editingKey: '' }
 
         this.columns = [
             {
-                title: 'Navn',
-                dataIndex: 'name',
+                title: 'Brugernavn',
+                dataIndex: 'username',
                 width: '25%',
                 editable: true,
             },
             {
-                title: 'Adresse',
-                dataIndex: 'address',
-                width: '30%',
-                editable: true,
-            },
-            {
-                title: 'By',
-                dataIndex: 'city',
-                width: '20%',
-                editable: true,
-            },
-            {
-                title: 'Post nummer',
-                dataIndex: 'zip',
-                width: '10%',
-                editable: true,
-            },
-            {
-                title: 'Telefon',
-                dataIndex: 'phoneNumber',
+                title: 'Stilling',
+                dataIndex: 'role',
                 width: '25%',
                 editable: true,
             },
             {
-                title: 'Diagnoser',
-                key: 'diagnoses',
-                dataIndex: 'diagnoses',
+                title: 'E-mail',
+                dataIndex: 'email',
+                width: '25%',
                 editable: true,
-                render: tags => (
-                    <span>
-                        {tags.map(tag => {
-                            let color = tag.length > 2 ? 'geekblue' : 'green'
-                            if (tag === 'Psykotisk') {
-                                color = 'volcano'
-                            }
-                            return (
-                                <Tag color={color} key={tag}>
-                                    {tag.toUpperCase()}
-                                </Tag>
-                            )
-                        })}
-                    </span>
-                )
             },
             {
-                title: 'operation',
+                title: 'Handling',
                 dataIndex: 'operation',
                 render: (text, record) => {
                     const { editingKey } = this.state
@@ -144,7 +108,7 @@ class EditableTable extends React.Component {
                                                 onClick={() => this.save(form, record.id)}
                                                 style={{ marginRight: 8 }}
                                             >
-                                                Save
+                                                Gem
                                             </a>
                                         )}
                                     </EditableContext.Consumer>
@@ -152,15 +116,15 @@ class EditableTable extends React.Component {
                                         title='Sure to cancel?'
                                         onConfirm={() => this.cancel(record.id)}
                                     >
-                                        <a>Cancel</a>
+                                        <a>Annullér</a>
                                     </Popconfirm>
                                 </span>
                             ) : (
-                                    <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>Edit</a>
+                                    <a disabled={editingKey !== ''} onClick={() => this.edit(record.id)}>Redigér</a>
                                 )}
                             <Divider type='vertical' />
                             {!editable ? (<Popconfirm title='Sure to delete?' onConfirm={() => this.handleDelete(record.id)}>
-                                <a href='javascript:'>Delete</a>
+                                <a href='javascript:'>Slet</a>
                             </Popconfirm>
                             ) : null}
                         </div>
@@ -171,11 +135,11 @@ class EditableTable extends React.Component {
     }
 
     componentWillMount() {
-        this.getCitizens()
+        this.getUsers()
     }
 
     handleDelete = (id) => {
-        this.deleteCitizen(id)
+        this.deleteUser(id)
     }
 
     isEditing = record => record.id === this.state.editingKey
@@ -185,23 +149,20 @@ class EditableTable extends React.Component {
     }
 
     save(form, key) {
-        const { primaryCitizens, otherCitizens } = this.props.citizensStore
+        const { users } = this.props.usersStore
         form.validateFields((error, row) => {
             if (error) {
                 return
             }
-            const newData = [...concat(primaryCitizens, otherCitizens)]
+            const newData = [...users]
             const index = newData.findIndex(item => key === item.id)
-            console.log("INDEX", index)
             if (index > -1) {
                 const item = toJS(newData[index])
-                const updatedCitizen = {
+                const updatedUser = {
                     ...item,
                     ...row
                 }
-                console.log("TEST")
-                console.log(updatedCitizen)
-                this.updateCitizen(updatedCitizen)
+                this.updateUser(updatedUser)
                 this.setState({ editingKey: '' })
             } else {
                 newData.push(row)
@@ -215,9 +176,8 @@ class EditableTable extends React.Component {
     }
 
     render() {
-        console.log("WHY U HERE")
-        const { citizensStore } = this.props
-        const { primaryCitizens, otherCitizens, isFetching } = citizensStore
+        const { usersStore } = this.props
+        const { users, isFetching } = usersStore
 
         const components = {
             body: {
@@ -233,7 +193,7 @@ class EditableTable extends React.Component {
                 ...col,
                 onCell: record => ({
                     record,
-                    inputType: col.dataIndex === 'diagnoses' ? 'option' : 'text',
+                    inputType: col.dataIndex === 'role' ? 'option' : 'text',
                     dataIndex: col.dataIndex,
                     title: col.title,
                     editing: this.isEditing(record),
@@ -249,7 +209,7 @@ class EditableTable extends React.Component {
                         <Table
                             components={components}
                             bordered
-                            dataSource={concat(primaryCitizens, otherCitizens)}
+                            dataSource={users}
                             columns={columns}
                             rowClassName='editable-row'
                             pagination={{
@@ -263,5 +223,5 @@ class EditableTable extends React.Component {
     }
 }
 
-const EditableFormTable = Form.create()(EditableTable)
+const EditableFormTable = Form.create()(EditableTableUsers)
 export default EditableFormTable
