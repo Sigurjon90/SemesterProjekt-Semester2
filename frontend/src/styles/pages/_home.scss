@@ -1,13 +1,33 @@
 body {
-  padding: remy(48px) remy(24px);
-  @media screen and (min-width: 961px) {
-    margin: 0 auto;
-    width: 100%;
-    max-width: remy(960px);
+    padding: remy(48px) remy(24px);
+    @media screen and (min-width: 961px) {
+      margin: 0 auto;
+      width: 100%;
+      max-width: remy(960px);
+    }
   }
+  
+  #root,
+  .wrapper {
+    height: 100%;
+  }
+
+.logo {
+  float:left;
+  background-color: rgba(255,255,255,.2);
+  width: 160px;
+  margin-top:15px;
+  margin-left:-30px;
+  height:30px;
 }
 
-#root,
-.wrapper {
-  height: 100%;
+.login-button {
+  margin-top:15px;
+  float:right;
+}
+
+.ant-layout-sider-trigger {
+  background-color: #FFF !important;
+  color:#333;
+  border-top:1px solid rgba(0,0,0,0.2);
 }

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Theme from "./Theme";
 import { Route, Link, Redirect } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import LazyRoute from "lazy-route";
@@ -30,8 +31,8 @@ const Admin = Authorization(["admin"])
 export default class App extends Component {
   render() {
     return (
-      <div className="wrapper">
-        <Route
+      <Theme>
+      <Route
           exact
           path="/"
           render={props => (
@@ -81,7 +82,8 @@ export default class App extends Component {
           )}
         />
         <DevTools />
-      </div>
+        <DevTools />
+      </Theme>
     )
   }
 }

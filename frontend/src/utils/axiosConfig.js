@@ -1,5 +1,4 @@
 import axios from "axios";
-import { BrowserRouter } from "react-router";
 import LoginStore from "../stores/LoginStore"
 
 // Add a request interceptor
