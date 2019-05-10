@@ -50,7 +50,7 @@ public class DiaryServiceTest {
 
     private final List<Diary> diary = Arrays.asList(new Diary(UUID.fromString("06d0166d-46b6-4bb5-8572-9299fc87c3dc"), "abba", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dd"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de"), new Date(System.currentTimeMillis()), null, "titel44"));
 
-    private final  List<Diary> diaries = Arrays.asList(new Diary(UUID.fromString("06d0166d-46b6-4bb5-8572-9299fc87c3dc"), "abba", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dd"), UUID.fromString("34fbbdfe-672f-4936-aba7-22e83863f323"), new Date(System.currentTimeMillis()), null, "titel22"),
+    private final List<Diary> diaries = Arrays.asList(new Diary(UUID.fromString("06d0166d-46b6-4bb5-8572-9299fc87c3dc"), "abba", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dd"), UUID.fromString("34fbbdfe-672f-4936-aba7-22e83863f323"), new Date(System.currentTimeMillis()), null, "titel22"),
             new Diary(UUID.fromString("8dd18834-88de-4380-94e9-acf1c2506d3c"), "walla", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dd"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3ff"), new Date(System.currentTimeMillis()), null, "titel33"));
 
     private final List<DiaryDTO> diaryDTO = java.util.Arrays.asList(
@@ -128,20 +128,19 @@ public class DiaryServiceTest {
      */
     @Test
     public void testUpdateDiary() {
-       // UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
+
         when(repositoryMock.updateDiary(createDiaryTest)).thenReturn(Optional.of(createDiaryTest));
 
         when(modelMapper.map(createDTO, Diary.class)).thenReturn(createDiaryTest);
-     //   when(modelMapper.map(diaryDTO.get(1), Diary.class)).thenReturn(diaries.get(1));
+
         when(modelMapper.map(createDiaryTest, DiaryDTO.class)).thenReturn(createDTO);
-      //  when(modelMapper.map(Optional.of(Arrays.asList(diaries.get(1))), DiaryDTO.class)).thenReturn(diaryDTO.get(1));
-        
-        DiaryDTO actual = diaryService.updateDiary(Optional.of(Arrays.asList(createDTO)));
+
+        Optional<DiaryDTO> actual = diaryService.updateDiary(createDTO);
 
         verify(repositoryMock, times(1)).updateDiary(createDiaryTest);
         verifyNoMoreInteractions(repositoryMock);
 
-        assertThat(actual, is(createDTO));
+        assertThat(actual, is(Optional.of(createDTO)));
     }
 
     /**
