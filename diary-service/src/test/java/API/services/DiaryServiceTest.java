@@ -77,6 +77,7 @@ public class DiaryServiceTest {
         when(repositoryMock.createDiary(createDiaryTest)).thenReturn(Optional.of(createDiaryTest));
         when(modelMapper.map(createDiaryTest, DiaryDTO.class)).thenReturn(createDTO);
         when(modelMapper.map(createDTO, Diary.class)).thenReturn(createDiaryTest);
+
         Optional<DiaryDTO> actual = diaryService.createDiary(createDTO);
 
         verify(repositoryMock, times(1)).createDiary(createDiaryTest);
@@ -90,8 +91,17 @@ public class DiaryServiceTest {
      */
     @Test
     public void testFindById() {
+        UUID id = UUID.fromString("06d0166d-46b6-4bb5-8572-9299fc87c3dc");
+        when(repositoryMock.findById(id)).thenReturn(Optional.of(diary.get(0)));
+        when(modelMapper.map(diary.get(0), DiaryDTO.class)).thenReturn(diaryDTO.get(0));
 
-        fail("The test case is a prototype.");
+        Optional<DiaryDTO> diaryDTOO = diaryService.findById(id);
+
+        verify(repositoryMock, times(1)).findById(id);
+        verifyNoMoreInteractions(repositoryMock);
+
+        assertThat(diaryDTOO, is(Optional.of(diaryDTO.get(0))));
+
     }
 
     /**
@@ -99,8 +109,18 @@ public class DiaryServiceTest {
      */
     @Test
     public void testFindByCitizenId() {
+        when(repositoryMock.findByCitizenID(citizensId)).thenReturn(Optional.of(diary.get(0)));
+        when(modelMapper.map(citizensId, DiaryDTO.class)).thenReturn(diaryDTO.get(0));
 
-        fail("The test case is a prototype.");
+        Optional<DiaryDTO> actual = diaryService.findByCitizenId(citizensId);
+        DiaryDTO diaryDTOo = new DiaryDTO(diaryId, "hallo", authorIDDiary, citizensId, "hallo", this.date, null);
+
+        verify(repositoryMock, times(1)).findByCitizenID(citizensId);
+        //  verify(repositoryMock, times(1)).findByCitizenID(authorIDDiary);
+        verifyNoMoreInteractions(repositoryMock);
+
+        modelMapper.validate();
+        assertThat(diaryDTOo.getId(), is(diaryId));
     }
 
     /**
@@ -108,17 +128,13 @@ public class DiaryServiceTest {
      */
     @Test
     public void testGetDiaries() {
-
-        when(repositoryMock.getDiaries(listOfCitizenIds)).thenReturn(diaries);
+        List<UUID> diaryUUID = Arrays.asList(UUID.fromString("e2a96b4d-edff-497b-a094-268e3b86ed28"));
+        when(repositoryMock.getDiaries(diaryUUID)).thenReturn(diary);
         when(modelMapper.map(diary.get(0), DiaryDTO.class)).thenReturn(diaryDTO.get(0));
-
-        List<DiaryDTO> actual = diaryService.getDiaries(listOfCitizenIds);
-
-        verify(repositoryMock, times(1)).getDiaries(listOfCitizenIds);
+        List<DiaryDTO> actual = diaryService.getDiaries(diaryUUID);
+        verify(repositoryMock, times(1)).getDiaries(diaryUUID);
         verifyNoMoreInteractions(repositoryMock);
-
         modelMapper.validate();
-
         assertThat(actual, is(Arrays.asList(diaryDTO.get(0))));
     }
 
