@@ -13,9 +13,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -128,23 +130,40 @@ public class DiaryControllerTest {
     /**
      * Test of createDiary method, of class DiaryController.
      */
-    /*  @Test
+    @Test
     public void testCreateDiary() throws Exception {
-        UUID authorId = UUID.fromString("06d0266d-56b6-4bb5-8572-9299fc87c3de");
-        UUID citizenId = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de");
-        DiaryDTO diaryDTO = new DiaryDTO(UUID.randomUUID(), "hallo", authorId, citizenId, "title2", null, null);
+        UUID citizensId = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de");
+        UUID authorIDDiary = UUID.fromString("6a7a8cb3-6502-4acc-b302-72b9e30bdf8e");
+
+        DiaryDTO diaryDTO = new DiaryDTO(UUID.fromString("e7c41f9e-cace-4f4d-845f-f3c4ed3fdaf9"), "Halló", authorIDDiary, citizensId, "titill", new Date(), null);
+
+        when(jwtUtils.getUserId(any(String.class))).thenReturn(authorIDDiary);
+        when(diaryService.createDiary(any(DiaryDTO.class))).thenReturn(Optional.of(diaryDTO));
+
         this.mockMvc.perform(post("/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(TestUtils.convertObjectToJsonBytes(diaryDTO))
                 .header("authorization", "Bearer")
         )
-    } */
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is("e7c41f9e-cace-4f4d-845f-f3c4ed3fdaf9")));
+
+        ArgumentCaptor<DiaryDTO> dtoCaptor = ArgumentCaptor.forClass(DiaryDTO.class);
+        verify(diaryService, times(1)).createDiary(dtoCaptor.capture());
+        verifyNoMoreInteractions(diaryService);
+
+        DiaryDTO dtoArgument = dtoCaptor.getValue();
+        assertThat(dtoArgument.getId(), is(UUID.fromString("e7c41f9e-cace-4f4d-845f-f3c4ed3fdaf9")));
+    }
+
     /**
      * Test of updateDiary method, of class DiaryController.
      *
      * @throws java.io.UnsupportedEncodingException
      */
     @Test
+
     public void testUpdateDiary() throws Exception {
 
         UUID authorId = UUID.fromString("75d988af-13d8-4513-ad27-3aa7741cc823");
