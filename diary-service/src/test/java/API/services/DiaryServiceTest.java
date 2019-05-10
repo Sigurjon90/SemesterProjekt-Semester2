@@ -43,7 +43,7 @@ public class DiaryServiceTest {
     private ModelMapper modelMapper;
 
     private final UUID citizensId = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de");
-    private final UUID authorIDDiary = UUID.fromString("6a7a8cb3-6502-4acc-b302-72b9e30bdf8e");
+    private final UUID authorIDDiary = UUID.fromString("06d0166d-46b6-4bb5-8572-9299fc87c3dc");
     private final UUID diaryId = UUID.fromString("e2a96b4d-edff-497b-a094-268e3b86ed28");
     private final Date date = new Date();
     List<UUID> listOfCitizenIds = Arrays.asList(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3da"));
@@ -54,7 +54,7 @@ public class DiaryServiceTest {
             new Diary(UUID.fromString("8dd18834-88de-4380-94e9-acf1c2506d3c"), "walla", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dd"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3ff"), new Date(System.currentTimeMillis()), null, "titel33"));
 
     private final List<DiaryDTO> diaryDTO = java.util.Arrays.asList(
-            new DiaryDTO(UUID.fromString("06d0166d-46b6-4bb5-8572-9299fc87c3dc"), "abba", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dd"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de"), "titel", new Date(System.currentTimeMillis()), null),
+            new DiaryDTO(diaryId, "hallo", authorIDDiary, citizensId, "hallo", new Date(System.currentTimeMillis()), null),
             new DiaryDTO(UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3df"), "lmao", UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3dc"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3da"), "titel1", new Date(System.currentTimeMillis()), null)
     );
 
@@ -91,16 +91,20 @@ public class DiaryServiceTest {
      */
     @Test
     public void testFindById() {
-        UUID id = UUID.fromString("06d0166d-46b6-4bb5-8572-9299fc87c3dc");
-        when(repositoryMock.findById(id)).thenReturn(Optional.of(diary.get(0)));
+        when(repositoryMock.findById(authorIDDiary)).thenReturn(Optional.of(diary.get(0)));
         when(modelMapper.map(diary.get(0), DiaryDTO.class)).thenReturn(diaryDTO.get(0));
 
-        Optional<DiaryDTO> diaryDTOO = diaryService.findById(id);
+        Optional<DiaryDTO> diaryDTOO = diaryService.findById(authorIDDiary);
+        DiaryDTO diaryDTOo = new DiaryDTO(diaryId, "hallo", authorIDDiary, citizensId, "hallo", this.date, null);
 
-        verify(repositoryMock, times(1)).findById(id);
+        verify(repositoryMock, times(1)).findById(authorIDDiary);
         verifyNoMoreInteractions(repositoryMock);
 
-        assertThat(diaryDTOO, is(Optional.of(diaryDTO.get(0))));
+        assertThat(diaryDTO.get(0), is(diaryDTOo));
+        assertThat(diaryDTO.get(0).getContent(), is("hallo"));
+        assertThat(diaryDTO.get(0).getTitle(), is("hallo"));
+        assertThat(diaryDTO.get(0).getAuthorID(), is(authorIDDiary));
+        assertThat(diaryDTO.get(0).getCitizenID(), is(citizensId));
 
     }
 
@@ -121,6 +125,10 @@ public class DiaryServiceTest {
 
         modelMapper.validate();
         assertThat(diaryDTOo.getId(), is(diaryId));
+        assertThat(diaryDTOo.getContent(), is("hallo"));
+        assertThat(diaryDTOo.getAuthorID(), is(authorIDDiary));
+        assertThat(diaryDTOo.getCitizenID(), is(citizensId));
+        assertThat(diaryDTOo.getTitle(), is("hallo"));
     }
 
     /**
