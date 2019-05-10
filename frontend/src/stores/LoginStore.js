@@ -30,6 +30,12 @@ class LoginStore {
     return !!this.user
   }
 
+  isLoggedInPersist() {
+    const token = localStorage.getItem("authorization");
+    if (token == null) return false;
+    return jwt_decode(token).exp > moment().unix()
+  }
+
   @action
   logout() {
     localStorage.removeItem("authorization")
