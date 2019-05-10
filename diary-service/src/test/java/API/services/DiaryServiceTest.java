@@ -105,6 +105,7 @@ public class DiaryServiceTest {
         assertThat(diaryDTO.get(0).getTitle(), is("hallo"));
         assertThat(diaryDTO.get(0).getAuthorID(), is(authorIDDiary));
         assertThat(diaryDTO.get(0).getCitizenID(), is(citizensId));
+        assertThat(diaryDTOo.getId(), is(diaryId));
 
     }
 
