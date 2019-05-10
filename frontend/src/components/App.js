@@ -18,9 +18,9 @@ const Authorization = (allowedRoles, isLoggedIn) =>
     return isLoggedIn && hasAnyRole(allowedRoles) ? (
       component
     ) : (
-      <Redirect to='/' />
-    )
-}
+        <Redirect to='/' />
+      )
+  }
 
 @inject("routing", "loginStore")
 @observer
@@ -33,12 +33,12 @@ class App extends Component {
     const CaseWorker = Authorization(["admin", "caseworker"], isLoggedIn)
     const Admin = Authorization(["admin"], isLoggedIn)
     return (
-        <Theme>
+      <Theme>
         <Route
           exact
           path="/"
           render={props => (
-            <LazyRoute {...props} component={import("./Login/Login")} />
+            <LazyRoute {...props} component={import("./Login/login")} />
           )}
         />
         <Route
@@ -83,12 +83,12 @@ class App extends Component {
             Admin(<LazyRoute {...props} component={import("./User/EditUser")} />)
           )}
         /><Route
-        exact
-        path="/admin"
-        render={props => (
-          Admin(<LazyRoute {...props} component={import("./Admin/AdminCitizens")} />)
-        )}
-      />
+          exact
+          path="/admin"
+          render={props => (
+            Admin(<LazyRoute {...props} component={import("./Admin/AdminCitizens")} />)
+          )}
+        />
         <DevTools />
       </Theme>
     )
