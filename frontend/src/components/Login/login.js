@@ -24,7 +24,7 @@ class Login extends Component {
 
   render() {
     const { loginStore } = this.props
-    const { isLoggedIn, error } = loginStore
+    const { isLoggedIn, error, isLoading } = loginStore
     const { getFieldDecorator } = this.props.form;
 
     if (isLoggedIn) {
@@ -89,6 +89,7 @@ class Login extends Component {
                     type="primary"
                     htmlType="submit"
                     className="login-form-button"
+                    loading={isLoading}
                   >
                     Log ind
                   </Button>

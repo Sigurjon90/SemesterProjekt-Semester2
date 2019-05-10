@@ -1,21 +1,28 @@
 import { post } from "axios";
 import jwt_decode from "jwt-decode"
 import { action, computed, observable } from "mobx"
+import moment from "moment"
 
 class LoginStore {
   @observable user = null;
   @observable error = false;
+  @observable isLoading = false;
 
   @action async authUser(username, password) {
+    this.isLoading = true
+    this.error = null
     try {
+      
       const response = await post("http://localhost:8762/auth", {
         username,
         password
       })
       this.user = jwt_decode(response.headers.authorization)
       localStorage.setItem("authorization", response.headers.authorization)
+      this.isLoading = false
     } catch (err) {
       this.error = err
+      this.isLoading = false
     }
   }
 

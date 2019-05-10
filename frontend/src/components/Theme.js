@@ -56,7 +56,6 @@ export default class Theme extends Component {
 
     const menu = menuItems.map((item, index) => {
       if (item.title.includes("Admin") && !hasRole("admin")) {
-        console.log("Re-render")
         return (null)
       } else {
         return (<Menu.Item key={index}>
