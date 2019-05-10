@@ -74,16 +74,15 @@ public class DiaryServiceTest {
      */
     @Test
     public void testCreateDiary() throws Exception {
-        when(repositoryMock.createDiary(createDiaryTest)).thenReturn(Optional.of(diary.get(0)));
-        when(modelMapper.map(diary.get(0), Diary.class)).thenReturn(diary.get(0));
-        when(modelMapper.map(createDiaryTest, Diary.class)).thenReturn(diary.get(0));
+        when(repositoryMock.createDiary(createDiaryTest)).thenReturn(Optional.of(createDiaryTest));
+        when(modelMapper.map(createDiaryTest, DiaryDTO.class)).thenReturn(createDTO);
+        when(modelMapper.map(createDTO, Diary.class)).thenReturn(createDiaryTest);
+        Optional<DiaryDTO> actual = diaryService.createDiary(createDTO);
 
-        DiaryDTO actual = diaryService.createDiary(Optional.of(createDTO));
-
-        verify(repositoryMock, times(1)).createDiary(diary.get(0));
+        verify(repositoryMock, times(1)).createDiary(createDiaryTest);
         verifyNoMoreInteractions(repositoryMock);
 
-        assertThat(actual, is(diaryDTO.get(0)));
+        assertThat(actual, is(Optional.of(createDTO)));
     }
 
     /**
