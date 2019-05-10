@@ -72,5 +72,4 @@ public class DiaryService implements IDiaryService {
     public boolean deleteDiary(UUID id, UUID authorId) {
         return diaryRepository.deleteDiaryByCitizenId(id, authorId);
     }
-
 }
