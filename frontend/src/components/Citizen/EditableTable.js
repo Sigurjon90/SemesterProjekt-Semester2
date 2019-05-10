@@ -17,11 +17,10 @@ class EditableCell extends React.Component {
                 mode='multiple'
                 style={{ width: '100%' }}
             >
-                <Option key='Alkoholiker'>Alkoholiker</Option>
-                <Option key='Pyroman'>Pyroman</Option>
-                <Option key='KaffeDrikker'>Kaffedrikker</Option>
-                <Option key='Koder'>Koder</Option>
-                <Option key='Handi'>Handi</Option>
+                <Option value="alkoholmisbrug">Alkoholmisbrug</Option>
+                <Option value="stofmisbrug">Stofmisbrug</Option>
+                <Option value="handicappet">Handicappet</Option>
+                <Option value="angst">Angst</Option>
             </Select>)
         }
         return <Input />

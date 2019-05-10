@@ -39,12 +39,17 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<User> getAllUsers(UUID careCenterId) {
         List<User> users = new ArrayList();
-        try (PreparedStatement getUsers = this.connection.prepareStatement("SELECT *  FROM users WHERE active=true AND care_center_id=?")) {
+        try (PreparedStatement getUsers = this.connection.prepareStatement("SELECT *, (SELECT array(SELECT citizen_id FROM my_citizens WHERE my_citizens.user_id = users.id)) AS assignedCitizens FROM users WHERE active=true AND care_center_id=?")) {
             getUsers.setObject(1, careCenterId, Types.OTHER);
             ResultSet usersResult = getUsers.executeQuery();
 
             while (usersResult.next()) {
-                users.add(new User((UUID) usersResult.getObject("id"), usersResult.getString("username"), usersResult.getString("email"), usersResult.getString("address"), usersResult.getString("role"), usersResult.getString("cpr")));
+                Array arrayOfCitizens = usersResult.getArray("assignedCitizens");
+                List<UUID> myCitizens = arrayOfCitizens != null ? Arrays.asList((UUID[])arrayOfCitizens.getArray()) : Arrays.asList();
+                users.add(new User(
+                        (UUID) usersResult.getObject("id"), 
+                        usersResult.getString("username"), 
+                        usersResult.getString("email"), usersResult.getString("address"), usersResult.getString("role"), usersResult.getString("cpr"), myCitizens));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,7 +126,7 @@ public class UserRepository implements IUserRepository {
             ResultSet findUsernameResult = findUser.executeQuery();
             while (findUsernameResult.next()) {
                 Array arrayOfCitizens = findUsernameResult.getArray("assignedCitizens");
-                List<UUID> myCitizens = Arrays.asList((UUID[])arrayOfCitizens.getArray());
+                List<UUID> myCitizens = arrayOfCitizens != null ? Arrays.asList((UUID[])arrayOfCitizens.getArray()) : Arrays.asList();
                 return new User((UUID) findUsernameResult.getObject("id"),
                         findUsernameResult.getString("username"),
                         findUsernameResult.getString("password"),
@@ -156,15 +161,36 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public User updateUser(User user) {
-        try (PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ? , email = ? , address = ?  WHERE id = ?  RETURNING id , username, email, active, address, role, cpr, care_center_id")) {
+        try {
+            connection.setAutoCommit(false);
+            User updatedUser = null;
+            
+            PreparedStatement deleteCitizens = this.connection.prepareStatement("DELETE FROM my_citizens WHERE user_id = ?");
+            deleteCitizens.setObject(1, user.getId());
+            deleteCitizens.execute();
+
+            if (user.getCitizensIDList() != null) {
+                for (UUID citizenId : user.getCitizensIDList()) {
+                    PreparedStatement assignCitizen = this.connection.prepareStatement("INSERT INTO my_citizens VALUES (?,?)");
+                    assignCitizen.setObject(1, user.getId(), Types.OTHER);
+                    assignCitizen.setObject(2, citizenId, Types.OTHER);
+                    assignCitizen.execute();
+                }
+            }
+            
+            PreparedStatement update = connection.prepareStatement("UPDATE users SET username = ? , email = ? , address = ?  WHERE id = ?  RETURNING id , username, email, active, address, role, cpr, care_center_id, (SELECT array(SELECT citizen_id FROM my_citizens WHERE my_citizens.user_id = ?)) AS myCitizens");
             update.setString(1, user.getUsername());
             update.setString(2, user.getEmail());
             update.setString(3, user.getAddress());
             update.setObject(4, user.getId(), Types.OTHER);
+            update.setObject(5, user.getId(), Types.OTHER);
             ResultSet updateResult = update.executeQuery();
             while (updateResult.next()) {
-                return new User((UUID) updateResult.getObject("id"), updateResult.getString("username"), null, updateResult.getString("email"), updateResult.getBoolean("active"), updateResult.getString("address"), updateResult.getString("role"), updateResult.getString("cpr"), null, (UUID)updateResult.getObject("care_center_id"));
+                updatedUser = new User((UUID) updateResult.getObject("id"), updateResult.getString("username"), null, updateResult.getString("email"), updateResult.getBoolean("active"), updateResult.getString("address"), updateResult.getString("role"), updateResult.getString("cpr"), null, (UUID)updateResult.getObject("care_center_id"));
             }
+            connection.commit();
+            connection.setAutoCommit(true);
+            return updatedUser;
         } catch (SQLException e) {
             e.printStackTrace();
         }

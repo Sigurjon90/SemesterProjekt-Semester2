@@ -48,13 +48,14 @@ public class User {
         this.cpr = cpr;
     }
 
-    public User(UUID id, String username, String email, String address, String role, String cpr) {
+    public User(UUID id, String username, String email, String address, String role, String cpr, List<UUID> citizensIDList) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.address = address;
         this.role = role;
         this.cpr = cpr;
+        this.citizensIDList = citizensIDList;
     }
 
 }

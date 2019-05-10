@@ -4,11 +4,18 @@ import { Menu, Icon } from "antd";
 import UsersList from "../User/UsersList";
 import CreateUser from "../User/CreateUser";
 import EditableTableUsers from "../User/EditableTableUsers";
+import concat from "../../utils/concat"
 
+@inject("citizensStore")
 @observer
 export default class AdminUsers extends Component {
     constructor(props) {
         super(props);
+        this.getCitizens = () => this.props.citizensStore.fetchCitizens()
+    }
+
+    componentWillMount() {
+        this.getCitizens()
     }
 
     state = {
@@ -22,6 +29,8 @@ export default class AdminUsers extends Component {
     }
 
     render() {
+        const { citizensStore } = this.props;
+        const { primaryCitizens, otherCitizens } = citizensStore
         const current = this.state.current
         return (
             <div>
@@ -40,8 +49,8 @@ export default class AdminUsers extends Component {
 
                 </Menu>
 
-                {current == "CreateUser" && <CreateUser />}
-                {current == "EditableUser" && <EditableTableUsers />}
+                {current == "CreateUser" && <CreateUser citizens={concat(primaryCitizens, otherCitizens)} />}
+                {current == "EditableUser" && <EditableTableUsers citizens={concat(primaryCitizens, otherCitizens)} />}
             </div>
         );
     }
