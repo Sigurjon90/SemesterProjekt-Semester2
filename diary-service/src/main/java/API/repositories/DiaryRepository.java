@@ -33,7 +33,7 @@ public class DiaryRepository implements IDiaryRepository {
     @Override
     public Optional<Diary> createDiary(Diary diary) {
         try (PreparedStatement diaryCreate = this.connection.prepareStatement(
-                    "INSERT INTO Diaries(id, content, author_id, citizen_id, title) Values(?, ?, ?, ?, ?) returning id, title, content, author_ID, citizen_ID, date_created, date_modified")) {
+                    "INSERT INTO diaries(id, content, author_id, citizen_id, title) Values(?, ?, ?, ?, ?) returning id, title, content, author_ID, citizen_ID, date_created, date_modified")) {
             diaryCreate.setObject(1, UUID.randomUUID(), Types.OTHER);
             diaryCreate.setString(2, diary.getContent());
             diaryCreate.setObject(3, diary.getAuthorID(), Types.OTHER);

@@ -95,18 +95,18 @@ public class DiaryServiceTest {
      */
     @Test
     public void testFindById() {
-        when(repositoryMock.findById(authorIDDiary)).thenReturn(Optional.of(diary.get(0)));
+        when(repositoryMock.findById(diaryId)).thenReturn(Optional.of(diary.get(0)));
         when(modelMapper.map(diary.get(0), DiaryDTO.class)).thenReturn(diaryDTO.get(0));
 
-        Optional<DiaryDTO> diaryDTOO = service.findById(authorIDDiary);
+        //Optional<DiaryDTO> diaryDTOO = service.findById(diaryId);
         DiaryDTO diaryDTOo = new DiaryDTO(diaryId, "hallo", authorIDDiary, citizensId, "TitilHallo", this.date, null);
 
-        verify(repositoryMock, times(1)).findById(authorIDDiary);
+        verify(repositoryMock, times(1)).findById(diaryId);
         verifyNoMoreInteractions(repositoryMock);
 
         assertThat(diaryDTOo.getId(), is(diaryId));
         assertThat(diaryDTOo.getContent(), is("hallo"));
-        assertThat(diaryDTOo.getTitle(), is("TitelHallo"));
+        assertThat(diaryDTOo.getTitle(), is("TitilHallo"));
         assertThat(diaryDTOo.getAuthorID(), is (authorIDDiary));
         assertThat(diaryDTOo.getCitizenID(), is (citizensId));
     }
@@ -120,8 +120,9 @@ public class DiaryServiceTest {
         when(modelMapper.map(citizensId, DiaryDTO.class)).thenReturn(diaryDTO.get(0));
 
         DiaryDTO diaryDTOo = new DiaryDTO(diaryId, "hallo", authorIDDiary, citizensId, "TitilHallo", this.date, null);
+        //DiaryDTO diaryDTO = service.findByCitizenId(Optional.of((UUID)citizensId));
 
-        verify(repositoryMock, times(1)).findByCitizenID(citizensId);
+        verify(repositoryMock, times(1)).findByCitizenID(diaryDTOo.getCitizenID());
         verifyNoMoreInteractions(repositoryMock);
 
         modelMapper.validate();
