@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Jonas
@@ -32,30 +34,44 @@ public class DiaryRepository implements IDiaryRepository {
 
     @Override
     public Optional<Diary> createDiary(Diary diary) {
-        try (PreparedStatement diaryCreate = this.connection.prepareStatement(
-                    "INSERT INTO diaries(id, content, author_id, citizen_id, title) Values(?, ?, ?, ?, ?) returning id, title, content, author_ID, citizen_ID, date_created, date_modified")) {
-            diaryCreate.setObject(1, UUID.randomUUID(), Types.OTHER);
-            diaryCreate.setString(2, diary.getContent());
-            diaryCreate.setObject(3, diary.getAuthorID(), Types.OTHER);
-            diaryCreate.setObject(4, diary.getCitizenID(), Types.OTHER);
-            diaryCreate.setString(5, diary.getTitle());
-
-            ResultSet diaryResult = diaryCreate.executeQuery();
-            while (diaryResult.next()) {
-                return Optional.of(new Diary(
-                        (UUID) diaryResult.getObject("id"),
-                        diaryResult.getString("content"),
-                        (UUID) diaryResult.getObject("author_id"),
-                        (UUID) diaryResult.getObject("citizen_id"),
-                        diaryResult.getDate("date_created"),
-                        diaryResult.getDate("date_modified"),
-                        diaryResult.getString("title")));
+        
+        try{
+            connection.setAutoCommit(false);
+            PreparedStatement createDiary = connection.prepareStatement("INSERT INTO diaries(id, content, author_id, citizen_id, title) VALUES (?, ?, ?, ?, ?) RETURNING id, content, date_created, author_id, citizen_id, date_modified, title");
+            createDiary.setObject(1, UUID.randomUUID(), Types.OTHER);
+            createDiary.setString(2, diary.getContent());
+            createDiary.setObject(3, diary.getAuthorID(), Types.OTHER);
+            createDiary.setObject(4, diary.getCitizenID(), Types.OTHER);
+            createDiary.setString(5, diary.getTitle());
+        
+            ResultSet diaryResultSet = createDiary.executeQuery();
+            Diary createdDiary = null;
+            
+            while(diaryResultSet.next()){
+                createdDiary = new Diary((UUID) diaryResultSet.getObject("id"), 
+                        diaryResultSet.getString("content"), 
+                        (UUID) diaryResultSet.getObject("author_id"), 
+                        (UUID)diaryResultSet.getObject("citizen_id"), 
+                        diaryResultSet.getDate("date_created"), 
+                        diaryResultSet.getDate("date_modified"), 
+                        diaryResultSet.getString("title"));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
+            connection.commit();
+            connection.setAutoCommit(true);
+            return Optional.of(createdDiary);
+        
+        } catch(SQLException ex){
+                   ex.printStackTrace();
+            Logger.getLogger(DiaryRepository.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(DiaryRepository.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
-
-        return Optional.empty();
+       
+        return null;
     }
 
     @Override

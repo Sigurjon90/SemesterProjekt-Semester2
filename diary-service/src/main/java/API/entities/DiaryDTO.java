@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiaryDTO {
-    
+
     private UUID Id;
     private String content;
     private UUID authorID;
@@ -22,4 +22,8 @@ public class DiaryDTO {
     private Date dateCreated;
     private Date dateModified;
 
+    @Override
+    public String toString() {
+        return Id.toString();
+    }
 }
