@@ -9,7 +9,8 @@ import { Row, Col, Form, Icon, Input, Button, Card, message } from "antd";
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.authUser = (username, password) => this.props.loginStore.authUser(username, password);
+    this.authUser = (username, password) =>
+      this.props.loginStore.authUser(username, password);
   }
 
   handleSubmit = e => {
@@ -17,22 +18,23 @@ class Login extends Component {
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.authUser(values.userName, values.password)
+        this.authUser(values.userName, values.password);
       }
-    })
-  }
+    });
+  };
 
   render() {
-    const { loginStore } = this.props
-    const { isLoggedIn, error } = loginStore
+    const { loginStore } = this.props;
+    const { isLoggedIn, error, isLoading } = loginStore;
     const { getFieldDecorator } = this.props.form;
 
     if (isLoggedIn) {
-      return <Redirect to="/citizens" />
+      return <Redirect to="/citizens" />;
     }
 
     if (error) {
-      message.error("Dit brugernavn eller adgangskode er ikke korrekt.")
+      console.log(1);
+      message.error("Dit brugernavn eller adgangskode er ikke korrekt.");
     }
 
     return (
@@ -89,6 +91,7 @@ class Login extends Component {
                     type="primary"
                     htmlType="submit"
                     className="login-form-button"
+                    loading={isLoading}
                   >
                     Log ind
                   </Button>
