@@ -67,7 +67,7 @@ export default class Diary extends Component {
             }
             {isLoaded && <div>
                 <Tabs
-                    defaultActiveKey={1}
+                    defaultActiveKey={diaArray[diaArray.length - 1].id}
                     tabPosition="top"
                     style={{ height: 220 }}>
 
