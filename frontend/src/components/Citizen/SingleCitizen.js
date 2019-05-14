@@ -90,23 +90,23 @@ export default class SingleCitizen extends Component {
               </Col>
             </Row>
             {hasAnyRole(["admin", "caseworker"]) &&
-            <div>
-              <Divider><strong>Sag</strong></Divider>
-              <Row>
-                <Col span={24}>
+              <div>
+                <Divider><strong>Sag</strong></Divider>
+                <Row>
+                  <Col span={24}>
 
-                  {!isClicked && (typeof theId !== 'undefined') && <Journal citizenID={theId} handleClick={this.handleClick} />}
-                  {isClicked && <EditJournal handleClick={this.handleClick} />}
+                    {!isClicked && (typeof theId !== 'undefined') && <Journal citizenID={theId} handleClick={this.handleClick} />}
+                    {isClicked && <EditJournal handleClick={this.handleClick} />}
 
-                  <Row>
-                    <Col span={8}>
-                    </Col>
-                    <Col span={16}>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </div>
+                    <Row>
+                      <Col span={8}>
+                      </Col>
+                      <Col span={16}>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </div>
             }
             <Divider><strong>Dagbog</strong></Divider>
             <Row>

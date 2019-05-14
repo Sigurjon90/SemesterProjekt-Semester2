@@ -5,7 +5,9 @@ import { action, observable } from "mobx";
 class DiaryStore {
     @observable error = null;
     @observable isFetching = false;
+    @observable isFetchingSecond = false;
     @observable diary = null;
+    @observable diaArray = [];
 
     @action async fetchDiary(id) {
         this.isFetching = true;
@@ -20,6 +22,21 @@ class DiaryStore {
             this.diary = null;
             this.error = error;
             this.isFetching = false;
+        }
+    }
+
+    @action async fetchDiaries(id) {
+        this.isFetchingSecond = true;
+        this.error = null;
+        try {
+            const response = await axios.get(
+                `http://localhost:8762/diaries/all/${id}`
+            );
+            this.diaArray = response.data;
+            this.isFetchingSecond = false;
+        } catch (error) {
+            this.error = error;
+            this.isFetchingSecond = false;
         }
     }
 

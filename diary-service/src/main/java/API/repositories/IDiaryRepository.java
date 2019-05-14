@@ -24,6 +24,10 @@ public interface IDiaryRepository {
         List<Diary> getDiaries(List<UUID> listOfCitizensIds);
 
         Optional<Diary> updateDiary(Diary diary);
+        
+        Optional<Diary> entryUpdateDiary(Diary diary);
+        
+        List<Diary> getDiariesByCitizenID(UUID citizenID);
 
         boolean deleteDiary(UUID id, UUID authorId);
 

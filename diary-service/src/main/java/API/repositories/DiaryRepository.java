@@ -57,6 +57,34 @@ public class DiaryRepository implements IDiaryRepository {
 
         return Optional.empty();
     }
+    
+    // MULIGVIS SLETTES
+    public Optional<Diary> entryUpdateDiary(Diary diary) {
+        try (PreparedStatement diaryCreate = this.connection.prepareStatement(
+                    "INSERT INTO Diaries(id, content, author_id, citizen_id, title) Values(?, ?, ?, ?, ?) returning id, title, content, author_ID, citizen_ID, date_created, date_modified")) {
+            diaryCreate.setObject(1, UUID.randomUUID(), Types.OTHER);
+            diaryCreate.setString(2, diary.getContent());
+            diaryCreate.setObject(3, diary.getAuthorID(), Types.OTHER);
+            diaryCreate.setObject(4, diary.getCitizenID(), Types.OTHER);
+            diaryCreate.setString(5, diary.getTitle());
+
+            ResultSet diaryResult = diaryCreate.executeQuery();
+            while (diaryResult.next()) {
+                return Optional.of(new Diary(
+                        (UUID) diaryResult.getObject("id"),
+                        diaryResult.getString("content"),
+                        (UUID) diaryResult.getObject("author_id"),
+                        (UUID) diaryResult.getObject("citizen_id"),
+                        diaryResult.getDate("date_created"),
+                        diaryResult.getString("date_modified"),
+                        diaryResult.getString("title")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 
     @Override
     public Optional<Diary> findById(UUID id) {
@@ -101,7 +129,31 @@ public class DiaryRepository implements IDiaryRepository {
         }
         return Optional.empty();
     }
-
+    
+    // Repo Citizen ID
+    public List<Diary> getDiariesByCitizenID(UUID citizenID) {
+        List<Diary> diaries = new ArrayList<>();
+        try (PreparedStatement getDiaries = this.connection.prepareStatement("SELECT * FROM diaries WHERE archived = false AND citizen_ID = ?")) {
+            getDiaries.setObject(1, citizenID, Types.OTHER);
+            ResultSet diariesResult = getDiaries.executeQuery();
+            while (diariesResult.next()) {
+                diaries.add(new Diary(
+                        (UUID) diariesResult.getObject("id"),
+                        diariesResult.getString("content"),
+                        (UUID) diariesResult.getObject("author_id"),
+                        (UUID) diariesResult.getObject("citizen_id"),
+                        diariesResult.getDate("date_created"),
+                        diariesResult.getString("date_modified"),
+                        diariesResult.getString("title")));
+                
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return diaries;
+    }
+    
+    
     @Override
     public List<Diary> getDiaries(List<UUID> listOfCitizensIds) {
         List<Diary> diaries = new ArrayList<>();

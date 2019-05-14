@@ -56,6 +56,13 @@ public class DiaryService implements IDiaryService {
         List<Diary> diaries = diaryRepository.getDiaries(listOfCitizensIds);
         return diaries.stream().map(source -> modelMapper.map(source, DiaryDTO.class)).collect(Collectors.toList());
     }
+    
+    //Get diaries by Citizen ID
+    @Override
+    public List<DiaryDTO> getDiariesByCitizenID(UUID citizenID) {
+        List<Diary> diaries = diaryRepository.getDiariesByCitizenID(citizenID);
+        return diaries.stream().map(source -> modelMapper.map(source, DiaryDTO.class)).collect(Collectors.toList());
+    }
 
     @Override
     public Optional<DiaryDTO> updateDiary(DiaryDTO diaryDTO) {
@@ -67,6 +74,18 @@ public class DiaryService implements IDiaryService {
         }
         return Optional.empty();
     }
+    
+    @Override
+    public Optional<DiaryDTO> entryUpdateDiary(DiaryDTO diaryDTO) {
+        Diary diary = modelMapper.map(diaryDTO, Diary.class);
+        Optional<Diary> diaryUpdated = diaryRepository.entryUpdateDiary(diary);
+        if (diaryUpdated.isPresent()) {
+            DiaryDTO diaryDto = modelMapper.map(diaryUpdated.get(), diaryDTO.getClass());
+            return Optional.of(diaryDto);
+        }
+        return Optional.empty();
+    }
+
 
     @Override
     public boolean deleteDiary(UUID id, UUID authorId) {
