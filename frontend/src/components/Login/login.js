@@ -33,8 +33,8 @@ class Login extends Component {
     }
 
     if (error) {
-      console.log(1);
       message.error("Dit brugernavn eller adgangskode er ikke korrekt.");
+      loginStore.setError(false);
     }
 
     return (

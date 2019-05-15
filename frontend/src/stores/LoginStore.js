@@ -29,6 +29,10 @@ class LoginStore {
     return !!this.user;
   }
 
+  @action setError(value) {
+    this.error = value;
+  }
+
   @action
   logout() {
     localStorage.removeItem("authorization");
