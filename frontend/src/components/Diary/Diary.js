@@ -15,6 +15,8 @@ export default class Diary extends Component {
         this.getDiary = (id) => this.props.diaryStore.fetchDiary(id);
     }
 
+    @observable diaArr = this.props.diaryStore.diaArray
+
     state = {
         createContent: "",
     };
@@ -36,6 +38,7 @@ export default class Diary extends Component {
             title: "Some title"
         }
         this.props.diaryStore.createDiary(createdDiary)
+        this.props.diaryStore.fetchDiaries(citizenID)
     }
 
 
@@ -52,6 +55,7 @@ export default class Diary extends Component {
         const isLoaded = !isFetching && error === null
         const { TextArea } = Input
         const { citizenID } = this.props
+        console.log("DO2", this.diaArr)
         return (<div>
             {isFetching && <Spin />}
             {diary == null &&
@@ -65,13 +69,13 @@ export default class Diary extends Component {
                     </Col>
                 </Row>
             }
-            {isLoaded && <div>
+            {isLoaded && !isFetchingSecond && <div>
                 <Tabs
-                    defaultActiveKey={diaArray[diaArray.length - 1].id}
+                    //defaultActiveKey={diaArray[0].id}
                     tabPosition="top"
                     style={{ height: 220 }}>
 
-                    {diaArray.slice().reverse().map((thing) =>
+                    {diaArray.slice().map((thing) =>
                         <TabPane tab={moment(thing.dateModified).format('DD-MM-YYYY')} key={thing.id}>
                             <Row>
                                 <Col span={8}>

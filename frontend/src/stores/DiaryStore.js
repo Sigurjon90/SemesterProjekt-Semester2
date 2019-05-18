@@ -35,6 +35,7 @@ class DiaryStore {
             this.diaArray = response.data;
             this.isFetchingSecond = false;
         } catch (error) {
+            this.diaArray = null
             this.error = error;
             this.isFetchingSecond = false;
         }
@@ -47,11 +48,11 @@ class DiaryStore {
             const response = await axios.put('http://localhost:8762/diaries', updatedDiary);
             this.diary = response.data;
             this.isFetching = false;
-
         } catch (error) {
             this.error = error
             this.isFetching = false;
         }
+        this.fetchDiaries(updatedDiary.citizenID)
     }
 
     @action async createDiary(createdDiary) {

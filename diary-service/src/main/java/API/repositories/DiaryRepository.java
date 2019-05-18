@@ -133,7 +133,7 @@ public class DiaryRepository implements IDiaryRepository {
     // Repo Citizen ID
     public List<Diary> getDiariesByCitizenID(UUID citizenID) {
         List<Diary> diaries = new ArrayList<>();
-        try (PreparedStatement getDiaries = this.connection.prepareStatement("SELECT * FROM diaries WHERE archived = false AND citizen_ID = ?")) {
+        try (PreparedStatement getDiaries = this.connection.prepareStatement("SELECT * FROM diaries WHERE archived = false AND citizen_ID = ? ORDER BY date_modified DESC")) {
             getDiaries.setObject(1, citizenID, Types.OTHER);
             ResultSet diariesResult = getDiaries.executeQuery();
             while (diariesResult.next()) {

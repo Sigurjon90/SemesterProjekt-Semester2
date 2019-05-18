@@ -15,7 +15,6 @@ export default class EditDiary extends Component {
         content: this.props.diaryStore.diary.content
     };
 
-    // citizenID skal måske ændres tilbage til id og så skal SQL være på id og ikke citizenID
     handleSubmit = () => {
         const { diary } = this.props.diaryStore;
         const updatedDiary = {
@@ -24,7 +23,6 @@ export default class EditDiary extends Component {
             authorID: 'afda2cd5-6fd9-40ff-a0db-938af02a281c'
         }
         this.props.diaryStore.putDiaryChanges(updatedDiary)
-        this.props.diaryStore.fetchDiaries(diary.citizenID)
         this.props.handleDiarySwitch()
     }
 
