@@ -35,7 +35,6 @@ export default class SingleCitizen extends Component {
     this.setState({ isClicked: !isClicked })
   }
 
-  // Switches between diary views
   handleDiarySwitch = () => {
     const { diarySwitch } = this.state;
     this.setState({ diarySwitch: !diarySwitch })

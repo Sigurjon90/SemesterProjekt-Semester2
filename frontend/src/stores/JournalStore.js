@@ -17,11 +17,8 @@ class JournalStore {
       const response = await axios.get(
         `http://localhost:8762/journals/citizen/${id}`
       );
-      console.log(response.data);
       // Data bliver smidt  i array
       this.journal = response.data;
-      console.log("JournalResponse")
-      console.log(response.data)
       this.isFetching = false;
     } catch (error) {
       this.journal = null;

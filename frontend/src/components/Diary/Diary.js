@@ -15,8 +15,6 @@ export default class Diary extends Component {
         this.getDiary = (id) => this.props.diaryStore.fetchDiary(id);
     }
 
-    @observable diaArr = this.props.diaryStore.diaArray
-
     state = {
         createContent: "",
     };
@@ -55,7 +53,6 @@ export default class Diary extends Component {
         const isLoaded = !isFetching && error === null
         const { TextArea } = Input
         const { citizenID } = this.props
-        console.log("DO2", this.diaArr)
         return (<div>
             {isFetching && <Spin />}
             {diary == null &&
@@ -71,7 +68,6 @@ export default class Diary extends Component {
             }
             {isLoaded && !isFetchingSecond && <div>
                 <Tabs
-                    //defaultActiveKey={diaArray[0].id}
                     tabPosition="top"
                     style={{ height: 220 }}>
 
