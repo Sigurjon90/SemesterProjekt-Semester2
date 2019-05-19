@@ -12,7 +12,7 @@ export default class AdminCitizens extends Component {
   }
 
   state = {
-    current: '',
+    current: 'EditCitizen',
   }
 
   handleClick = (e) => {

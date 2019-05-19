@@ -17,22 +17,18 @@ class Login extends Component {
 
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log("Received values of form: ", values);
-        const success = this.authUser(values.userName, values.password)
-        if (success) {
-          <Redirect to="/test" />
-        }
+        this.authUser(values.userName, values.password)
       }
     })
   }
 
   render() {
     const { loginStore } = this.props
-    const { isLoggedIn, error } = loginStore
+    const { isLoggedInPersist, error, isLoading } = loginStore
     const { getFieldDecorator } = this.props.form;
 
-    if (isLoggedIn) {
-      return <Redirect to="/test" />
+    if (isLoggedInPersist()) {
+      return <Redirect to="/citizens" />
     }
 
     if (error) {
@@ -93,6 +89,7 @@ class Login extends Component {
                     type="primary"
                     htmlType="submit"
                     className="login-form-button"
+                    loading={isLoading}
                   >
                     Log ind
                   </Button>
@@ -106,6 +103,6 @@ class Login extends Component {
   }
 }
 
-const loginForm = Form.create({ name: "normal_losgin" })(Login);
+const loginForm = Form.create({ name: "normal_login" })(Login);
 
 export default loginForm;

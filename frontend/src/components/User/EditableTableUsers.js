@@ -12,13 +12,22 @@ class EditableCell extends React.Component {
         if (this.props.inputType === 'number') {
             return <InputNumber />
         }
-        if (this.props.inputType === 'option') {
+        if (this.props.inputType === 'option' && this.props.dataIndex === 'role') {
             return (<Select disabled
                 style={{ width: '100%' }}
             >
                 <Option key='admin'>Administrator</Option>
                 <Option key='caseworker'>Sagsbehandler</Option>
                 <Option key='caregiver'>Pædagog</Option>
+            </Select>)
+        }
+        if (this.props.inputType === 'option' && this.props.dataIndex === 'citizensIDList') {
+            return (<Select
+                mode="multiple"
+                style={{ width: '100%' }}>
+                {this.props.citizens.map(citizen => (
+                    <Option key={citizen.id}>{citizen.name}</Option>
+                ))}
             </Select>)
         }
         return <Input />
@@ -90,6 +99,25 @@ class EditableTableUsers extends React.Component {
                 dataIndex: 'email',
                 width: '25%',
                 editable: true,
+            },
+            {
+                title: 'Borgere',
+                dataIndex: 'citizensIDList',
+                width: '25%',
+                editable: true,
+                render: (text, record) => {
+                    const citizens = this.props.citizens.filter(citizen => record.citizensIDList.includes(citizen.id))
+                    return (
+                        <span>
+                        {citizens.map(citizen => (
+                            (<Tag color="geekblue" key={citizen.id}>
+                                {citizen.name}
+                            </Tag>)
+                            )
+                        )}
+                    </span>
+                    )
+                }
             },
             {
                 title: 'Handling',
@@ -176,7 +204,7 @@ class EditableTableUsers extends React.Component {
     }
 
     render() {
-        const { usersStore } = this.props
+        const { usersStore, citizens } = this.props
         const { users, isFetching } = usersStore
 
         const components = {
@@ -193,9 +221,10 @@ class EditableTableUsers extends React.Component {
                 ...col,
                 onCell: record => ({
                     record,
-                    inputType: col.dataIndex === 'role' ? 'option' : 'text',
+                    inputType: col.dataIndex === 'role' || col.dataIndex === 'citizensIDList' ? 'option' : 'text',
                     dataIndex: col.dataIndex,
                     title: col.title,
+                    citizens,
                     editing: this.isEditing(record),
                 }),
             }

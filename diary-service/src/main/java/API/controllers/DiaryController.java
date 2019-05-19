@@ -45,6 +45,21 @@ public class DiaryController {
         List<DiaryDTO> diaries = diaryService.getDiaries(listOfCitizensIds);
         return new ResponseEntity(diaries, HttpStatus.OK);
     }
+    
+    // NEW METHOD
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message= "Successful", response = DiaryDTO.class)
+    })
+    @RequestMapping(path = "/all/{id}", method = RequestMethod.GET)
+    public ResponseEntity getDiariesByCitizenID(@PathVariable("id") String id){
+        List<DiaryDTO> diaries = diaryService.getDiariesByCitizenID(UUID.fromString(id));
+        
+        if(diaries != null) {
+            return new ResponseEntity(diaries, HttpStatus.OK);
+        }
+        
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
 
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message= "Successful", response = DiaryDTO.class)
@@ -94,7 +109,7 @@ public class DiaryController {
         String token = httpHeaders.getFirst("authorization");
         UUID authorId = jwtUtils.getUserId(token);
         diaryDTO.setAuthorID(authorId);
-        Optional diary = diaryService.updateDiary(diaryDTO);
+        Optional diary = diaryService.entryUpdateDiary(diaryDTO);
         if(diary.isPresent()){
             return new ResponseEntity(diary.get(), HttpStatus.OK);
         }

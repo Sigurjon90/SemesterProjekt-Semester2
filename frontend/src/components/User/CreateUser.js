@@ -36,6 +36,7 @@ export default class CreateUser extends Component {
     @observable cpr = ""
     @observable addressChecker = "error"
     @observable address = ""
+    @observable assignedCitizens = []
     @observable isUserCreated = false
 
     handleCreate = () => {
@@ -45,7 +46,8 @@ export default class CreateUser extends Component {
             role: this.role,
             email: this.email,
             cpr: this.cpr,
-            address: this.address
+            address: this.address,
+            citizensIDList: this.assignedCitizens
         }
         this.props.usersStore.createUser(createdUser)
         this.isUserCreated = true
@@ -104,10 +106,14 @@ export default class CreateUser extends Component {
 
     handleRole = (value) => {
         this.role = value
+    }
 
+    handleCitizens = (value) => {
+        this.assignedCitizens = value
     }
 
     render() {
+        const { citizens } = this.props
         return (<div>
             {this.isUserCreated &&
                 <div>
@@ -161,6 +167,16 @@ export default class CreateUser extends Component {
                                 <Option value="admin">Administrator</Option>
                                 <Option value="caseworker">Sagsbehandler</Option>
                                 <Option value="caregiver">Pædagog</Option>
+                            </Select>
+                            <Divider>Vælg Primære borgere</Divider>
+                            <Select
+                                mode="multiple"
+                                placeholder="Vælg Primære borgere"
+                                style={{ width: 180, marginLeft: 150, marginTop: 10 }}
+                            >
+                                {citizens.map(citizen =>
+                                    <Option value={citizen.id} key={citizen.id}>{citizen.name}</Option>
+                                )}
                             </Select>
                             <Button type="primary" style={{ marginLeft: 10 }} onClick={this.handleCreate}>Opret bruger</Button>
                         </Col>

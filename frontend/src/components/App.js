@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import Theme from "./Theme";
-import { Route, Link, Redirect } from "react-router-dom";
+import { Route, Link, Redirect, withRouter } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import LazyRoute from "lazy-route";
 import DevTools from "mobx-react-devtools";
-import LoginStore from "../stores/LoginStore";
 import hasAnyRole from "../utils/auth";
 
 /*
@@ -13,44 +12,46 @@ const Manager = Authorization(["manager", "admin"]);
 const Admin = Authorization(["admin"]);
 */
 
-const Authorization = (allowedRoles) =>
+const Authorization = (allowedRoles, isLoggedIn) =>
   (component) => {
-    return LoginStore.isLoggedIn && hasAnyRole(allowedRoles) ? (
+    return isLoggedIn && hasAnyRole(allowedRoles) ? (
       component
     ) : (
-      <Redirect to='/' />
-    )
-}
+        <Redirect to='/' />
+      )
+  }
 
-const User = Authorization(["user", "manager", "admin"])
-const Manager = Authorization(["manager", "test"])
-const Admin = Authorization(["admin"])
-
-@inject("routing")
+@inject("routing", "loginStore")
 @observer
-export default class App extends Component {
+class App extends Component {
   render() {
+    const { loginStore } = this.props
+    const { isLoggedInPersist } = loginStore
+    const isLoggedIn = isLoggedInPersist()
+    const CareGiver = Authorization(["admin", "caseworker", "caregiver"], isLoggedIn)
+    const CaseWorker = Authorization(["admin", "caseworker"], isLoggedIn)
+    const Admin = Authorization(["admin"], isLoggedIn)
     return (
       <Theme>
-      <Route
+        <Route
           exact
           path="/"
           render={props => (
-            <LazyRoute {...props} component={import("./Login/Login")} />
+            <LazyRoute {...props} component={import("./Login/login")} />
           )}
         />
         <Route
           exact
           path="/citizens"
           render={props => (
-            <LazyRoute {...props} component={import("./Citizen/CitizensList")} />
+            CareGiver(<LazyRoute {...props} component={import("./Citizen/CitizensList")} />)
           )}
         />
         <Route
           exact
           path="/citizens/:id"
           render={props => (
-            <LazyRoute {...props} component={import("./Citizen/SingleCitizen")} />
+            CareGiver(<LazyRoute {...props} component={import("./Citizen/SingleCitizen")} />)
           )}
         />
         <Route
@@ -64,26 +65,33 @@ export default class App extends Component {
           exact
           path="/admin/users"
           render={props => (
-            <LazyRoute {...props} component={import("./Admin/AdminUsers")} />
+            Admin(<LazyRoute {...props} component={import("./Admin/AdminUsers")} />)
           )}
         />
         <Route
           exact
           path="/admin/citizens/edit/:id"
           render={props => (
-            <LazyRoute {...props} component={import("./Citizen/EditCitizen")} />
+            Admin(<LazyRoute {...props} component={import("./Citizen/EditCitizen")} />)
           )}
         />
         <Route
           exact
           path="/admin/users/edit/:id"
           render={props => (
-            <LazyRoute {...props} component={import("../components/User/EditUser")} />
+            Admin(<LazyRoute {...props} component={import("./User/EditUser")} />)
+          )}
+        /><Route
+          exact
+          path="/admin"
+          render={props => (
+            Admin(<LazyRoute {...props} component={import("./Admin/AdminCitizens")} />)
           )}
         />
-        <DevTools />
         <DevTools />
       </Theme>
     )
   }
 }
+
+export default withRouter(observer(App))

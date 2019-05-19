@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react"
-import { Form, Input, Button, Divider, Select, Alert, Row, Col } from "antd";
+import { Form, Input, Button, Divider, Select, Alert, Row, Col, Spin } from "antd";
 import { observable } from "mobx";
 
 const { Option } = Select;
@@ -16,12 +16,13 @@ const formItemLayout = {
     },
 };
 
-@inject("citizensStore")
+@inject("citizensStore", "fakeCPRStore")
 @observer
-export default class CreateCitizen extends Component {
+class CreateCitizen extends Component {
     constructor(props) {
         super(props);
         this.getCitizen = (id) => this.props.citizensStore.fetchCitizen(id);
+        this.getCPRCitzen = (ssn) => this.props.fakeCPRStore.fetchCPRregister(ssn);
     }
 
     @observable nameChecker = "error"
@@ -40,19 +41,31 @@ export default class CreateCitizen extends Component {
     @observable diagnoses = []
     @observable isCitizenCreated = false
 
+    componentWillMount() {
+        this.props.fakeCPRStore.reset()
+    }
+
+    getCitizenFromCPR() {
+        this.getCPRCitzen(this.cpr)
+    }
+
     handleCreate = () => {
-        const createdCitizen = {
-            name: this.name,
-            address: this.address,
-            city: this.city,
-            zip: this.zip,
-            cpr: this.cpr,
-            phoneNumber: this.phone,
-            careCenterID: this.careCenter,
-            diagnoses: this.diagnoses
-        }
-        this.props.citizensStore.createCitizen(createdCitizen)
-        this.isCitizenCreated = true
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                const createdCitizen = {
+                    name: this.name || values.name,
+                    address: this.address || values.address,
+                    city: this.city || values.city,
+                    zip: this.zip || values.zip,
+                    cpr: this.cpr,
+                    phoneNumber: this.phone || values.phoneNumber,
+                    careCenterID: this.careCenter,
+                    diagnoses: this.diagnoses
+                }
+                this.props.citizensStore.createCitizen(createdCitizen)
+                this.isCitizenCreated = true
+            }
+        })
     }
 
     handleName = (e) => {
@@ -117,15 +130,17 @@ export default class CreateCitizen extends Component {
 
     handleCareCenter = (value) => {
         this.careCenter = value
-
     }
 
     handleDiagnoses = (value) => {
         this.diagnoses = value
     }
 
-
     render() {
+        const { fakeCPRStore, form } = this.props
+        const { isFetching, citizen } = fakeCPRStore
+        const { getFieldDecorator } = form
+        const hasCitizen = citizen !== null
         return (<div>
             {this.isCitizenCreated &&
                 <div>
@@ -139,47 +154,74 @@ export default class CreateCitizen extends Component {
                             <Divider>Udfyld information om borgeren</Divider>
                             <Form {...formItemLayout}>
                                 <Form.Item
-                                    label="Navn: "
-                                    validateStatus={this.nameChecker}
-                                    help={this.nameChecker != "success" && "Navn må kun indeholde bogstaver"}
-                                >
-                                    <Input onChange={this.handleName} />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Adresse: "
-                                    validateStatus={this.addressChecker}
-                                    help={this.addressChecker != "success" && "Udfyld adressen"}
-                                >
-                                    <Input onChange={this.handleAddress} />
-                                </Form.Item>
-                                <Form.Item
-                                    label="By: "
-                                    validateStatus={this.cityChecker}
-                                    help={this.cityChecker != "success" && "Indtast en by"}
-                                >
-                                    <Input onChange={this.handleCity} />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Postnummer: "
-                                    validateStatus={this.zipChecker}
-                                    help={this.zipChecker != "success" && "Indtast postnummer"}
-                                >
-                                    <Input onChange={this.handleZip} />
-                                </Form.Item>
-                                <Form.Item
                                     label="CPR: "
                                     validateStatus={this.cprChecker}
                                     help={this.cprChecker != "success" && "Indtast CPR-nummer"}
                                 >
-                                    <Input onChange={this.handleCPR} />
+                                <Row gutter={12}>
+                                    <Col span={20}>
+                                        <Input onChange={this.handleCPR} />
+                                    </Col>
+                                    <Col span={2}>
+                                    <Button type="primary" shape="circle" disabled={!(this.cprChecker === "success")}
+                                        icon="search" onClick={() => this.getCitizenFromCPR()} />
+                                    </Col>
+                                </Row>
+                                </Form.Item>
+                                <div className="spinner">
+                                {isFetching && 
+                                    <Spin size="large" tip="Henter borger fra CPR-register" />
+                                }
+                                {!isFetching &&
+                                <div>
+                                <Form.Item
+                                    label="Navn"
+                                    validateStatus={hasCitizen ? "success" : this.nameChecker}
+                                    help={(hasCitizen) ? "" : this.nameChecker != "success" && "Navn må kun indeholde bogstaver"}
+                                >
+                                {getFieldDecorator('name', { initialValue: hasCitizen ? citizen.name : '' })(
+                                    <Input onChange={this.handleName} />
+                                )}
                                 </Form.Item>
                                 <Form.Item
-                                    label="Telefon: "
-                                    validateStatus={this.phoneChecker}
-                                    help={this.phoneChecker != "success" && "Indtast telefonnummer"}
+                                    label="Adresse"
+                                    validateStatus={hasCitizen ? "success" : this.addressChecker}
+                                    help={hasCitizen ? "" : this.addressChecker != "success" && "Udfyld adressen"}
                                 >
-                                    <Input onChange={this.handlePhone} />
+                                {getFieldDecorator('address', { initialValue: hasCitizen ? citizen.address : '' })(
+                                    <Input onChange={this.handleAddress} />
+                                )}
                                 </Form.Item>
+                                <Form.Item
+                                    label="By"
+                                    validateStatus={hasCitizen ? "success" : this.cityChecker}
+                                    help={hasCitizen ? "" : this.cityChecker != "success" && "Indtast en by"}
+                                >
+                                {getFieldDecorator('city', { initialValue: hasCitizen ? citizen.city : '' })(
+                                    <Input onChange={this.handleCity} />
+                                )}
+                                </Form.Item>
+                                <Form.Item
+                                    label="Postnummer"
+                                    validateStatus={hasCitizen ? "success" : this.zipChecker}
+                                    help={hasCitizen ? "" : this.zipChecker != "success" && "Indtast postnummer"}
+                                >
+                                {getFieldDecorator('zip', { initialValue: hasCitizen ? citizen.zip : '' })(
+                                    <Input onChange={this.handleZip} />
+                                )}
+                                </Form.Item>
+                                <Form.Item
+                                    label="Telefon"
+                                    validateStatus={hasCitizen ? "success" : this.phoneChecker}
+                                    help={hasCitizen ? "" : this.phoneChecker != "success" && "Indtast telefonnummer"}
+                                >
+                                {getFieldDecorator('phoneNumber', { initialValue: hasCitizen ? citizen.phoneNumber : '' })(
+                                    <Input onChange={this.handlePhone} />
+                                )}
+                                </Form.Item>
+                                </div>
+                                }
+                                </div>
                             </Form>
                             <Divider>Vælg bosted</Divider>
                             <Select defaultValue="Vælg bosted" style={{ width: 180, marginLeft: 150, marginTop: 10 }} onChange={this.handleCareCenter}>
@@ -192,7 +234,6 @@ export default class CreateCitizen extends Component {
                                 style={{ width: 220, marginLeft: 150, marginTop: 10 }}
                                 placeholder="Vælg diagnoser"
                                 onChange={this.handleDiagnoses}
-
                             >
                                 <Option value="alkoholmisbrug">Alkoholmisbrug</Option>
                                 <Option value="stofmisbrug">Stofmisbrug</Option>
@@ -200,7 +241,6 @@ export default class CreateCitizen extends Component {
                                 <Option value="angst">Angst</Option>
                             </Select>
                             <Button type="primary" style={{ marginLeft: 10 }} onClick={this.handleCreate}>Opret borger</Button>
-
                         </Col>
                         <Col span={12}></Col>
                     </Row>
@@ -208,3 +248,6 @@ export default class CreateCitizen extends Component {
         </div >)
     }
 }
+
+const Wrapped = Form.create({ name: 'create_citizen' })(CreateCitizen)
+export default Wrapped

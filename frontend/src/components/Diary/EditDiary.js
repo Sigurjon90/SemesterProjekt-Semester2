@@ -15,7 +15,6 @@ export default class EditDiary extends Component {
         content: this.props.diaryStore.diary.content
     };
 
-    // citizenID skal måske ændres tilbage til id og så skal SQL være på id og ikke citizenID
     handleSubmit = () => {
         const { diary } = this.props.diaryStore;
         const updatedDiary = {
@@ -42,19 +41,14 @@ export default class EditDiary extends Component {
         const { TextArea } = Input;
         return (<div>
             <Row>
-                <Col span={8}>
-                </Col>
-                <Col span={16}>
-                    <h3>Senest redigeret...</h3>
-                    <TextArea rows={10} onChange={this.onChangeHandler} defaultValue={diary.content} />
+                <Col span={24}>
+                    <h3>Udfyld dagbog for borger</h3>
+                    <TextArea rows={10} onChange={this.onChangeHandler} defaultValue="" />
                 </Col>
             </Row>
             <Row>
-                <Col span={8}>
-
-                </Col>
-                <Col span={16}>
-                    <Button type="primary" onClick={this.handleSubmit}>Gem</Button>
+                <Col span={24}>
+                    <Button type="primary" onClick={this.handleSubmit} style={{ marginTop: 10 }}>Gem</Button>
 
                 </Col>
             </Row>

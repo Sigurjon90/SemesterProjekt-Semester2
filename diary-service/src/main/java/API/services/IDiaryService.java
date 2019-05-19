@@ -17,6 +17,10 @@ public interface IDiaryService {
     List<DiaryDTO> getDiaries(List<UUID> listOfCitizensIds);
 
     Optional<DiaryDTO> updateDiary(DiaryDTO diaryDTO);
-
+    
+    Optional<DiaryDTO> entryUpdateDiary(DiaryDTO diaryDTO);
+    
+    List<DiaryDTO> getDiariesByCitizenID(UUID citizenID);
+    
     boolean deleteDiary(UUID id, UUID authorId);
 }

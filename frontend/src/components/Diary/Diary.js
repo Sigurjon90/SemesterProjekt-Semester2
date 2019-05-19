@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
-import { Row, Col, Alert, Button, Spin, Input } from "antd";
+import { observable } from "mobx";
+import { Row, Col, Alert, Button, Spin, Input, Tabs } from "antd";
 import moment from "moment";
 import ReactMarkdown from "react-markdown"
+
+const TabPane = Tabs.TabPane
 
 @inject("diaryStore")
 @observer
@@ -13,7 +16,7 @@ export default class Diary extends Component {
     }
 
     state = {
-        createContent: ""
+        createContent: "",
     };
 
     handleDiarySwitch = () => {
@@ -33,19 +36,23 @@ export default class Diary extends Component {
             title: "Some title"
         }
         this.props.diaryStore.createDiary(createdDiary)
+        this.props.diaryStore.fetchDiaries(citizenID)
     }
+
 
     componentWillMount() {
         const { citizenID } = this.props;
         const { diary } = this.getDiary(citizenID)
+        const { diaArray } = this.props.diaryStore.fetchDiaries(citizenID)
     }
 
 
     render() {
         const { diaryStore } = this.props;
-        const { diary, isFetching, error } = diaryStore;
+        const { diary, isFetching, isFetchingSecond, error, diaArray } = diaryStore;
         const isLoaded = !isFetching && error === null
         const { TextArea } = Input
+        const { citizenID } = this.props
         return (<div>
             {isFetching && <Spin />}
             {diary == null &&
@@ -59,30 +66,30 @@ export default class Diary extends Component {
                     </Col>
                 </Row>
             }
-            {isLoaded && <div>
+            {isLoaded && !isFetchingSecond && <div>
+                <Tabs
+                    tabPosition="top"
+                    style={{ height: 220 }}>
+
+                    {diaArray.slice().map((thing) =>
+                        <TabPane tab={moment(thing.dateModified).format('DD-MM-YYYY')} key={thing.id}>
+                            <Row>
+                                <Col span={8}>
+                                    <strong>Ændringstidspunkt:</strong> {moment(thing.dateModified).format('DD-MM-YYYY HH:mm')}
+                                </Col>
+                                <Col span={16}>
+                                    <ReactMarkdown source={`${thing.content}`} />
+                                </Col>
+                            </Row></TabPane>)}
+                </Tabs>
                 <Row>
-                    <Col span={8}>
-                        <h3><strong>Senest redigeret:</strong></h3>
-                    </Col>
-                    <Col span={16}>
-                        <h3><strong>Dagbog:</strong></h3>
+                    <Col span={24}>
+
+                        <Button type="primary" onClick={this.handleDiarySwitch}>Opret nyt indlæg i dagbog</Button>
                     </Col>
                 </Row>
-                <Row>
-                    <Col span={8}>
-                        <h3>{moment(diary.dateModified).format('DD-MM-YYYY HH:mm')}</h3>
-                    </Col>
-                    <Col span={16}>
-                        <ReactMarkdown source={`${diary.content}`} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col span={8}>
-                    </Col>
-                    <Col span={16}>
-                        <Button type="primary" onClick={this.handleDiarySwitch}>Redigér</Button>
-                    </Col>
-                </Row>
+
+
             </div>}
         </div>)
     }
