@@ -53,10 +53,10 @@ export default class Theme extends Component {
 
   render() {
     const { loginStore, routing } = this.props
-
+    const { isLoggedInPersist } = loginStore
+    const isLoggedIn = isLoggedInPersist()
     const menu = menuItems.map((item, index) => {
       if (item.title.includes("Admin") && !hasRole("admin")) {
-        console.log("Re-render")
         return (null)
       } else {
         return (<Menu.Item key={index}>
@@ -91,12 +91,12 @@ export default class Theme extends Component {
 
     return (
       <div style={{ height: '100%' }}>
-        {!loginStore.isLoggedIn &&
+        {!isLoggedIn &&
           <div style={{ height: '100%' }}>
             {this.props.children}
           </div>
         }
-        {loginStore.isLoggedIn &&
+        {isLoggedIn &&
           <Layout style={{ minHeight: '100vh' }}>
             <Header className="header">
               <img src={logo} className="logo" alt="logo" onClick={e => routing.push("/citizens")} />

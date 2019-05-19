@@ -4,7 +4,6 @@ import { Route, Link, Redirect, withRouter } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import LazyRoute from "lazy-route";
 import DevTools from "mobx-react-devtools";
-import LoginStore from "../stores/LoginStore";
 import hasAnyRole from "../utils/auth";
 
 /*
@@ -27,8 +26,8 @@ const Authorization = (allowedRoles, isLoggedIn) =>
 class App extends Component {
   render() {
     const { loginStore } = this.props
-    const { isLoggedIn } = loginStore
-
+    const { isLoggedInPersist } = loginStore
+    const isLoggedIn = isLoggedInPersist()
     const CareGiver = Authorization(["admin", "caseworker", "caregiver"], isLoggedIn)
     const CaseWorker = Authorization(["admin", "caseworker"], isLoggedIn)
     const Admin = Authorization(["admin"], isLoggedIn)

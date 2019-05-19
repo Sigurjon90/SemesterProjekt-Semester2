@@ -7,6 +7,8 @@ package API.entities;
 
 import API.utils.BCryptPasswordDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,5 +36,6 @@ public class CreateUserDTO {
     private String email; 
     private String cpr;
     private String address;
+    private List<UUID> citizensIDList;
 
 }

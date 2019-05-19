@@ -77,8 +77,7 @@ export default class CitizensList extends Component {
 
   render() {
     const { citizensStore } = this.props;
-    const { primaryCitizens } = citizensStore;
-    const { otherCitizens } = citizensStore;
+    const { primaryCitizens, otherCitizens } = citizensStore
     return (
       <div>
         <PageHeader
