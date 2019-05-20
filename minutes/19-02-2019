@@ -1,0 +1,47 @@
+Gruppens mødetid rykkes måske til kl 14:15 hvis gruppe 17-18 slås sammen.
+
+Skal sende en indkaldelse senest søndag med dagsorden. Dagsorden kan være på github.
+
+Feedback:
+Fin indledende formulering. Lone vil have vi benytter projeket til at blive god til det vi bliver eksamineret i(javaFx)
+Det er ikke et krav at bruge javaFX. Backend skal laves i Java. 
+Vi skal kunne argumentere for vores valg(de forstår det ikke)
+Vi kan gøre det hurtigere på den måde.
+Det kan lade sig gøre at gå igennem det sådan her, men det er et punkt der slås ned på.
+Har vi lavet noget fancy, men som ikke virker, vil de spørge om vi har prioriteret korrekt.
+Vi bliver ikke belønnet på programmering. 
+Han fraråder ikke at vi gør det på vores måde. 
+Det skal være for vores indlæringsskyld
+Vi skal alle sammen være bekendt med hvad der skrives.
+Vi kunne snakke om gruppe diskussionen om brugen af biblioteker i javaScript.
+Der skal være styr på usecase model osv.
+
+
+Feedback på problemformulering:
+Det er meget punktform.
+Vi vil se på systemerne sammen. Det er ikke nødvendt at adressere alle 3 hvis ikke vi vil.
+1 system = brugernære usecases
+2 systemer = samarbejde mellem det. Hvilke opgaver skal det ene system kunne i forohld til den anden? Hvordan får vi systemerne til at flyde sammen. Hvad er borgeren beriget med af data i de forskellige systemer. I kraft af at man kalder de forskellige objekter noget forskelligt, bliver det automatisk opdelt.
+Hvis vi fokuserer på 1 system i forhold til dataafgrænsning, skal vi skrive en problemformulering ud fra det."Sosu hjælperen skal kunne se den planlagte dag for Jens Egon" "Jens Egon skal også kunne se, men han skal ikke kunne se andet data".
+Man kan også lave et overordnet login system, som automatisk danner et overblik over det du skal bruge, og giver adgang til de midler du skal bruge.
+Gør det snævert nok til at vi kan se hvilke usecases der skal laves, men uden at begrænse os for meget.
+Anbefaler at vi vælger 1 af de tre punkter.
+Tag dataafgrænsning med som vigtigt punkt.
+Der vil være GDPR regler som vi ikke kan følge. 
+Hvis man laver UP så er usecases vigtige. Vi skal lave en kort prosa af usescases. Usecase is love, usecase is life.
+
+Hvis vi synes det er fedt at lave et system for 3-10 områder så lav det.
+
+Aftaler:
+
+Samaftale:
+Tid sat af til det:
+Han anbefaler 12 timer om ugen på projektet som minimum.
+20ish timer for hittin' that A grade.
+
+Erfaring for det her semester betyder mere end karakteren.
+
+I frohold til hvad vi har lavet sidst:
+Det går fint for gruppen. Vi har manglet lidt svar. Mange ideer. Vi skal gøre vores bedste for at få noget konkret ud af det. 
+Vi skal have noget klar fredag kl 23:59.
+Forvent en side med problemformulering og problemafgrænsning.
