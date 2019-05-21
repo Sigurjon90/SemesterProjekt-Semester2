@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.UUID;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,7 +47,7 @@ public class DiaryRepositoryTest {
     
     private static UUID identifier;
     
-    private final List<Diary> diarys = Arrays.asList(
+    private final List<Diary> diaries = Arrays.asList(
             new Diary(UUID.fromString("e2a96b4d-edff-497b-a094-268e3b86ed28"), "Hallo", UUID.fromString("6a7a8cb3-6502-4acc-b302-72b9e30bdf8e"), UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de"), new Date(), null, "Titil"),
             new Diary(UUID.fromString("fa9af319-94fb-414a-a76a-2862808e3f1f"), "Hallo#2", UUID.fromString("ab50317c-f506-44cf-9861-a2b1c38a1f66"), UUID.fromString("aa05c216-10ac-4703-903a-c1b95c54ba05"), new Date(), null, "Titil#2")
     );
@@ -60,9 +59,9 @@ public class DiaryRepositoryTest {
     public static void setUpBeforeClass() throws IOException, SQLException {
         final String url = postgres.start("localhost", 5431, "dbName", "username", "password");
         try(Connection conn = DriverManager.getConnection(url)){
-             conn.createStatement().execute("CREATE TABLE diary(id UUID PRIMARY KEY, content text, date_created timestamp default timezone('utc'::text, now()), author_id UUID, citizen_id UUID, date_modified timestamp, title text, archived boolean default false)");
-             conn.createStatement().execute("INSERT INTO diary(id, content, author_id, citizen_id, title, archived) VALUES('e2a96b4d-edff-497b-a094-268e3b86ed28', 'Hallo', '6a7a8cb3-6502-4acc-b302-72b9e30bdf8e', '06d0166d-56b6-4bb5-8572-9299fc87c3de', 'Titill', false)");
-             conn.createStatement().execute("INSERT INTO diary(id, content, author_id, citizen_id, title, archived) VALUES('fa9af319-94fb-414a-a76a-2862808e3f1f', 'Hallo#2', 'ab50317c-f506-44cf-9861-a2b1c38a1f66', 'aa05c216-10ac-4703-903a-c1b95c54ba05', 'Titill#2', false)");
+             conn.createStatement().execute("CREATE TABLE diaries(id UUID PRIMARY KEY, content text, date_created timestamp default timezone('utc'::text, now()), author_id UUID, citizen_id UUID, date_modified timestamp, title text, archived boolean default false)");
+             conn.createStatement().execute("INSERT INTO diaries(id, content, author_id, citizen_id, title, archived) VALUES('e2a96b4d-edff-497b-a094-268e3b86ed28', 'Hallo', '6a7a8cb3-6502-4acc-b302-72b9e30bdf8e', '06d0166d-56b6-4bb5-8572-9299fc87c3de', 'Titill', false)");
+             conn.createStatement().execute("INSERT INTO diaries(id, content, author_id, citizen_id, title, archived) VALUES('fa9af319-94fb-414a-a76a-2862808e3f1f', 'Hallo#2', 'ab50317c-f506-44cf-9861-a2b1c38a1f66', 'aa05c216-10ac-4703-903a-c1b95c54ba05', 'Titill#2', false)");
         }
         diaryRepository = new DiaryRepository(url, "username", "password");
     }
@@ -82,17 +81,15 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testCreateDiary() {
-        List<UUID> listOfDiaryId = Arrays.asList(UUID.fromString("e2a96b4d-edff-497b-a094-268e3b86ed28"));
-        List<Diary> actuals = diaryRepository.getDiaries(listOfDiaryId);
-        
-        Diary diary = diarys.get(0);
-        Diary actual = actuals.get(0);
-        assertThat(actual, hasProperty("id", equalTo(diary.getCitizenID())));
-        assertThat(actual, hasProperty("content", equalTo(diary.getContent())));
-        assertThat(actual, hasProperty("author_id", equalTo(diary.getAuthorID())));
-        assertThat(actual, hasProperty("citizen_id", equalTo(diary.getCitizenID())));
-        assertThat(actual, hasProperty("title", equalTo(diary.getTitle())));
-
+//        UUID authorId = UUID.fromString("6a7a8cb3-6502-4acc-b302-72b9e30bdf8e");
+//        UUID citizenId = UUID.fromString("06d0166d-56b6-4bb5-8572-9299fc87c3de");
+//        
+//        Diary diary = new Diary(null, "Hallo", authorId, citizenId, new Date(), null, "Titill");
+//        
+//        Diary actual = diaryRepository.createDiary(diary);
+//        
+//        identifier = actual.getCitizenID();
+//                
         
     }
 
@@ -101,14 +98,9 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testFindById() {
-        System.out.println("findById");
-        UUID id = null;
-        DiaryRepository instance = null;
-        Optional<Diary> expResult = null;
-        Optional<Diary> result = instance.findById(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        identifier = UUID.fromString("e2a96b4d-edff-497b-a094-268e3b86ed28");
+        
     }
 
     /**
@@ -131,14 +123,18 @@ public class DiaryRepositoryTest {
      */
     @Test
     public void testGetDiaries() {
-        System.out.println("getDiaries");
-        List<UUID> listOfCitizensIds = null;
-        DiaryRepository instance = null;
-        List<Diary> expResult = null;
-        List<Diary> result = instance.getDiaries(listOfCitizensIds);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        List<UUID> listOfDiaryId = Arrays.asList(UUID.fromString("e2a96b4d-edff-497b-a094-268e3b86ed28"));
+        List<Diary> actuals = diaryRepository.getDiaries(listOfDiaryId);
+        
+        Diary diary = diaries.get(0);
+        Diary actual = actuals.get(0);
+        assertThat(actual, hasProperty("id", equalTo(diary.getCitizenID())));
+        assertThat(actual, hasProperty("content", equalTo(diary.getContent())));
+        assertThat(actual, hasProperty("author_id", equalTo(diary.getAuthorID())));
+        assertThat(actual, hasProperty("citizen_id", equalTo(diary.getCitizenID())));
+        assertThat(actual, hasProperty("title", equalTo(diary.getTitle())));
+
     }
 
     /**
