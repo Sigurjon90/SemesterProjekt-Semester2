@@ -1,0 +1,13 @@
+Deployment:
+Vi laver et build script som skal køres ved start når programmet skal køres.
+
+Vi laver en elepanth sql som database. Vi er måske nød til at betale for at få connections nok.
+Vi sætter det op lokalt når det skal fremvises
+Vi skal tænke over hvordan vi kan fremvise det offline hvis der ikke er net
+Eksamensdato den 24 er forventet. 
+Vi kan skrive til Runes mail angående spørgsmål omkring rapporten, med struktur og opdeling.
+Er der faldgrupper?
+Vi skal passe på at vores rapport ikke bliver trash. Vores produkt er nice, men vores rapport skal passe til. 
+Beskriv hvorfor vi har taget valgende, og hvad vi har lært. Den skal være nærværende. 
+Sikre os at vores endelige design artifakt passer til vores endelige design. 
+Det er godt hvis vi kan forklare hvorfor vi retter artifakten til. Dokumentation er vigtigt.
