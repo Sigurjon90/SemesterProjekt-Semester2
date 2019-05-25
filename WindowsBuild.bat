@@ -8,5 +8,6 @@ start cmd /k "cd %~dp0auth-service && mvn spring-boot:run"
 start cmd /k "cd %~dp0citizen-service && mvn spring-boot:run"
 start cmd /k "cd %~dp0journal-service && mvn spring-boot:run"
 start cmd /k "cd %~dp0user-service && mvn spring-boot:run"
+start cmd /k "cd %~dp0frontend && npm install && npm start"
 
 PAUSE
