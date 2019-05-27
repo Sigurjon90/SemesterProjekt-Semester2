@@ -9,11 +9,11 @@ class UsersStore {
     @observable users = [];
     @observable archived = false;
 
-    pushCitizen = user => {
-        const pindex = this.users.findIndex(item => user.id === item.id)
-        if (pindex > -1) {
-            const item = this.users[pindex]
-            this.users.splice(pindex, 1, {
+    pushUser = user => {
+        const index = this.users.findIndex(item => user.id === item.id)
+        if (index > -1) {
+            const item = this.users[index]
+            this.users.splice(index, 1, {
                 ...item,
                 ...user,
             })
@@ -56,16 +56,12 @@ class UsersStore {
         this.isFetching = true;
         this.error = null;
         try {
-            const response = await axios.put('http://localhost:8762/users', updatedUser);
-            this.fetchUsers()
+            await axios.put('http://localhost:8762/users', updatedUser);
             this.isFetching = false;
-
-
         } catch (error) {
             this.error = error
             this.isFetching = false;
         }
-
     }
 
     @action async fetchUser(id) {

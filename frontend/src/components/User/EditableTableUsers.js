@@ -177,7 +177,7 @@ class EditableTableUsers extends React.Component {
     }
 
     save(form, key) {
-        const { users } = this.props.usersStore
+        const { users, isFetching, error } = this.props.usersStore
         form.validateFields((error, row) => {
             if (error) {
                 return
@@ -190,7 +190,11 @@ class EditableTableUsers extends React.Component {
                     ...item,
                     ...row
                 }
-                this.updateUser(updatedUser)
+                this.updateUser(updatedUser).then((response) => {
+                    if (!isFetching && error === null) {
+                        this.getUsers()
+                    }
+                })
                 this.setState({ editingKey: '' })
             } else {
                 newData.push(row)

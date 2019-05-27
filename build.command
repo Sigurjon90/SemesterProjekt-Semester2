@@ -10,6 +10,7 @@ declare -a arr=("eureka-server/"
                 "user-service/"
                 "journal-service/"
                 "diary-service/"
+                "citizen-service/"
                 "frontend"
                 )
 
