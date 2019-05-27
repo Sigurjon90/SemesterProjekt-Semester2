@@ -167,7 +167,9 @@ class EditableTableUsers extends React.Component {
     }
 
     handleDelete = (id) => {
-        this.deleteUser(id)
+        this.deleteUser(id).then((response) => {
+            this.getUsers()
+        })
     }
 
     isEditing = record => record.id === this.state.editingKey
