@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react"
 import { Form, Input, Button, Divider, Select, Alert, Row, Col } from "antd";
-import { observable } from "mobx";
+import { observable, toJS } from "mobx";
 
 const { Option } = Select;
 
@@ -47,7 +47,7 @@ export default class CreateUser extends Component {
             email: this.email,
             cpr: this.cpr,
             address: this.address,
-            citizensIDList: this.assignedCitizens
+            citizensIDList: toJS(this.assignedCitizens)
         }
         this.props.usersStore.createUser(createdUser)
         this.isUserCreated = true
@@ -172,6 +172,7 @@ export default class CreateUser extends Component {
                             <Select
                                 mode="multiple"
                                 placeholder="Vælg Primære borgere"
+                                onChange={this.handleCitizens}
                                 style={{ width: 180, marginLeft: 150, marginTop: 10 }}
                             >
                                 {citizens.map(citizen =>
